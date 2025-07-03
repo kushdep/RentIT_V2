@@ -10,12 +10,14 @@ dotenv.config()
 ConnectDB()
 
 app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 app.use(cors())
 app.use('/',userRoutes)
 
 app.listen(process.env.PORT, () => {
     console.log(`Connected on Port ${process.env.PORT}`)
-})  
+}) 
+
 
 
 

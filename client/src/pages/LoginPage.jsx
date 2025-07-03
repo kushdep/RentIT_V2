@@ -4,10 +4,10 @@ export default function LoginPage() {
   return (
     <>
       <Form method="POST">
-        <label htmlFor="username">username</label>
-        <input type="text" name="username" id="username" />
         <label htmlFor="email">Email</label>
         <input type="email" name="email" id="email" />
+        <label htmlFor="password">password</label>
+        <input type="password" name="password" id="password" />
         <button type="submit">submit</button>
       </Form>
     </>

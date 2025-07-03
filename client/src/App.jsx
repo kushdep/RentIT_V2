@@ -1,14 +1,20 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { action as LoginAction } from "./pages/LoginPage";
-import { action as RegisterAction } from "./pages/LoginPage";
+import { action as SignUpAction } from "./pages/SignUp";
 import Homepage from "./pages/Homepage";
 import LoginPage from "./pages/LoginPage";
-import Register from "./pages/RegisterPage";
+import SignUp from "./pages/SignUp";
 
 const router = createBrowserRouter([
-  { path: "/", element: <Homepage /> },
-  { path: "/login", element: <LoginPage />, action: LoginAction },
-  {path:'/register',element:<Register/>,action:RegisterAction}
+  {
+    path: "/",
+    element: <Homepage />,
+    children: [
+      { path: "login", element: <LoginPage />, action: LoginAction },
+      { path: "signup", element: <SignUp />, action: SignUpAction },
+      { path: "send-otp", element: <SignUp />, action: SignUpAction },
+    ],
+  },
 ]);
 
 function App() {
