@@ -2,23 +2,25 @@ import mongoose from 'mongoose'
 import mailSender from '../utils/mailSender.js'
 
 const otpSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        required: true,
-    },
-    otp: {
-        type: String,
-        required: true,
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-        expires: 60 * 5,
-    },
+  email: {
+    type: String,
+    required: true,
+  },
+  otp: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: 60 * 5,
+  },
 });
 
 async function sendVerificationEmail(email, otp) {
   try {
+    console.log(email)
+    console.log(otp)
     const mailResponse = await mailSender(
       email,
       "Verification Email",
@@ -40,6 +42,6 @@ otpSchema.pre("save", async function (next) {
   next();
 });
 
-const OTP = mongoose.model('OTP',otpSchema)
-export default OTP 
+const OTP = mongoose.model('OTP', otpSchema)
+export default OTP
 
