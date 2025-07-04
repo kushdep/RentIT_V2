@@ -1,5 +1,7 @@
 import nodemailer from 'nodemailer';
 import { google } from "googleapis"
+import dotenv from 'dotenv'
+dotenv.config()
 
 const oAuth2Client = new google.auth.OAuth2(
   process.env.CLIENT_ID,
@@ -25,18 +27,14 @@ const mailSender = async (email, title, body) => {
         accessToken: accessToken?.token,
       }
     }
-    console.log(transportBody)
     let transporter = nodemailer.createTransport(transportBody)
-    console.log(transporter)
     const emailBody = {
       from: 'www.RentIt.in - Deependra Kumar',
       to: email,
       subject: title,
       html: body,
     }
-    console.log(emailBody)
     let info = await transporter.sendMail(emailBody);
-    console.log("Email info: ", info);
     return info;
   } catch (error) {
     console.log(error.message);
