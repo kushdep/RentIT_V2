@@ -4,6 +4,7 @@ import { action as SignUpAction } from "./pages/SignUp";
 import Homepage from "./pages/Homepage";
 import LoginPage from "./pages/LoginPage";
 import SignUp from "./pages/SignUp";
+import RentLocs from "./pages/RentLocs";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,7 @@ const router = createBrowserRouter([
       { path: "login", element: <LoginPage />, action: LoginAction },
       { path: "signup", element: <SignUp otpSend={true}/>, action: SignUpAction },
       { path: "send-otp", element: <SignUp />, action: SignUpAction },
+      { path: "rent-locs", element: <RentLocs />},
     ],
   },
 ]);

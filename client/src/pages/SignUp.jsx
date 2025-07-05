@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useState } from "react";
 import { Form, redirect } from "react-router-dom";
 
 export default function SignUp({ otpSend }) {
@@ -25,37 +24,36 @@ export default function SignUp({ otpSend }) {
 }
 
 export async function action({ request, params }) {
-  console.log(request);
-  console.log(params);
-  const data = await request.formData();
-  console.log(request);
-  let url = 'http://localhost:3000';
-  let body = {};
-  if (request.url.includes("send-otp")) {
-    url+='/send-otp'
-    body = {
-      email: data.get("email"),
-    };
-  } else {
-    url+='/signup'
-    body = {
-      username: data.get("username"),
-      email: data.get("email"),
-      otp: data.get("otp"),
-      password: data.get("password"),
-    };
-  }
-  console.log(url)
-  console.log(body)
   try {
-    const response = await axios.post(url, body);
-    console.log(response);
-    if (response.status === 200) {
-      return redirect('/signup');
+    const data = await request.formData();
+    let url = "http://localhost:3000";
+    let body = {};
+    if (request.url.includes("send-otp")) {
+      url += "/send-otp";
+      body = {
+        email: data.get("email"),
+      };
+      const response = await axios.post(url, body);
+      console.log(response);
+      if (response.status === 200) {
+        return redirect("/signup");
+      }
+    } else {
+      url += "/signup";
+      body = {
+        username: data.get("username"),
+        email: data.get("email"),
+        otp: data.get("otp"),
+        password: data.get("password"),
+      };
+      const response = await axios.post(url, body);
+      console.log(response);
+      if (response.status === 201) {
+        return redirect("/rent-locs");
+      }
     }
-  } catch (error) {
-    console.error("Error during signup:", error);
-    // Optionally, return an error or handle it as needed
     return null;
+  } catch (error) {
+    console.log(error);
   }
 }
