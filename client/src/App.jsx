@@ -1,6 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { action as LoginAction } from "./pages/LoginPage";
-import { action as SignUpAction } from "./pages/SignUp";
 import Homepage from "./pages/Homepage";
 import LoginPage from "./pages/LoginPage";
 import SignUp from "./pages/SignUp";
