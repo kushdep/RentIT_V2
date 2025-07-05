@@ -12,8 +12,7 @@ const router = createBrowserRouter([
     element: <Homepage />,
     children: [
       { path: "login", element: <LoginPage />, action: LoginAction },
-      { path: "signup", element: <SignUp otpSend={true}/>, action: SignUpAction },
-      { path: "send-otp", element: <SignUp />, action: SignUpAction },
+      { path: "signup", element: <SignUp />},
       { path: "rent-locs", element: <RentLocs />},
     ],
   },

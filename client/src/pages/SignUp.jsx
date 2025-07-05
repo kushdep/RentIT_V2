@@ -1,58 +1,93 @@
 import axios from "axios";
-import { Form, redirect } from "react-router-dom";
+import { useActionState } from "react";
 
-export default function SignUp({ otpSend }) {
+export default function SignUp() {
+  const [formState, formFn] = useActionState(action, {
+    email: "",
+    otpSent: false,
+  });
+
   return (
     <>
-      <Form method="POST">
+      <form action={formFn}>
         <label htmlFor="email">email</label>
-        <input type="email" name="email" id="email" />
-        {otpSend && (
+        <input
+          type="email"
+          name="email"
+          id="email"
+          defaultValue={formState?.email}
+        />
+        {formState.otpSent && (
           <div>
             <label htmlFor="otp">OTP</label>
-            <input type="text" name="otp" id="otp" />
+            <input
+              type="text"
+              name="otp"
+              id="otp"
+              defaultValue={formState?.otp}
+            />
             <label htmlFor="username">username</label>
-            <input type="text" name="username" id="username" />
+            <input
+              type="text"
+              name="username"
+              id="username"
+              defaultValue={formState?.username}
+            />
             <label htmlFor="password">password</label>
             <input type="password" name="password" id="password" />
+            <label htmlFor="confirm-password">confirm password</label>
+            <input
+              type="password"
+              name="confirm-password"
+              id="confirm-password"
+            />
           </div>
         )}
-        <button type="submit">submit</button>
-      </Form>
+        <button type="submit">
+          {formState.otpSent ? "submit" : "send otp"}
+        </button>
+      </form>
     </>
   );
 }
 
-export async function action({ request, params }) {
+export async function action(currentState, formData) {
   try {
-    const data = await request.formData();
     let url = "http://localhost:3000";
     let body = {};
-    if (request.url.includes("send-otp")) {
+    console.log(currentState);
+    if (!currentState.otpSent) {
       url += "/send-otp";
       body = {
-        email: data.get("email"),
+        email: formData.get("email"),
       };
       const response = await axios.post(url, body);
       console.log(response);
       if (response.status === 200) {
-        return redirect("/signup");
+        console.log(JSON.stringify(currentState));
+        console.log(JSON.stringify(body));
+        const newData = {
+          ...currentState,
+          otpSent: true,
+          email: formData.get("email"),
+        };
+        console.log(newData);
+        return newData;
       }
     } else {
       url += "/signup";
       body = {
-        username: data.get("username"),
-        email: data.get("email"),
-        otp: data.get("otp"),
-        password: data.get("password"),
+        username: formData.get("username"),
+        email: formData.get("email"),
+        otp: formData.get("otp"),
+        password: formData.get("password"),
       };
       const response = await axios.post(url, body);
       console.log(response);
       if (response.status === 201) {
-        return redirect("/rent-locs");
+        return { ...currentState, body };
       }
     }
-    return null;
   } catch (error) {
     console.log(error);
   }
