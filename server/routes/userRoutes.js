@@ -3,7 +3,7 @@ import {login,signup,sendOtp} from '../controllers/authController.js'
 import {validateUser} from "../middlewares/userValidation.js"
 const router = express.Router()
 
-router.get('/login',login)
+router.post('/login',login)
 
 router.post('/send-otp',sendOtp)
 

@@ -2,6 +2,7 @@ import otpGenerator from 'otp-generator'
 import OTP from "../models/otp.js"
 import User from '../models/user.js'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 export const signup = async (req, res) => {
     try {
@@ -45,6 +46,30 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
     console.log(req.body)
+    const { email, password } = req.body
+    if (!email || !password) {
+        res.status(400).send({
+            success: false,
+            message: 'All feilds are required'
+        })
+    }
+    const user = await User.findOne({ email })
+    console.log(user)
+    if (!user) {
+        res.status(401).send({
+            success: false,
+            message: 'User do not exist'
+        })
+    }
+    const validPassword = await bcrypt.compare(password, user.password)
+    if(!validPassword){
+        res.status(402).send({
+            success:false,
+            message:'Email or password incorrect'
+        })
+    }
+    const token = jwt.sign({_id:user._id},process.env.JWT_SECRET,{expiresIn:'7d'})
+    res.header('auth-token',token).send(token)
 }
 
 export const sendOtp = async (req, res) => {
