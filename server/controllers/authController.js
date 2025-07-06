@@ -1,16 +1,11 @@
 import otpGenerator from 'otp-generator'
 import OTP from "../models/otp.js"
 import User from '../models/user.js'
+import bcrypt from 'bcrypt'
 
 export const signup = async (req, res) => {
     try {
         const { username, email, password, otp } = req.body
-        if (!username || !email || !password || !otp) {
-            return res.status(403).json({
-                success: false,
-                message: 'All fields are required',
-            });
-        }
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
@@ -25,10 +20,17 @@ export const signup = async (req, res) => {
                 message: 'The OTP is not valid',
             });
         }
+        let hashPassword
+        try {
+            hashPassword = await bcrypt.hash(password, 10)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ success: false, error: error.message });
+        }
         const newUser = await User.create({
             username,
             email,
-            password,
+            password: hashPassword,
         })
         return res.status(201).json({
             success: true,
@@ -48,11 +50,11 @@ export const login = async (req, res) => {
 export const sendOtp = async (req, res) => {
     try {
         const { email } = req.body
-        const existingUser = await User.findOne({email})
-        if(existingUser){
+        const existingUser = await User.findOne({ email })
+        if (existingUser) {
             return res.status(400).send({
-                success:false,
-                message:'User already exist'
+                success: false,
+                message: 'User already exist'
             })
         }
         let otp = otpGenerator.generate(6, {

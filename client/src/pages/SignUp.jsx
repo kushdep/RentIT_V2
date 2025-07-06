@@ -49,9 +49,9 @@ export default function SignUp() {
           email: formData.get("email"),
           otp: formData.get("otp"),
           password: formData.get("password"),
-          confirmPassword: formData.get("confirm-password"),
         };
-        const validation = checkPassword(body.password, body.confirmPassword);
+        let confirmPassword = formData.get("confirm-password");
+        const validation = checkPassword(body.password, confirmPassword);
         if (!validation?.length || !validation?.isEqual) {
           error.push(validation?.message);
           return {
@@ -68,6 +68,7 @@ export default function SignUp() {
           }
         } catch (err) {
           if (err?.response?.status === 400) {
+            console.log(err)
             error.push(err?.response?.data?.message);
             const newData = {
               ...currentState,
@@ -135,7 +136,7 @@ export default function SignUp() {
           {formState?.otpSent ? "submit" : "send otp"}
         </button>
       </form>
-      {formState.errors && formState.errors.map(e=><li>{e}</li>)}
+      {formState.errors && formState.errors.map((e) => <li>{e}</li>)}
     </>
   );
 }

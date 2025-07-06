@@ -2,9 +2,20 @@ import Joi from "joi";
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    username:Joi.string().min(3).max(30).required(),
-    email:Joi.string().email().required(),
-    password:Joi.string().required()
+    username:{
+        type:String,
+        required:true,
+        unique:true
+    },
+    email:{
+        type:String,
+        unique:true,
+        required:true
+    },
+    password:{
+        type:String,
+        required:true
+    }
 })
 
 
