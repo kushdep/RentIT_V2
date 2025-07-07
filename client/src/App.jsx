@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import SignUp from "./pages/SignUp";
 import RentLocs from "./pages/RentLocs";
 import GoogleSignIn from "./pages/GoogleSignIn";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const router = createBrowserRouter([
   {
@@ -11,7 +12,6 @@ const router = createBrowserRouter([
     element: <Homepage />,
     children: [
       { path: "login", element: <LoginPage /> },
-      { path: "google", element: <GoogleSignIn /> },
       { path: "signup", element: <SignUp /> },
       { path: "rent-locs", element: <RentLocs /> },
     ],

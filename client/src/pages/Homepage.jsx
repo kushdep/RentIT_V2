@@ -10,7 +10,6 @@ function Homepage() {
       <Outlet>
         <LoginPage />
         <SignUp />
-        <GoogleSignIn/>
       </Outlet>
     </>
   );
