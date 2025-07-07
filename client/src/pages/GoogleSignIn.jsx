@@ -3,17 +3,15 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function GoogleSignIn() {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
   async function responseGoogle(authResult) {
     try {
-      console.log("1");
       if (authResult["code"]) {
-          console.log("2");
-          const response = await axios.get(`http://localhost:3000/google?code=${authResult.code}`)
-          console.log("3");
-          console.log(response);
+        const response = await axios.get(
+          `http://localhost:3000/google?code=${authResult.code}`
+        );
         const token = response.data;
-        localStorage.setItem("token",token);
+        localStorage.setItem("token", token);
         navigate("/rent-locs");
       } else {
         console.log("auth result ", authResult);

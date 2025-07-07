@@ -105,29 +105,22 @@ export const googleLogin = async (req, res) => {
     try {
         const { code } = req.query
         console.log(code)
-        console.log('4')
         const googleRes = await oAuth2Client.getToken(code)
         oAuth2Client.setCredentials(googleRes?.tokens)
-        console.log('5')
         console.log("google Res " + JSON.stringify(googleRes))
         try {
             const userRes = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes?.tokens?.access_token}`)
-            console.log('6')
 
             console.log("userData " + JSON.stringify(userRes.data))
             const { email, name } = userRes.data
-            const existingUser = await User.findOne({ email })
-            if (existingUser) {
-                return res.status(400).send({
-                    success: false,
-                    message: 'User already exist'
+            const user = await User.findOne({ email })
+            if (!user) {
+                user = await User.create({
+                    username: name,
+                    email
                 })
             }
-            const newUser = await User.create({
-                username: name,
-                email
-            })
-            const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
+            const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
             res.header('auth-token', token).send(token)
         }
         catch (error) {

@@ -3,8 +3,6 @@ import Homepage from "./pages/Homepage";
 import LoginPage from "./pages/LoginPage";
 import SignUp from "./pages/SignUp";
 import RentLocs from "./pages/RentLocs";
-import GoogleSignIn from "./pages/GoogleSignIn";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const router = createBrowserRouter([
   {
