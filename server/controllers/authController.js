@@ -56,6 +56,12 @@ export const login = async (req, res) => {
         })
     }
     const user = await User.findOne({ email })
+    if(user && !user.password){
+        return res.status(401).send({
+            success:false,
+            message:'Sign In with your google Account'
+        })
+    }
     console.log(user)
     if (!user) {
         res.status(401).send({

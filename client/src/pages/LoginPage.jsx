@@ -31,12 +31,19 @@ export default function LoginPage() {
       } catch (error) {
         let err = [];
         if (error?.response?.status === 400) {
-          err.push(error?.response?.message);
+          err.push(error?.response?.data?.message);
           return {
             ...currentState,
             email,
             errors: err,
           };
+        }
+        if(error?.response?.status===401){
+          err.push(error?.response?.data?.message)
+          return {
+            ...currentState,
+            errors:err
+          }
         }
       }
     } catch (error) {
@@ -52,6 +59,7 @@ export default function LoginPage() {
         <label htmlFor="password">password</label>
         <input type="password" name="password" id="password" />
         <button type="submit">Log In</button>
+        {formState.errors && formState.errors.map(e=><li>{e}</li>)}
       </form>
       <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
         <GoogleSignIn />
