@@ -1,3 +1,63 @@
-.navbar div{
-    background-color: aquamarine;
+.info img {
+  height: 20px;
+  width: auto;
+}
+
+.info span {
+  font-size: 12px;
+  font-weight: 300;
+  color: #7a7a7a;
+}
+
+.social-icons img {
+  max-width: 5%;
+}
+
+.navigation {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.nav-link:hover {
+  color: #f35525 !important;
+}
+
+.nav-link.active {
+  font-weight: 900;
+  color: #f35525 !important;
+}
+
+#logo {
+  max-width: 27%;
+  height: auto;
+}
+
+#login{
+    font-size:20px;
+    font-weight: 500;
+}
+
+#signup{
+    font-size:20px;
+    font-weight: 500;
+}
+
+.btn-outline-primary {
+  color: #f35525;
+  border-color: #f35525;
+}
+
+.btn-primary{
+    background-color: #f35525;
+    border-color: #f35525;
+}
+.btn-primary:hover{
+    background-color: #f35525;
+    border-color: white;
+}
+
+.btn-outline-primary:hover {
+  background-color: #f35525;
+  color: white;
+  border-color: white;
 }
