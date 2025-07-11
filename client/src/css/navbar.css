@@ -25,6 +25,7 @@
 .nav-link.active {
   font-weight: 900;
   color: #f35525 !important;
+  text-decoration: underline;
 }
 
 #logo {
@@ -43,8 +44,8 @@
 }
 
 .btn-outline-primary {
-  color: #f35525;
-  border-color: #f35525;
+  color: #1e1e1e;
+  border-color: #1e1e1e;
 }
 
 .btn-primary{
@@ -57,7 +58,14 @@
 }
 
 .btn-outline-primary:hover {
-  background-color: #f35525;
+  background-color: #1e1e1e;
   color: white;
   border-color: white;
+}
+
+.page-heading img {
+  width: 100%;
+  background-position: center bottom;
+  background-size: cover;
+  display: block;
 }
