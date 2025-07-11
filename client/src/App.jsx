@@ -5,6 +5,8 @@ import SignUp from "./pages/SignUp";
 import RentLocs from "./pages/RentLocs";
 import Homepage from "./pages/Homepage";
 import ContactUs from "./pages/ContactUs";
+import Profile from "./pages/Profile";
+import AddLocForm from "./components/AddLocForm";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +18,14 @@ const router = createBrowserRouter([
       { path: "signup", element: <SignUp /> },
       { path: "rent-locs", element: <RentLocs /> },
       { path: "contact-us", element: <ContactUs /> },
+      {
+        path: "profile",
+        element: <Profile />,
+        children: [
+          { path: "new-loc", element: <AddLocForm/> },
+          { path: "edit-loc", element: <Profile/> }
+        ],
+      },
     ],
   },
 ]);
