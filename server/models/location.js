@@ -13,7 +13,10 @@ const locSchema = new mongoose.Schema({
         },
         images: [
             {
-                title: String,
+                title: {
+                    type: String,
+                    required: true
+                },
                 url: {
                     type: String,
                     required: true

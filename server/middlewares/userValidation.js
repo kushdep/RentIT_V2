@@ -1,7 +1,6 @@
 import Joi from 'joi'
 
 export function validateUser(req, res, next) {
-    console.log(req.body)
     const userSchema = Joi.object({
         username: Joi.string().required(),
         email: Joi.string().email().required(),
