@@ -1,14 +1,15 @@
 import mongoose from "mongoose"
 
 const locSchema = new mongoose.Schema({
-    title: {
+    locType: {
         type: String,
-        required: true
+        required: true,
+        enum: ['A01', 'V01', 'P01']
     },
-    locDetl:{
-        title:{
-            type:String,
-            required:true
+    locDetl: {
+        title: {
+            type: String,
+            required: true
         },
         images: [
             {
@@ -31,19 +32,27 @@ const locSchema = new mongoose.Schema({
             type: String,
             required: true
         },
+        facilities: [{
+            title: {
+                type: String,
+                required: true,
+                enum:['Parking Faciities','Kitchen and dining','Connectivity','Home Safety','Entertainment','Bedroom and laundary','Bathroom']
+            },
+            ammenities:[String]
+        }],
         location: String,
         author: {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         },
         reviews: [
             {
-                type: Schema.Types.ObjectId,
+                type: mongoose.Schema.Types.ObjectId,
                 ref: "Review",
             },
         ],
     }
-})
+}, { timestamps: { createdAt: 'createdAt' } })
 
 const Location = mongoose.model('Location', locSchema)
 export default Location

@@ -1,4 +1,5 @@
-import '../css/addlocform.css'
+import "../css/addlocform.css";
+import Button from "./UI/Button";
 
 function AddLocForm() {
   return (
@@ -75,7 +76,12 @@ function AddLocForm() {
               ></textarea>
               <div className="valid-feedback">Looks Good!</div>
             </div>
-            <button className="btn btn-success w-100 fw-semibold">Add Location</button>
+              <Button
+                btnType="submit"
+                title="Add Location"
+                btnBg="btn-success"
+                btnW="100"
+              />
           </div>
         </div>
       </div>
