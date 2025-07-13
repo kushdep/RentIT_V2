@@ -17,15 +17,15 @@ function NavBar() {
 
               <div className="col-lg-4 col-md-4 d-flex align-items-center justify-content-start  p-0">
                 <div className="social-icons p-1">
-                <a href="#" className="me-2">
-                  <img src="/icons/facebook.png" alt="facebook" />
-                </a>
-                <a href="#" className="me-2">
-                  <img src="/icons/instagram.png" alt="instagram" />
-                </a>
-                <a href="#">
-                  <img src="/icons/twitter.png" alt="twitter" />
-                </a>
+                  <a href="#" className="me-2">
+                    <img src="/icons/facebook.png" alt="facebook" />
+                  </a>
+                  <a href="#" className="me-2">
+                    <img src="/icons/instagram.png" alt="instagram" />
+                  </a>
+                  <a href="#">
+                    <img src="/icons/twitter.png" alt="twitter" />
+                  </a>
                 </div>
               </div>
             </div>
@@ -94,8 +94,28 @@ function NavBar() {
               </div>
 
               <div className="col-3 d-flex justify-content-center btn-group">
-                <button className="btn btn-primary me-1" id="login">Login</button>
-                <button className="btn btn-outline-primary" id="signup">Sign Up</button>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "btn btn-primary me-1 active"
+                      : "btn btn-primary me-1"
+                  }
+                  id="login"
+                >
+                  Login
+                </NavLink>
+                <NavLink
+                  to="/signup"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "btn btn-outline-primary active"
+                      : "btn btn-outline-primary"
+                  }
+                  id="signup"
+                >
+                  Sign Up
+                </NavLink>
               </div>
             </div>
           </div>

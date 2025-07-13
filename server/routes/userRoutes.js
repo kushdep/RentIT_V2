@@ -1,6 +1,6 @@
 import express from "express";
 import {login,signup,sendOtp,googleLogin} from '../controllers/authController.js'
-import {validateUser} from "../middlewares/userValidation.js"
+import {validateUser} from "../middlewares/JoiValidations/userValidation.js"
 const router = express.Router()
 
 router.post('/login',login)

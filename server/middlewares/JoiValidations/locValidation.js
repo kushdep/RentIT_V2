@@ -1,7 +1,6 @@
 import Joi from 'joi'
 
 export function newLocValidation(req, res, next) {
-    console.log(req.body)
     const locSchema = Joi.object({
         locType: Joi.string().required(),
         locDtl: Joi.object({
@@ -26,7 +25,6 @@ export function newLocValidation(req, res, next) {
     })
 
     const result = locSchema.validate(req.body)
-    console.log(result)
     if (result.error) {
         console.log(result.error)
         return res.status(400).send({

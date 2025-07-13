@@ -6,7 +6,7 @@ const locSchema = new mongoose.Schema({
         required: true,
         enum: ['A01', 'V01', 'P01']
     },
-    locDetl: {
+    locDtl: {
         title: {
             type: String,
             required: true
@@ -39,9 +39,9 @@ const locSchema = new mongoose.Schema({
             title: {
                 type: String,
                 required: true,
-                enum:['Parking Faciities','Kitchen and dining','Connectivity','Home Safety','Entertainment','Bedroom and laundary','Bathroom']
+                enum: ['Parking Faciities', 'Kitchen and dining', 'Connectivity', 'Home Safety', 'Entertainment', 'Bedroom and laundary', 'Bathroom']
             },
-            ammenities:[String]
+            ammenities: [String]
         }],
         location: String,
         author: {

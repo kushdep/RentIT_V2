@@ -43,15 +43,17 @@
     font-weight: 500;
 }
 
-.btn-outline-primary {
+.btn-outline-primary.active{
   color: #1e1e1e;
+  background-color: white;
   border-color: #1e1e1e;
 }
 
-.btn-primary{
+.btn-primary.active{
     background-color: #f35525;
     border-color: #f35525;
 }
+
 .btn-primary:hover{
     background-color: #f35525;
     border-color: white;

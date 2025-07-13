@@ -1,9 +1,21 @@
-import User from '../models/user.js'
+import Loc from '../models/location.js'
 
-export const addLocation = async(req,res) => {
-    console.log(req.body)
-    const user = User.findOne({})
-    res.send("DONE")
+export const addLocation = async (req, res) => {
+    try {
+        const newLoc = { ...req.body, locDtl: { ...req.body.locDtl, author: req.user._id } }
+        const locRes = await Loc.create(newLoc)
+        return res.status(201).send({
+            success: true,
+            message: 'Location Added Successfully',
+            locId: locRes._id
+        })
+    } catch (error) {
+        console.log(error)   
+        res.status(400).send({
+            success:false,
+            message:error
+        })  
+    }
 }
 
 
