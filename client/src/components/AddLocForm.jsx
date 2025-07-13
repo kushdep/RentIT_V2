@@ -1,9 +1,15 @@
+import { useRef } from "react";
 import "../css/addlocform.css";
+import AddImagesModal from "./Modals/AddImagesModal";
 import Button from "./UI/Button";
 
 function AddLocForm() {
+  const modal = useRef()
+  
   return (
     <>
+    <AddImagesModal reference={modal}>
+    </AddImagesModal>
       <div className="container">
         <div className="row">
           <div className="col">
@@ -35,13 +41,9 @@ function AddLocForm() {
               />
               <div className="valid-feedback">Looks Good!</div>
             </div>
-            <input
-              className="form-control btn btn-outline-success"
-              type="file"
-              name="image"
-              id=""
-              multiple
-            />
+            <button className="btn w-100 fw-semibold btn-outline-primary" onClick={()=>modal.current.showModal()}>
+              Add Images
+            </button> 
             <div className="mb-3">
               <label for="price" className="form-label fw-semibold">
                 Price
@@ -76,12 +78,12 @@ function AddLocForm() {
               ></textarea>
               <div className="valid-feedback">Looks Good!</div>
             </div>
-              <Button
-                btnType="submit"
-                title="Add Location"
-                btnBg="btn-success"
-                btnW="100"
-              />
+            <Button
+              btnType="submit"
+              title="Add Location"
+              btnBg="btn-success"
+              btnW="100"
+            />
           </div>
         </div>
       </div>

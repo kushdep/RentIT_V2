@@ -3,7 +3,6 @@ import AddLocForm from "../components/AddLocForm"
 
 function Profile(){ 
     return <>
-        <h1>Profile</h1>
         <Outlet>
             <AddLocForm/>
         </Outlet>
