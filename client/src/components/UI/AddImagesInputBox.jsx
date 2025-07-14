@@ -1,6 +1,16 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
 
-const AddImagesInputBox = forwardRef(({ rmInpBox, ipBoxVal, ind}, ref) => {
+function getURLs(file) {
+  return new Promise((res, rej) => {
+    const reader = new FileReader();
+    console.log(reader.result);
+    reader.onload = () => res(reader.result);
+    reader.onerror = rej;
+    reader.readAsDataURL(file);
+  });
+}
+
+const AddImagesInputBox = forwardRef(({ rmInpBox, ipBoxVal, ind }, ref) => {
   const [title, setTitle] = useState("");
   const [images, setImages] = useState([]);
 
@@ -11,10 +21,14 @@ const AddImagesInputBox = forwardRef(({ rmInpBox, ipBoxVal, ind}, ref) => {
     }),
   }));
 
-  function setImageUrls(e) {
+  async function setImageUrls(e) {
     console.log(e);
+    const Files = Array.from(e.target.files);
+    const imagesURLs = await Promise.all(Files.map(getURLs));
+    console.log(imagesURLs);
+
     setImages((prev) => {
-      return [...prev, ...e.target.files];
+      return [...prev, ...imagesURLs];
     });
     e.target.values = "";
   }
@@ -57,16 +71,7 @@ const AddImagesInputBox = forwardRef(({ rmInpBox, ipBoxVal, ind}, ref) => {
             required
           />
           <div className="my-3">
-            <input
-              className="form-control mb-3"
-              type="file"
-              id="formFileMultiple"
-              onChange={setImageUrls}
-              multiple
-              maxLength={3}
-              disabled={images?.length > 3 ? true : false}
-            />
-            <div className="d-flex">
+            <div className="d-flex justify-content-start">
               {images?.map((ele, i) => (
                 <div className="d-flex position-relative me-2">
                   <img
@@ -84,6 +89,18 @@ const AddImagesInputBox = forwardRef(({ rmInpBox, ipBoxVal, ind}, ref) => {
                   </button>
                 </div>
               ))}
+              {images?.length < 4 && (
+                <div className="position-relative d-inline-block">
+                  <button className="btn border">
+                    <input
+                      type="file"
+                      className="position-absolute top-0 start-0 w-100 h-100 opacity-0"
+                      onChange={setImageUrls}
+                    />
+                    <img src="/icons/plus-lg.svg" className="mb-1" />
+                  </button>
+                </div>
+              )}{" "}
             </div>
           </div>
         </div>
@@ -92,5 +109,4 @@ const AddImagesInputBox = forwardRef(({ rmInpBox, ipBoxVal, ind}, ref) => {
   );
 });
 
-
-export default AddImagesInputBox
+export default AddImagesInputBox;

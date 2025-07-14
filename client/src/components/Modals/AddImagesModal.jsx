@@ -60,7 +60,7 @@ function AddImagesModal({ children, reference }) {
                   className="btn w-100 border mb-3 d-flex justify-content-center"
                   onClick={() => setAddImInBxStt((prev) => prev + 1)}
                 >
-                  <img src="/icons/plus-lg.svg" />
+                  Add more
                 </button>
               )}
             </div>
@@ -71,7 +71,7 @@ function AddImagesModal({ children, reference }) {
         className="btn w-100 fw-semibold btn-outline-primary"
         onClick={addImgTtlData}
       >
-        Add
+        Done
       </button>
     </dialog>,
     document.getElementById("modal-root")
