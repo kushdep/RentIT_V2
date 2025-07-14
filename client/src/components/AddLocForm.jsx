@@ -14,7 +14,7 @@ function AddLocForm() {
         <div className="row">
           <div className="col">
             <div className="mb-3">
-              <label className="form-label fw-semibold" for="title">
+              <label className="form-label fw-semibold" htmlFor="title">
                 Title
               </label>
               <input

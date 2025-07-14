@@ -1,21 +1,43 @@
-function AddImagesInputBox({ rmInpBox, imgState, setITStt, ipBoxVal }) {
-  console.log(ipBoxVal.images.length)
-  
+import { useState } from "react";
+
+function AddImagesInputBox({ rmInpBox, imgState, setITStt, ipBoxVal, ind }) {
+  const [title, setTitle] = useState("");
+  const [images, setImages] = useState([]);
+
+  function setImageUrls(e) {
+    console.log(e);
+    setImages((prev) => {
+      return [...prev, ...e.target.files];
+    });
+    e.target.values = "";
+  }
+
+  function delImg(ind) {
+    setImages((prev) => {
+      const newSttImg = prev.filter((e, i) => (i !== ind ? e : ""));
+      return newSttImg;
+    });
+  }
+
+  console.log(images);
+
   return (
     <>
-      <div className="row border p-2 mb-2">
+      <div className="row p-2">
         <div className="col p-2">
           <div className="d-flex justify-content-between ">
             <label className="form-label fw-semibold" htmlFor="title">
               Add Images & title
             </label>
-            <button
-              type="button"
-              className="btn btn-sm fw-bold"
-              onClick={() => rmInpBox((prev) => prev - 1)}
-            >
-              <img src="/icons/trash.svg" />
-            </button>
+            {ind > 0 && (
+              <button
+                type="button"
+                className="btn btn-sm fw-bold"
+                onClick={() => rmInpBox((prev) => prev - 1)}
+              >
+                <img src="/icons/trash.svg" />
+              </button>
+            )}
           </div>
           <input
             className="form-control"
@@ -23,7 +45,8 @@ function AddImagesInputBox({ rmInpBox, imgState, setITStt, ipBoxVal }) {
             id="title"
             name="title"
             placeholder="Enter a title"
-            defaultValue={ipBoxVal.title}
+            defaultValue={ipBoxVal?.title}
+            onChange={() => setTitle(e.target.value)}
             required
           />
           <div className="my-3">
@@ -31,16 +54,30 @@ function AddImagesInputBox({ rmInpBox, imgState, setITStt, ipBoxVal }) {
               className="form-control mb-3"
               type="file"
               id="formFileMultiple"
+              onChange={setImageUrls}
               multiple
-              disabled={ipBoxVal.images.length > 4 ? true : false}
+              maxLength={3}
+              disabled={images?.length > 3 ? true : false}
             />
-            {ipBoxVal.images.map((ele) => (
-              <img
-                src={ele}
-                className="img-thumbnail me-2"
-                style={{ width: 50 }}
-              />
-            ))}
+            <div className="d-flex">
+              {images?.map((ele, i) => (
+                <div className="d-flex position-relative me-2">
+                  <img
+                    src={ele}
+                    key={i}
+                    className="img-thumbnail"
+                    style={{ width: 50, height: 50, objectFit: "cover" }}
+                  />
+                  <button
+                    className="btn p-0 mb-auto position-absolute"
+                    style={{ top: -15, right: -6 }}
+                    onClick={() => delImg(i)}
+                  >
+                    <img src="/icons/x-circle.svg" alt="" />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
