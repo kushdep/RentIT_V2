@@ -26,7 +26,7 @@ const AddImagesInputBox = forwardRef(({ rmInpBox, ipBoxVal, ind}, ref) => {
     });
   }
 
-  // console.log(images);
+  console.log(images);
 
   return (
     <>
