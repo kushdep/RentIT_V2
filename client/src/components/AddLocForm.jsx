@@ -4,12 +4,11 @@ import AddImagesModal from "./Modals/AddImagesModal";
 import Button from "./UI/Button";
 
 function AddLocForm() {
-  const modal = useRef()
-  
+  const modal = useRef();
+
   return (
     <>
-    <AddImagesModal reference={modal}>
-    </AddImagesModal>
+      <AddImagesModal reference={modal}></AddImagesModal>
       <div className="container">
         <div className="row">
           <div className="col">
@@ -41,9 +40,12 @@ function AddLocForm() {
               />
               <div className="valid-feedback">Looks Good!</div>
             </div>
-            <button className="btn w-100 fw-semibold btn-outline-primary" onClick={()=>modal.current.showModal()}>
+            <button
+              className="btn w-100 fw-semibold btn-outline-primary"
+              onClick={() => modal.current.showModal()}
+            >
               Add Images
-            </button> 
+            </button>
             <div className="mb-3">
               <label for="price" className="form-label fw-semibold">
                 Price
@@ -77,6 +79,40 @@ function AddLocForm() {
                 required
               ></textarea>
               <div className="valid-feedback">Looks Good!</div>
+              <div className="container my-3">
+                <div className="row" style={{height:80}}>
+                  <div className="col-2">
+                    <div class="dropdown ">
+                      <button
+                        class="btn btn-outline-primary dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        Offered Ammenities
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <button class="dropdown-item" type="button">
+                            Action
+                          </button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button">
+                            Another action
+                          </button>
+                        </li>
+                        <li>
+                          <button class="dropdown-item" type="button">
+                            Something else here
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="col-10 border rounded-2"></div>
+                </div>
+              </div>
             </div>
             <Button
               btnType="submit"
