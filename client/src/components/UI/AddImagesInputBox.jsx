@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 
-function AddImagesInputBox({ rmInpBox, imgState, setITStt, ipBoxVal, ind }) {
+const AddImagesInputBox = forwardRef(({ rmInpBox, ipBoxVal, ind}, ref) => {
   const [title, setTitle] = useState("");
   const [images, setImages] = useState([]);
+
+  useImperativeHandle(ref, () => ({
+    getValues: () => ({
+      title,
+      images,
+    }),
+  }));
 
   function setImageUrls(e) {
     console.log(e);
@@ -19,7 +26,7 @@ function AddImagesInputBox({ rmInpBox, imgState, setITStt, ipBoxVal, ind }) {
     });
   }
 
-  console.log(images);
+  // console.log(images);
 
   return (
     <>
@@ -46,7 +53,7 @@ function AddImagesInputBox({ rmInpBox, imgState, setITStt, ipBoxVal, ind }) {
             name="title"
             placeholder="Enter a title"
             defaultValue={ipBoxVal?.title}
-            onChange={() => setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
             required
           />
           <div className="my-3">
@@ -83,6 +90,7 @@ function AddImagesInputBox({ rmInpBox, imgState, setITStt, ipBoxVal, ind }) {
       </div>
     </>
   );
-}
+});
 
-export default AddImagesInputBox;
+
+export default AddImagesInputBox

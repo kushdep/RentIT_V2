@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import AddImagesInputBox from "../UI/AddImagesInputBox";
 
@@ -7,10 +7,25 @@ function AddImagesModal({ children, reference }) {
   const [imgData, setImgDataStt] = useState([
     {
       title: "",
-      images: [],
+      images: [{}],
     },
   ]);
-  console.log(addImInBxstt);
+  const childRefs = useRef([]);
+
+  function addImgTtlData() {
+    setImgDataStt((prev)=>{
+      const newData = childRefs.current.map(
+        (ref) => ref.current?.getValues()
+      );
+      console.log("All Child Component Data:", newData);
+      return [
+        ...newData
+      ]
+    })
+  }
+
+  console.log(imgData)
+
   return createPortal(
     <dialog ref={reference} className="border-0">
       <form method="dialog">
@@ -23,16 +38,21 @@ function AddImagesModal({ children, reference }) {
       </form>
       <div className="modal-dialog-scrollable">
         <div className="container border p-3 mb-3">
-          {Array.from({ length: addImInBxstt }).map((e, i) => (
-            <AddImagesInputBox
-              key={i}
-              ind={i}
-              ipBoxVal={e}
-              rmInpBox={setAddImInBxStt}
-              imgState={imgData}
-              setITStt={setImgDataStt}
-            />
-          ))}
+          {Array.from({ length: addImInBxstt }).map((e, i) => {
+            if (!childRefs.current[i]) {
+              childRefs.current[i] = React.createRef();
+            }
+
+            return (
+              <AddImagesInputBox
+                key={i}
+                ind={i}
+                ipBoxVal={e}
+                rmInpBox={setAddImInBxStt}
+                ref={childRefs.current[i]}
+              />
+            );
+          })}
           <div className="row d-flex justify-content-center">
             <div className="col-5">
               {addImInBxstt < 5 && (
@@ -47,7 +67,12 @@ function AddImagesModal({ children, reference }) {
           </div>
         </div>
       </div>
-      <button className="btn w-100 fw-semibold btn-outline-primary">Add</button>
+      <button
+        className="btn w-100 fw-semibold btn-outline-primary"
+        onClick={addImgTtlData}
+      >
+        Add
+      </button>
     </dialog>,
     document.getElementById("modal-root")
   );
