@@ -13,21 +13,17 @@ function AddImagesModal({ children, reference }) {
   const childRefs = useRef([]);
 
   function addImgTtlData() {
-    setImgDataStt((prev)=>{
-      const newData = childRefs.current.map(
-        (ref) => ref.current?.getValues()
-      );
+    setImgDataStt((prev) => {
+      const newData = childRefs.current.map((ref) => ref.current?.getValues());
       console.log("All Child Component Data:", newData);
-      return [
-        ...newData
-      ]
-    })
+      return [...newData];
+    });
   }
 
-  console.log(imgData)
+  console.log(imgData);
 
   return createPortal(
-    <dialog ref={reference} className="border-0">
+    <dialog ref={reference} className="border-0 w-25 rounded-4">
       <form method="dialog">
         <button
           type="submit"
@@ -37,7 +33,7 @@ function AddImagesModal({ children, reference }) {
         ></button>
       </form>
       <div className="modal-dialog-scrollable">
-        <div className="container border p-3 mb-3">
+        <div className="container border mb-3 rounded-4">
           {Array.from({ length: addImInBxstt }).map((e, i) => {
             if (!childRefs.current[i]) {
               childRefs.current[i] = React.createRef();
@@ -67,12 +63,14 @@ function AddImagesModal({ children, reference }) {
           </div>
         </div>
       </div>
-      <button
-        className="btn w-100 fw-semibold btn-outline-primary"
-        onClick={addImgTtlData}
-      >
-        Done
-      </button>
+      <form method="dialog">
+        <button
+          type="submit"
+          className="btn w-100 fw-semibold btn-outline-primary"
+        >
+          Done
+        </button>
+      </form>
     </dialog>,
     document.getElementById("modal-root")
   );
