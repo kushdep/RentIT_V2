@@ -1,5 +1,6 @@
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 export default function GoogleSignIn() {
@@ -12,6 +13,7 @@ export default function GoogleSignIn() {
         );
         const token = response.data;
         localStorage.setItem("token", token);
+        toast.success('Logged In')
         navigate("/rent-locs");
       } else {
         console.log("auth result ", authResult);

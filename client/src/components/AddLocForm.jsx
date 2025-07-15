@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import "../css/addlocform.css";
-import AddImagesModal from "./Modals/AddImagesModal";
+import { Ammentities } from "../config.js";
 import Button from "./UI/Button";
+import AddImagesModal from "./Modals/AddImagesModal";
 
 function AddLocForm() {
   const modal = useRef();
@@ -66,6 +67,42 @@ function AddLocForm() {
               </div>
               <div className="valid-feedback">Looks Good!</div>
             </div>
+            <div className="container my-3">
+              <div className="row" style={{ height: 80 }}>
+                <div className="col-2">
+                  <div class="dropdown ">
+                    <button
+                      class="btn btn-outline-primary dropdown-toggle"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      Offered Ammenities
+                    </button>
+                    <ul class="dropdown-menu">
+                      {Ammentities.map((e) => (
+                        <li>
+                          <button className="dropdown-item">{e.title}</button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <div className="col-10 border rounded-2 d-flex flex-row p-2">
+                  <div className="d-flex flex-column me-3" style={{ width: 90, height:100 }}>
+                    <button className="btn border-dark-subtle p-0 mt-2">
+                      <img
+                        src="/public/icons/amenities/services/cleaning.png"
+                        className="img-thumbnail border-0"
+                        style={{ width: 70, height: 70, objectFit: "scale-down"}}
+                      />
+                    </button>
+                    <p class="fs-6 text-center">Cleaning</p>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
             <div className="mb-3">
               <label className="form-label fw-semibold" for="description">
                 Description
@@ -79,40 +116,6 @@ function AddLocForm() {
                 required
               ></textarea>
               <div className="valid-feedback">Looks Good!</div>
-              <div className="container my-3">
-                <div className="row" style={{height:80}}>
-                  <div className="col-2">
-                    <div class="dropdown ">
-                      <button
-                        class="btn btn-outline-primary dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        Offered Ammenities
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li>
-                          <button class="dropdown-item" type="button">
-                            Action
-                          </button>
-                        </li>
-                        <li>
-                          <button class="dropdown-item" type="button">
-                            Another action
-                          </button>
-                        </li>
-                        <li>
-                          <button class="dropdown-item" type="button">
-                            Something else here
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="col-10 border rounded-2"></div>
-                </div>
-              </div>
             </div>
             <Button
               btnType="submit"
