@@ -1,7 +1,8 @@
 import axios from "axios";
+import toast from 'react-hot-toast'
 import { useActionState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import GoogleSignIn from "./GoogleSignIn";
+import { Link, useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function LoginPage() {
@@ -26,6 +27,7 @@ export default function LoginPage() {
         const response = await axios.post("http://localhost:3000/login", body);
         if (response.status === 200) {
           localStorage.setItem("token", response.data);
+          toast.success('Logged In')
           navigate("/rent-locs");
         }
       } catch (error) {

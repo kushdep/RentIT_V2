@@ -1,19 +1,14 @@
 import { Outlet } from "react-router-dom";
-import LoginPage from "./LoginPage";
-import SignUp from "./SignUp";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
-import RentLocs from "./RentLocs";
+import { Toaster } from "react-hot-toast";
 
 function Layout() {
   return (
     <>
       <NavBar />
-      <Outlet>
-        <LoginPage />
-        <SignUp />
-        <RentLocs />
-      </Outlet>
+      <Toaster />
+      <Outlet />
       <Footer />
     </>
   );

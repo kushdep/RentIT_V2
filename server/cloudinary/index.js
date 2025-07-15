@@ -7,7 +7,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_SECRET
 })
 
-const storage = new CloudinaryStorage({
+export const storage = new CloudinaryStorage({
     cloudinary,
     params: {
         folder: 'Rent-IT_V2',
@@ -15,9 +15,5 @@ const storage = new CloudinaryStorage({
     }
 })
 
-module.exports = {
-    storage,
-    cloudinary
-}
 
 
