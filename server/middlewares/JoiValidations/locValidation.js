@@ -5,13 +5,7 @@ export function newLocValidation(req, res, next) {
         locType: Joi.string().required(),
         locDtl: Joi.object({
             title: Joi.string().required(),
-            images: Joi.array().items(
-                Joi.object({
-                    title: Joi.string().required(),
-                    url: Joi.string().required(),
-                    filename: Joi.string().required(),
-                }),
-            ),
+            images: Joi.array().required(),
             price: Joi.number().required(),
             description: Joi.string().required(),
             facilities: Joi.array().items(

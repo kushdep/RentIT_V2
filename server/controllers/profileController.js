@@ -2,7 +2,8 @@ import Loc from '../models/location.js'
 
 export const addLocation = async (req, res) => {
     try {
-        const newLoc = { ...req.body, locDtl: { ...req.body.locDtl, author: req.user._id } }
+        const imageURLs = req.files.map(f => ({ url: f.path, filename: f.filename }))
+        const newLoc = { ...req.body, locDtl: { ...req.body.locDtl, images: imageURLs, author: req.user._id } }
         const locRes = await Loc.create(newLoc)
         return res.status(201).send({
             success: true,
@@ -10,11 +11,11 @@ export const addLocation = async (req, res) => {
             locId: locRes._id
         })
     } catch (error) {
-        console.log(error)   
+        console.log(error)
         res.status(400).send({
-            success:false,
-            message:error
-        })  
+            success: false,
+            message: error
+        })
     }
 }
 
