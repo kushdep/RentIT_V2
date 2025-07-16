@@ -89,17 +89,29 @@ function AddLocForm() {
                   </div>
                 </div>
                 <div className="col-10 border rounded-2 d-flex flex-row p-2">
-                  <div className="d-flex flex-column me-3" style={{ width: 90, height:100 }}>
-                    <button className="btn border-dark-subtle p-0 mt-2">
+                  <div
+                    className="d-flex flex-column me-3"
+                    style={{ width: 90, height: 100 }}
+                  >
+                    <button className="btn border-dark-subtle p-0 mt-2 position-relative">
                       <img
-                        src="/public/icons/amenities/services/cleaning.png"
+                        src="/public/icons/amenities/bedroomAndLaundary/air-conditioner.png"
                         className="img-thumbnail border-0"
-                        style={{ width: 70, height: 70, objectFit: "scale-down"}}
+                        style={{
+                          width: 70,
+                          height: 70,
+                          objectFit: "scale-down",
+                        }}
                       />
+                      <button
+                        className="btn p-0 mb-auto position-absolute"
+                        style={{ top: -14, right: -8}}
+                      >
+                        <img src="/icons/x-circle-fill.svg" alt="" />
+                      </button>
                     </button>
                     <p class="fs-6 text-center">Cleaning</p>
                   </div>
-                  
                 </div>
               </div>
             </div>
