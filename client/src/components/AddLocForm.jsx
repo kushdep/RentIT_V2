@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import "../css/addlocform.css";
-import { Ammentities } from "../config.js";
+import { Ammentities, locType } from "../config.js";
 import Button from "./UI/Button";
 import AddImagesModal from "./Modals/AddImagesModal";
 
@@ -14,15 +14,15 @@ function AddLocForm() {
         <div className="row">
           <div className="col">
             <div className="mb-3">
-              <label className="form-label fw-semibold" htmlFor="title">
-                Title
+              <label className="form-label fw-semibold" htmlFor="LocName">
+                Location Name
               </label>
               <input
                 className="form-control"
                 type="text"
-                id="title"
-                name="title"
-                placeholder="Enter a title"
+                id="LocName"
+                name="LocName"
+                placeholder="Enter name of your location"
                 required
               />
               <div className="valid-feedback">Looks Good!</div>
@@ -41,32 +41,59 @@ function AddLocForm() {
               />
               <div className="valid-feedback">Looks Good!</div>
             </div>
+            <div className="container">
+              <div className="row align-items-center">
+                <div className="col-8">
+                  <div className="mb-3">
+                    <label for="price" className="form-label fw-semibold">
+                      Price
+                    </label>
+                    <div className="input-group">
+                      <span className="input-group-text">$</span>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        id="price"
+                        className="form-control"
+                        placeholder="0.00"
+                        name="price"
+                        required
+                      />
+                      <span className="input-group-text">/night</span>
+                    </div>
+                    <div className="valid-feedback">Looks Good!</div>
+                  </div>
+                </div>
+                <div className="col-4">
+                  <div class="btn-group">
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary dropdown-toggle mt-3"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      Location type
+                    </button>
+                    <ul class="dropdown-menu">
+                      {locType &&
+                        locType.map((l) => (
+                          <li>
+                            <button class="dropdown-item">{l.title}</button>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
             <button
               className="btn w-100 fw-semibold btn-outline-primary"
               onClick={() => modal.current.showModal()}
             >
               Add Images
             </button>
-            <div className="mb-3">
-              <label for="price" className="form-label fw-semibold">
-                Price
-              </label>
-              <div className="input-group">
-                <span className="input-group-text">$</span>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  id="price"
-                  className="form-control"
-                  placeholder="0.00"
-                  name="price"
-                  required
-                />
-                <span className="input-group-text">/night</span>
-              </div>
-              <div className="valid-feedback">Looks Good!</div>
-            </div>
+
             <div className="container my-3">
               <div className="row" style={{ height: 80 }}>
                 <div className="col-2">
@@ -105,7 +132,7 @@ function AddLocForm() {
                       />
                       <button
                         className="btn p-0 mb-auto position-absolute"
-                        style={{ top: -14, right: -8}}
+                        style={{ top: -14, right: -8 }}
                       >
                         <img src="/icons/x-circle-fill.svg" alt="" />
                       </button>

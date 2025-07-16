@@ -1,6 +1,9 @@
 import React, { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import AddImagesInputBox from "../UI/AddImagesInputBox";
+import { useDispatch, useSelector } from "react-redux";
+import { addLocActions } from "../../store/addLoc-slice";
+
 
 function AddImagesModal({ children, reference }) {
   const [addImInBxstt, setAddImInBxStt] = useState(1);
@@ -11,6 +14,8 @@ function AddImagesModal({ children, reference }) {
     },
   ]);
   const childRefs = useRef([]);
+
+  const dispatch = useDispatch()
 
   function addImgTtlData() {
     setImgDataStt((prev) => {
@@ -54,7 +59,10 @@ function AddImagesModal({ children, reference }) {
               {addImInBxstt < 5 && (
                 <button
                   className="btn w-100 border mb-3 d-flex justify-content-center"
-                  onClick={() => setAddImInBxStt((prev) => prev + 1)}
+                  onClick={() => {
+                    setAddImInBxStt((prev) => prev + 1)
+                    dispatch(addLocActions.addNewInput())
+                  }}
                 >
                   Add more
                 </button>

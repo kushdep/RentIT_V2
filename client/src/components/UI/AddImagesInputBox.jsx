@@ -1,4 +1,6 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addLocActions } from "../../store/addLoc-slice";
 
 function getURLs(file) {
   return new Promise((res, rej) => {
@@ -11,15 +13,19 @@ function getURLs(file) {
 }
 
 const AddImagesInputBox = forwardRef(({ rmInpBox, ipBoxVal, ind }, ref) => {
-  const [title, setTitle] = useState("");
-  const [images, setImages] = useState([]);
+  // const [title, setTitle] = useState("");
+  // const [images, setImages] = useState([]);
 
-  useImperativeHandle(ref, () => ({
-    getValues: () => ({
-      title,
-      images,
-    }),
-  }));
+  const dispatch = useDispatch();
+  const imag = useSelector((state) => state.addLocData.imgTtlData);
+  const title = useSelector((state) => state.addLocData.imgTtlData.title);
+
+  // useImperativeHandle(ref, () => ({
+  //   getValues: () => ({
+  //     title,
+  //     images,
+  //   }),
+  // }));
 
   async function setImageUrls(e) {
     console.log(e);
@@ -27,20 +33,19 @@ const AddImagesInputBox = forwardRef(({ rmInpBox, ipBoxVal, ind }, ref) => {
     const imagesURLs = await Promise.all(Files.map(getURLs));
     console.log(imagesURLs);
 
-    setImages((prev) => {
-      return [...prev, ...imagesURLs];
-    });
+    dispatch(addLocActions.addImgFiles({ file: inpFile[0], index: ind }));
+
     e.target.values = "";
   }
 
-  function delImg(ind) {
-    setImages((prev) => {
-      const newSttImg = prev.filter((e, i) => (i !== ind ? e : ""));
-      return newSttImg;
-    });
-  }
+  // function delImg(ind) {
+  //   setImages((prev) => {
+  //     const newSttImg = prev.filter((e, i) => (i !== ind ? e : ""));
+  //     return newSttImg;
+  //   });
+  // }
 
-  console.log(images);
+  console.log(imag);
 
   return (
     <>
@@ -54,7 +59,11 @@ const AddImagesInputBox = forwardRef(({ rmInpBox, ipBoxVal, ind }, ref) => {
               <button
                 type="button"
                 className="btn btn-sm fw-bold"
-                onClick={() => rmInpBox((prev) => prev - 1)}
+                onClick={() => {
+                  rmInpBox((prev) => prev - 1);
+                  console.log(ind)
+                  dispatch(addLocActions.delImgInput({ind}))
+                }}
               >
                 <img src="/icons/trash.svg" />
               </button>
@@ -66,13 +75,20 @@ const AddImagesInputBox = forwardRef(({ rmInpBox, ipBoxVal, ind }, ref) => {
             id="title"
             name="title"
             placeholder="Enter a title"
-            defaultValue={ipBoxVal?.title}
-            onChange={(e) => setTitle(e.target.value)}
+            // defaultValue={ipBoxVal?.title}
+            onChange={(e) =>
+              dispatch(
+                addLocActions.addFilesTtl({
+                  filesTtl: e.target.value,
+                  index: ind,
+                })
+              )
+            }
             required
           />
           <div className="my-3">
             <div className="d-flex justify-content-start">
-              {images?.map((ele, i) => (
+              {imag?.images?.map((ele, i) => (
                 <div className="d-flex position-relative me-2">
                   <img
                     src={ele}
@@ -83,24 +99,32 @@ const AddImagesInputBox = forwardRef(({ rmInpBox, ipBoxVal, ind }, ref) => {
                   <button
                     className="btn p-0 mb-auto position-absolute"
                     style={{ top: -15, right: -6 }}
-                    onClick={() => delImg(i)}
+                    onClick={() => delImg(imgIn)}
                   >
                     <img src="/icons/x-circle.svg" alt="" />
                   </button>
                 </div>
               ))}
-              {images?.length < 4 && (
+              {
                 <div className="position-relative d-inline-block">
                   <button className="btn border">
                     <input
                       type="file"
                       className="position-absolute top-0 start-0 w-100 h-100 opacity-0"
-                      onChange={setImageUrls}
+                      onInput={(e) => {
+                        const inpFile = Array.from(e.target.files);
+                        dispatch(
+                          addLocActions.addImgFiles({
+                            file: inpFile[0],
+                            index: ind,
+                          })
+                        );
+                      }}
                     />
                     <img src="/icons/plus-lg.svg" className="mb-1" />
                   </button>
                 </div>
-              )}{" "}
+              }
             </div>
           </div>
         </div>

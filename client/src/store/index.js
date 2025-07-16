@@ -3,7 +3,7 @@ import addLocSlice  from './addLoc-slice.js'
 
 const store = configureStore({
     reducer:{
-        addLocData:addLocSlice
+        addLocData:addLocSlice.reducer
     }
 })
 
