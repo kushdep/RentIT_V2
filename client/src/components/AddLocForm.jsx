@@ -1,21 +1,26 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import "../css/addlocform.css";
 import { Ammentities, locType } from "../config.js";
 import Button from "./UI/Button";
 import AddImagesModal from "./Modals/AddImagesModal";
 import AddAmmenitiesModal from "./Modals/AddAmenitiesModal.jsx";
+import { useSelector } from "react-redux";
 
 function AddLocForm() {
   const addImgTtlModal = useRef();
   const addAmmModal = useRef();
+  const [selAmmenity, setSelAmm] = useState(0);
+
+  const selAmmStt = useSelector((state) => state.offAmm);
 
   function openModal(id) {
+    setSelAmm(id);
     addAmmModal.current.showModal();
   }
 
   return (
     <>
-      <AddAmmenitiesModal reference={addAmmModal} />;
+      <AddAmmenitiesModal id={selAmmenity} reference={addAmmModal} />;
       <AddImagesModal reference={addImgTtlModal}></AddImagesModal>
       <div className="container">
         <div className="row">
@@ -114,11 +119,11 @@ function AddLocForm() {
                       Offered Ammenities
                     </button>
                     <ul class="dropdown-menu">
-                      {Ammentities.map((e) => (
+                      {Ammentities.map((e, i) => (
                         <li>
                           <button
                             className="dropdown-item"
-                            onClick={() => openModal(e.id)}
+                            onClick={() => openModal(i)}
                           >
                             {e.title}
                           </button>
@@ -128,29 +133,37 @@ function AddLocForm() {
                   </div>
                 </div>
                 <div className="col-10 border rounded-2 d-flex flex-row p-2">
-                  <div
-                    className="d-flex flex-column me-3"
-                    style={{ width: 90, height: 100 }}
-                  >
-                    <button className="btn border-dark-subtle p-0 mt-2 position-relative">
-                      <img
-                        src="/public/icons/amenities/bedroomAndLaundary/air-conditioner.png"
-                        className="img-thumbnail border-0"
-                        style={{
-                          width: 70,
-                          height: 70,
-                          objectFit: "scale-down",
-                        }}
-                      />
-                      <button
-                        className="btn p-0 mb-auto position-absolute"
-                        style={{ top: -14, right: -8 }}
+                  {selAmmStt?.ammId ? (
+                    selAmmStt.map((e, i) => {
+                      <div
+                        className="d-flex flex-column me-3"
+                        style={{ width: 90, height: 100 }}
                       >
-                        <img src="/icons/x-circle-fill.svg" alt="" />
-                      </button>
-                    </button>
-                    <p class="fs-6 text-center">Cleaning</p>
-                  </div>
+                        <button className="btn border-dark-subtle p-0 mt-2 position-relative">
+                          <img
+                            src={`/public${e.optId[0]}`}
+                            className="img-thumbnail border-0"
+                            style={{
+                              width: 70,
+                              height: 70,
+                              objectFit: "scale-down",
+                            }}
+                          />
+                          <button
+                            className="btn p-0 mb-auto position-absolute"
+                            style={{ top: -14, right: -8 }}
+                          >
+                            <img src="/icons/x-circle-fill.svg" alt="" />
+                          </button>
+                        </button>
+                        <p class="fs-6 text-center">{e.ammId.title}</p>
+                      </div>;
+                    })
+                  ) : (
+                    <div>
+                      <p className="text-muted">No Ammenitites Selected</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

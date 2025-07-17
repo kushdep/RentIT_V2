@@ -25,7 +25,7 @@ export const Ammentities = [
         title: "Home Safety",
         options: [
             {id:301, name: "Exterior security cameras on property", img: "/icons/amenities/homeSafety/security-camera.png" },
-            {id:302, name: "Smoke alarm", img: "/icons/amenities/homeSafety/smke-detector.png" },
+            {id:302, name: "Smoke alarm", img: "/icons/amenities/homeSafety/smoke-detector.png" },
             {id:303, name: "Fire extinguisher", img: "/icons/amenities/homeSafety/fire-extinguisher.png" },
             {id:304, name: "First aid kit", img: "/icons/amenities/homeSafety/first-aid-kit.png" }
         ]
@@ -34,7 +34,7 @@ export const Ammentities = [
         id:4,
         title: "Entertainment",
         options: [
-            {id:401, name: "TV", img: "/icons/amenities/entertainment/telivision.png" },
+            {id:401, name: "TV", img: "/icons/amenities/entertainment/television.png" },
             {id:402, name: "Books and reading material", img: "/icons/amenities/entertainment/book.png" },
         ]
     },
@@ -52,7 +52,7 @@ export const Ammentities = [
         options: [
             {id:601, name: "Kitchen", img: "/icons/amenities/kitchenAndDining/kitchen.png" },
             {id:602, name: "Dishes and cutlery", img: "/icons/amenities/kitchenAndDining/kitchenware.png" },
-            {id:603, name: "Freezer", img: "/icons/amenities/kitchenAndDining/refrigirator.png" },
+            {id:603, name: "Freezer", img: "/icons/amenities/kitchenAndDining/refrigerator.png" },
             {id:604, name: "Kettle", img: "/icons/amenities/kitchenAndDining/electric-kettle.png" },
             {id:605, name: "Dining table", img: "/icons/amenities/kitchenAndDining/diningtable.png" }
         ]
