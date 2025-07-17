@@ -19,38 +19,40 @@ const addLocSlice = createSlice({
         price: null
     },
     reducers: {
-        // addNewInput(state, action) {
-        //     state.imgTtlData.push({ title: '', images: [] })
-        // },
+        addImgTtlNewData(state,action){
+            state.imgTtlData.push({title:'',images:[]})
+        },
         delImgInput(state, action) {
-            const { ind } = action.payload;
-            state.imgTtlData = state.imgTtlData.filter((_, i) => i !== ind);
+            try {
+                const { ind } = action.payload;
+                state.imgTtlData = state.imgTtlData.filter((_, i) => i !== ind);
+            } catch (error) {
+                console.log(error)
+            }
         },
         addFilesTtl(state, action) {
-            const { index, filesTtl } = action.payload
-            const newDataLen = Math.max(0, index - state.imgTtlData.length + 1);
-            const newData = Array.from({ length: newDataLen }, () => ({ title: '', images: [] }));
-
-            state.imgTtlData.push(...newData)
-
-            state.imgTtlData[index].title = filesTtl
+            try {
+                const { index, filesTtl } = action.payload
+                state.imgTtlData[index].title = filesTtl
+            } catch (error) {
+                console.log(error)
+            }
         },
         addImgFiles(state, action) {
             try {
                 const { index, file } = action.payload
-                const newDataLen = Math.max(0, index - state.imgTtlData.length + 1);
-                const newData = Array.from({ length: newDataLen }, () => ({ title: '', images: [] }));
-
-                state.imgTtlData.push(...newData);
-
                 state.imgTtlData[index].images.push(file)
             } catch (error) {
                 console.log(error)
             }
         },
         delImgFile(state, action) {
-            const { index, imgIn } = action.payload
-            state.imgTtlData[index].images = state.imgTtlData[index].images.filter((e, i) => imgIn !== i)
+            try {
+                const { index, imgIn } = action.payload
+                state.imgTtlData[index].images = state.imgTtlData[index].images.filter((e, i) => imgIn !== i)
+            } catch (error) {
+                console.log(error)
+            }
         },
     }
 })
