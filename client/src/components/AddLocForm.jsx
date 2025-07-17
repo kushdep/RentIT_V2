@@ -3,13 +3,20 @@ import "../css/addlocform.css";
 import { Ammentities, locType } from "../config.js";
 import Button from "./UI/Button";
 import AddImagesModal from "./Modals/AddImagesModal";
+import AddAmmenitiesModal from "./Modals/AddAmenitiesModal.jsx";
 
 function AddLocForm() {
-  const modal = useRef();
+  const addImgTtlModal = useRef();
+  const addAmmModal = useRef();
+
+  function openModal(id) {
+    addAmmModal.current.showModal();
+  }
 
   return (
     <>
-      <AddImagesModal reference={modal}></AddImagesModal>
+      <AddAmmenitiesModal reference={addAmmModal} />;
+      <AddImagesModal reference={addImgTtlModal}></AddImagesModal>
       <div className="container">
         <div className="row">
           <div className="col">
@@ -89,7 +96,7 @@ function AddLocForm() {
             </div>
             <button
               className="btn w-100 fw-semibold btn-outline-primary"
-              onClick={() => modal.current.showModal()}
+              onClick={() => addImgTtlModal.current.showModal()}
             >
               Add Images
             </button>
@@ -109,7 +116,12 @@ function AddLocForm() {
                     <ul class="dropdown-menu">
                       {Ammentities.map((e) => (
                         <li>
-                          <button className="dropdown-item">{e.title}</button>
+                          <button
+                            className="dropdown-item"
+                            onClick={() => openModal(e.id)}
+                          >
+                            {e.title}
+                          </button>
                         </li>
                       ))}
                     </ul>
