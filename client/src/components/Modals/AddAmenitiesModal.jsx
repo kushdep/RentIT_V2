@@ -1,6 +1,12 @@
 import { Ammentities } from "../../config";
+import { addLocActions } from "../../store/addLoc-slice";
+import { useDispatch } from "react-redux";
 
 function AddAmmenitiesModal({ reference, id }) {
+  const dispatch = useDispatch();
+  const ammenityData = Ammentities.find((e)=>e.id===id)
+  console.log(ammenityData)
+
   return (
     <>
       <dialog ref={reference} className="border-0 w-25 rounded-4">
@@ -17,12 +23,12 @@ function AddAmmenitiesModal({ reference, id }) {
           </div>
         </form>
         <div className="col d-flex justify-content-center">
-          <p className="fs-4 fw-medium">{Ammentities[id].title}</p>
+          <p className="fs-4 fw-medium">{ammenityData?.title}</p>
         </div>
         <div className="mb-3">
           <div className="container">
             <div className="row d-flex justify-content-center">
-              {Ammentities[id].options.map((e, i) => {
+              {ammenityData?.options.map((e, i) => {
                 return (
                   <>
                     <input
@@ -30,6 +36,15 @@ function AddAmmenitiesModal({ reference, id }) {
                       className="col-6 btn-check"
                       id={e.id}
                       autocomplete="off"
+                      onChange={(event) =>
+                        dispatch(
+                          addLocActions.handleAmmOpt({
+                            ammId: id,
+                            optId: e.id,
+                            isChecked: event.target.checked,
+                          })
+                        )
+                      }
                     />
                     <label
                       className="btn btn-outline-dark rounded-4 p-3 my-2"

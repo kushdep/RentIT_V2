@@ -4,14 +4,17 @@ import { Ammentities, locType } from "../config.js";
 import Button from "./UI/Button";
 import AddImagesModal from "./Modals/AddImagesModal";
 import AddAmmenitiesModal from "./Modals/AddAmenitiesModal.jsx";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addLocActions } from "../store/addLoc-slice.js";
 
 function AddLocForm() {
   const addImgTtlModal = useRef();
   const addAmmModal = useRef();
-  const [selAmmenity, setSelAmm] = useState(0);
+  const [selAmmenity, setSelAmm] = useState(null);
+  const dispatch =useDispatch()
 
-  const selAmmStt = useSelector((state) => state.offAmm);
+  const selAmmStt = useSelector((state) => state.addLocData.offAmm);
+  console.log("in form " + JSON.stringify(selAmmStt));
 
   function openModal(id) {
     setSelAmm(id);
@@ -20,7 +23,7 @@ function AddLocForm() {
 
   return (
     <>
-      <AddAmmenitiesModal id={selAmmenity} reference={addAmmModal} />;
+      <AddAmmenitiesModal id={selAmmenity} reference={addAmmModal} />
       <AddImagesModal reference={addImgTtlModal}></AddImagesModal>
       <div className="container">
         <div className="row">
@@ -123,7 +126,11 @@ function AddLocForm() {
                         <li>
                           <button
                             className="dropdown-item"
-                            onClick={() => openModal(i)}
+                            onClick={() => {
+                              console.log("amm " + JSON.stringify(e));
+                              console.log("amm Id " + e.id);
+                              openModal(e.id);
+                            }}
                           >
                             {e.title}
                           </button>
@@ -133,15 +140,20 @@ function AddLocForm() {
                   </div>
                 </div>
                 <div className="col-10 border rounded-2 d-flex flex-row p-2">
-                  {selAmmStt?.ammId ? (
+                  {selAmmStt.length > 0 ? (
                     selAmmStt.map((e, i) => {
-                      <div
-                        className="d-flex flex-column me-3"
+                      return <div
+                        className="d-flex flex-column me-3  position-relative"
                         style={{ width: 90, height: 100 }}
                       >
-                        <button className="btn border-dark-subtle p-0 mt-2 position-relative">
+                        <button
+                          className="btn border-dark-subtle p-0 mt-2"
+                          onClick={() => openModal(e.id)}
+                        >
                           <img
-                            src={`/public${e.optId[0]}`}
+                            src={`/public${
+                              Ammentities[e?.id - 1]?.options[0]?.img
+                            }`}
                             className="img-thumbnail border-0"
                             style={{
                               width: 70,
@@ -149,14 +161,18 @@ function AddLocForm() {
                               objectFit: "scale-down",
                             }}
                           />
+                          </button>
                           <button
                             className="btn p-0 mb-auto position-absolute"
-                            style={{ top: -14, right: -8 }}
+                            style={{ top: -9, right: -9 }}
+                            onClick={()=>{
+                              console.log(e.id)
+                              dispatch(addLocActions.delAmmenity({id:e.id}))}
+                            }
                           >
                             <img src="/icons/x-circle-fill.svg" alt="" />
                           </button>
-                        </button>
-                        <p class="fs-6 text-center">{e.ammId.title}</p>
+                        <p class="fs-6 text-center">{e?.title}</p>
                       </div>;
                     })
                   ) : (

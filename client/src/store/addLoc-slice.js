@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { Ammentities } from "../config";
 
 
 const addLocSlice = createSlice({
@@ -11,16 +12,13 @@ const addLocSlice = createSlice({
             title: '',
             images: []
         }],
-        offAmm: [{
-            ammId: null,
-            optId: []
-        }],
+        offAmm: [],
         desc: '',
         price: null
     },
     reducers: {
-        addImgTtlNewData(state,action){
-            state.imgTtlData.push({title:'',images:[]})
+        addImgTtlNewData(state, action) {
+            state.imgTtlData.push({ title: '', images: [] })
         },
         delImgInput(state, action) {
             try {
@@ -54,6 +52,50 @@ const addLocSlice = createSlice({
                 console.log(error)
             }
         },
+        handleAmmOpt(state, action) {
+            try {
+                const { ammId, optId, isChecked } = action.payload
+                const isAmmExist = state.offAmm.find((e) => e.id === ammId)
+                const ammData = Ammentities.find((e) => e.id === ammId)
+
+                if (!isAmmExist) {
+                    state.offAmm.push({ id: ammId, title: ammData.title, opt: [] })
+                }
+                if (isChecked) {
+                    const name = ammData.options.find((o) => o.id === optId).name
+
+                    const newOpt = { id: optId, name }
+                    state.offAmm = state.offAmm.map((e) => {
+                        if (e.id === ammId) {
+                            e.opt.push(newOpt)
+                        }
+                        return e
+                    })
+                } else {
+                    if (isAmmExist.opt.length === 1) {
+                        state.offAmm = state.offAmm.filter((e) => e.id !== ammId)
+                    } else {
+                        state.offAmm = state.offAmm.map((e) => {
+                            if (e.id === ammId) {
+                                e.opt = e.opt.filter((o) => o.id !== optId)
+                            }
+                            return e
+                        })
+                    }
+                }
+            } catch (error) {
+                console.log(error)
+            }
+
+        },
+        delAmmenity(state, action) {
+            try {
+                const { id } = action.payload
+                state.offAmm = state.offAmm.filter((e) => e.id !== id)
+            } catch (error) {
+                console.log(error)
+            }
+        }
     }
 })
 
