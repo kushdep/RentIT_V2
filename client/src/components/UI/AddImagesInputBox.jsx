@@ -61,8 +61,7 @@ const AddImagesInputBox = forwardRef(({ rmInpBox, ipBoxVal, ind }, ref) => {
                 className="btn btn-sm fw-bold"
                 onClick={() => {
                   rmInpBox((prev) => prev - 1);
-                  console.log(ind)
-                  dispatch(addLocActions.delImgInput({ind}))
+                  dispatch(addLocActions.delImgInput({ ind }));
                 }}
               >
                 <img src="/icons/trash.svg" />
