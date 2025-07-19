@@ -62,8 +62,8 @@ function AddAmmenitiesModal({ reference, id }) {
                           mmStt
                             ? mmStt.find((m) => e.id === m.id)
                               ? "btn btn-outline-dark rounded-4 p-3 my-2"
-                              : "btn p-3 my-2"
-                            : "btn p-3 my-2"
+                              : "btn border p-3 my-2"
+                            : "btn border rounded-4 p-3 my-2"
                         }
                         htmlFor={e.id}
                       >
