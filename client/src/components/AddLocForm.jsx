@@ -11,9 +11,11 @@ function AddLocForm() {
   const addImgTtlModal = useRef();
   const addAmmModal = useRef();
   const [selAmmenity, setSelAmm] = useState(null);
-  const dispatch =useDispatch()
+  const dispatch = useDispatch();
 
   const selAmmStt = useSelector((state) => state.addLocData.offAmm);
+  const selImgStt = useSelector((state) => state.addLocData.imgTtlData);
+
   console.log("in form " + JSON.stringify(selAmmStt));
 
   function openModal(id) {
@@ -103,10 +105,14 @@ function AddLocForm() {
               </div>
             </div>
             <button
-              className="btn w-100 fw-semibold btn-outline-primary"
+              className={
+                selImgStt[0].images.length === 0
+                  ? "btn w-100 fw-semibold btn-outline-primary"
+                  : "btn w-100 fw-semibold btn-dark"
+              }
               onClick={() => addImgTtlModal.current.showModal()}
             >
-              Add Images
+              {selImgStt[0].images.length === 0 ? "Add Images" : "Edit Images"}
             </button>
 
             <div className="container my-3">
@@ -142,38 +148,40 @@ function AddLocForm() {
                 <div className="col-10 border rounded-2 d-flex flex-row p-2">
                   {selAmmStt.length > 0 ? (
                     selAmmStt.map((e, i) => {
-                      return <div
-                        className="d-flex flex-column me-3  position-relative"
-                        style={{ width: 90, height: 100 }}
-                      >
-                        <button
-                          className="btn border-dark-subtle p-0 mt-2"
-                          onClick={() => openModal(e.id)}
+                      return (
+                        <div
+                          className="d-flex flex-column me-3  position-relative"
+                          style={{ width: 90, height: 100 }}
                         >
-                          <img
-                            src={`/public${
-                              Ammentities[e?.id - 1]?.options[0]?.img
-                            }`}
-                            className="img-thumbnail border-0"
-                            style={{
-                              width: 70,
-                              height: 70,
-                              objectFit: "scale-down",
-                            }}
-                          />
+                          <button
+                            className="btn border-dark-subtle p-0 mt-2"
+                            onClick={() => openModal(e.id)}
+                          >
+                            <img
+                              src={`/public${
+                                Ammentities[e?.id - 1]?.options[0]?.img
+                              }`}
+                              className="img-thumbnail border-0"
+                              style={{
+                                width: 70,
+                                height: 70,
+                                objectFit: "scale-down",
+                              }}
+                            />
                           </button>
                           <button
                             className="btn p-0 mb-auto position-absolute"
                             style={{ top: -9, right: -9 }}
-                            onClick={()=>{
-                              console.log(e.id)
-                              dispatch(addLocActions.delAmmenity({id:e.id}))}
-                            }
+                            onClick={() => {
+                              console.log(e.id);
+                              dispatch(addLocActions.delAmmenity({ id: e.id }));
+                            }}
                           >
                             <img src="/icons/x-circle-fill.svg" alt="" />
                           </button>
-                        <p class="fs-6 text-center">{e?.title}</p>
-                      </div>;
+                          <p class="fs-6 text-center">{e?.title}</p>
+                        </div>
+                      );
                     })
                   ) : (
                     <div>
