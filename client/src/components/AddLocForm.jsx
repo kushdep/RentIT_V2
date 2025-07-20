@@ -6,6 +6,7 @@ import AddImagesModal from "./Modals/AddImagesModal";
 import AddAmmenitiesModal from "./Modals/AddAmenitiesModal.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { addLocActions } from "../store/addLoc-slice.js";
+import LocInputBox from "./UI/LocInputBox.jsx";
 
 function AddLocForm() {
   const addImgTtlModal = useRef();
@@ -31,22 +32,8 @@ function AddLocForm() {
         <div className="row">
           <div className="col">
             <div className="mb-3">
-              <label className="form-label fw-semibold" htmlFor="LocName">
-                Location Name
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                id="LocName"
-                name="LocName"
-                placeholder="Enter name of your location"
-                required
-              />
-              <div className="valid-feedback">Looks Good!</div>
-            </div>
-            <div className="mb-3">
               <label className="form-label fw-semibold" for="location">
-                Location
+                Location Name
               </label>
               <input
                 className="form-control"
@@ -58,6 +45,7 @@ function AddLocForm() {
               />
               <div className="valid-feedback">Looks Good!</div>
             </div>
+            <LocInputBox />
             <div className="container">
               <div className="row align-items-center">
                 <div className="col-8">
