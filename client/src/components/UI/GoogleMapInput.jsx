@@ -1,11 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import {  useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
+import { addLocActions } from "../../store/addLoc-slice";
 
 function GoogleMapInput() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [inpVal, setInpVal] = useState("");
   const [sugg, setSugg] = useState([]);
   const sessionTokenRef = useRef(null);
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (!window.google) {
@@ -53,11 +56,21 @@ function GoogleMapInput() {
     const result = await getGeocode({ address });
     const { lat, lng } = getLatLng(result[0]);
     console.log(`${address} Cordinates --> lat: ${lat} lng:${lng}`);
+    const location = {
+      address,
+      coordinates: {
+        latitude: lat,
+        longitude: lng,
+      },
+    };
+    console.log(location)
+    dispatch(addLocActions.addLocCord(location))
+    setInpVal('')
   };
 
   return (
     <>
-      <div className="col-4">
+      <div className="col-8 d-flex align-items-md-center">
         <input
           type="text"
           value={inpVal}
@@ -71,12 +84,13 @@ function GoogleMapInput() {
           {sugg?.map((sug) => (
             <li
               className="dropdown-item"
-              onClick={() => handleSelect(sug?.Dg?.Nh?.[0][2]?.[0])}
+              onClick={() => setInpVal(sug?.Dg?.Nh?.[0]?.[2]?.[0])}
             >
-              {sug?.Dg?.Nh?.[0][2]?.[0] || "Unknown"}
+              {sug?.Dg?.Nh?.[0]?.[2]?.[0] || "Unknown"}
             </li>
           ))}
         </ul>
+        <button className="btn btn-outline-primary p-1 mx-2 h-50 w-25" onClick={()=>handleSelect(inpVal)} >Add</button>
       </div>
     </>
   );

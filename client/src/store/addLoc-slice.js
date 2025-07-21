@@ -7,7 +7,7 @@ const addLocSlice = createSlice({
     initialState: {
         locName: '',
         locType: '',
-        locCorn: '',
+        locCord: [],
         imgTtlData: [{
             title: '',
             images: []
@@ -92,6 +92,15 @@ const addLocSlice = createSlice({
             try {
                 const { id } = action.payload
                 state.offAmm = state.offAmm.filter((e) => e.id !== id)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        addLocCord(state,action){
+            try {
+                const {location}=action.payload
+                state.locCord.push(location)
+                console.log(state.locCord)
             } catch (error) {
                 console.log(error)
             }
