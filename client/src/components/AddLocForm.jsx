@@ -32,7 +32,7 @@ function AddLocForm() {
         <div className="row">
           <div className="col">
             <div className="mb-3">
-              <label className="form-label fw-semibold" for="location">
+              <label className="form-label fw-semibold" htmlFor="location">
                 Location Name
               </label>
               <input

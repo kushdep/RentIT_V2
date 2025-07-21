@@ -7,7 +7,9 @@ const addLocSlice = createSlice({
     initialState: {
         locName: '',
         locType: '',
-        locCord: [],
+        locAdd: {
+
+        },
         imgTtlData: [{
             title: '',
             images: []
@@ -96,11 +98,12 @@ const addLocSlice = createSlice({
                 console.log(error)
             }
         },
-        addLocCord(state,action){
+        addLocCord(state, action) {
             try {
-                const {location}=action.payload
-                state.locCord.push(location)
-                console.log(state.locCord)
+                const { location } = action.payload
+                console.log(location)
+                state.locAdd = location
+                console.log(state.locAdd)
             } catch (error) {
                 console.log(error)
             }

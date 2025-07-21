@@ -1,4 +1,4 @@
-import {  useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { addLocActions } from "../../store/addLoc-slice";
@@ -8,7 +8,7 @@ function GoogleMapInput() {
   const [inpVal, setInpVal] = useState("");
   const [sugg, setSugg] = useState([]);
   const sessionTokenRef = useRef(null);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!window.google) {
@@ -44,6 +44,12 @@ function GoogleMapInput() {
             {
               input: inpVal,
               sessionToken: sessionTokenRef.current,
+              locationBias: {
+                west: 68.11, 
+                south: 6.55,
+                east: 97.4, 
+                north: 35.67,
+              },
             }
           );
         setSugg(suggestions);
@@ -63,14 +69,14 @@ function GoogleMapInput() {
         longitude: lng,
       },
     };
-    console.log(location)
-    dispatch(addLocActions.addLocCord(location))
-    setInpVal('')
+    console.log(location);
+    dispatch(addLocActions.addLocCord({ location }));
+    setInpVal("");
   };
 
   return (
     <>
-      <div className="col-8 d-flex align-items-md-center">
+      <div className="col-6 d-flex align-items-md-center">
         <input
           type="text"
           value={inpVal}
@@ -90,7 +96,12 @@ function GoogleMapInput() {
             </li>
           ))}
         </ul>
-        <button className="btn btn-outline-primary p-1 mx-2 h-50 w-25" onClick={()=>handleSelect(inpVal)} >Add</button>
+        <button
+          className="btn btn-outline-primary p-1 mx-2 h-50 w-25"
+          onClick={() => handleSelect(inpVal)}
+        >
+          Add
+        </button>
       </div>
     </>
   );
