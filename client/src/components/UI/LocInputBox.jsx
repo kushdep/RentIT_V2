@@ -29,24 +29,29 @@ function LocInputBox() {
         <label className="form-label fw-semibold" htmlFor="LocName">
           Address
         </label>
-        <input
-          className="form-control"
+        <div className="d-flex">
+          <GoogleMapInput />
+            <button
+              className="btn btn-primary fw-medium p-1 mx-2"
+              onClick={geoFindMe}
+            >
+              <img
+                src="/public/icons/arrows.png"
+                className=""
+                style={{ width: 30, height: 30, objectFit: "cover" }}
+              />
+              Locate me
+            </button>
+        </div>
+        <textarea
+          className="form-control mt-2"
           type="text"
-          id="LocName"
-          name="LocName"
-          placeholder="Enter name of your location"
+          id="Address"
+          rows="3"
+          name="Address"
+          placeholder="Enter address of your location"
           required
         />
-        <button className="btn d-flex" onClick={geoFindMe}>
-          <img
-            src="/public/icons/gps.png"
-            className=""
-            style={{ width: 40, height: 40, objectFit: "cover" }}
-          />
-          <p className="fw-semibold">Locate me</p>
-        </button>
-        <div className="valid-feedback">Looks Good!</div>
-        <GoogleMapInput/>
       </div>
     </>
   );

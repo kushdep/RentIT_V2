@@ -180,7 +180,7 @@ function AddLocForm() {
               </div>
             </div>
             <div className="mb-3">
-              <label className="form-label fw-semibold" for="description">
+              <label className="form-label fw-semibold" htmlFor="description">
                 Description
               </label>
               <textarea
