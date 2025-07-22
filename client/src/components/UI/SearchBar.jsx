@@ -5,7 +5,7 @@ function SearchBar() {
         className="container d-flex justify-content-center w-50 position-absolute"
         style={{ height: 100, top: 150, right: 390 }}
       >
-        <div className="row rounded-4 w-100 bg-body-tertiary d-flex align-content-center">
+        <div className="row rounded-pill  w-100 bg-body-tertiary d-flex align-content-center">
           <div className="col">
             <div className="container">
               <div className="row d-flex align-items-center">

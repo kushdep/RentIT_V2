@@ -1,3 +1,4 @@
+import PropertyCard from "../components/UI/PropertyCard";
 import SearchBar from "../components/UI/SearchBar";
 
 export default function RentLocs() {
