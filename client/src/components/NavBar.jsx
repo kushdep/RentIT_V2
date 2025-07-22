@@ -94,7 +94,7 @@ function NavBar() {
               </div>
 
               <div className="col-3 d-flex justify-content-center btn-group">
-                <NavLink
+                {/* <NavLink
                   to="/login"
                   className={({ isActive }) =>
                     isActive
@@ -115,7 +115,56 @@ function NavBar() {
                   id="signup"
                 >
                   Sign Up
-                </NavLink>
+                </NavLink> */}
+                <div className="container" style={{ width: 80, height: 50 }}>
+                  <div className="row h-100">
+                    <div className="col h-100 p-0">
+                      <div className="dropdown w-100 h-100">
+                        <button
+                          className="btn rounded-pill dropdown-toggle p-2"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <img
+                            src="/icons/user.png"
+                            alt=""
+                            className="w-50 h-50 position-relative"
+                          />
+                        <span class="position-absolute top-0 start-10 translate-middle badge rounded-pill bg-danger text-light">
+                          99+
+                          <span class="visually-hidden">unread messages</span>
+                        </span>
+                        </button>
+                        <ul className="dropdown-menu">
+                          <li>
+                            <NavLink to="/profile" className="dropdown-item">
+                              Profile
+                            </NavLink>
+                          </li>
+                          <li>
+                            <a className="dropdown-item" href="#">
+                              Another action
+                            </a>
+                          </li>
+                          <li>
+                            <a className="dropdown-item" href="#">
+                              Something else here
+                            </a>
+                          </li>
+                          <li>
+                            <hr className="dropdown-divider" />
+                          </li>
+                          <li>
+                            <a className="dropdown-item" href="#">
+                              Separated link
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

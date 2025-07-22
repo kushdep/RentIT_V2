@@ -45,7 +45,9 @@ function AddLocForm() {
               />
               <div className="valid-feedback">Looks Good!</div>
             </div>
-            <LocInputBox />
+            <div className="">
+              <LocInputBox />
+            </div>
             <div className="container">
               <div className="row align-items-center">
                 <div className="col-8">
@@ -92,23 +94,27 @@ function AddLocForm() {
                 </div>
               </div>
             </div>
-            <button
-              className={
-                selImgStt[0].images.length === 0
-                  ? "btn w-100 fw-semibold btn-outline-primary"
-                  : "btn w-100 fw-semibold btn-dark"
-              }
-              onClick={() => addImgTtlModal.current.showModal()}
-            >
-              {selImgStt[0].images.length === 0 ? "Add Images" : "Edit Images"}
-            </button>
+            <div className="my-3">
+              <button
+                className={
+                  selImgStt[0].images.length === 0
+                    ? "btn w-100 fw-semibold btn-outline-primary"
+                    : "btn w-100 fw-semibold btn-dark"
+                }
+                onClick={() => addImgTtlModal.current.showModal()}
+              >
+                {selImgStt[0].images.length === 0
+                  ? "Add Images"
+                  : "Edit Images"}
+              </button>
+            </div>
 
             <div className="container my-3">
-              <div className="row" style={{ height: 80 }}>
-                <div className="col-2">
-                  <div class="dropdown ">
+              <div className="row " style={{ height: 80 }}>
+                <div className="col-2 p-0">
+                  <div className="dropdown">
                     <button
-                      class="btn btn-outline-primary dropdown-toggle"
+                      className="btn btn-outline-primary dropdown-toggle"
                       type="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
@@ -121,8 +127,6 @@ function AddLocForm() {
                           <button
                             className="dropdown-item"
                             onClick={() => {
-                              console.log("amm " + JSON.stringify(e));
-                              console.log("amm Id " + e.id);
                               openModal(e.id);
                             }}
                           >
@@ -133,7 +137,7 @@ function AddLocForm() {
                     </ul>
                   </div>
                 </div>
-                <div className="col-10 border rounded-2 d-flex flex-row p-2">
+                <div className="col-9 ms-2 border rounded-2 d-flex flex-row">
                   {selAmmStt.length > 0 ? (
                     selAmmStt.map((e, i) => {
                       return (

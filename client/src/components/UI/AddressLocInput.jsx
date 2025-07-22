@@ -50,7 +50,7 @@ function AddressLocInput() {
         <form action={formAcn}>
           <div className="container">
             <div className="row">
-              <div className="col-8">
+              <div className="col">
                 <div class="container text-center">
                   <div class="row row-cols-2">
                     <div class="col">

@@ -76,7 +76,7 @@ function GoogleMapInput() {
 
   return (
     <>
-      <div className="col-6 d-flex align-items-md-center">
+      <div className="d-flex align-items-md-center">
         <input
           type="text"
           value={inpVal}

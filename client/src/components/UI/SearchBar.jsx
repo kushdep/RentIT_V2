@@ -13,7 +13,7 @@ function SearchBar() {
                   <div className="form-floating">
                     <input
                       type="email"
-                      className="form-control"
+                      className="form-control rounded-start-pill"
                       id="floatingInput"
                       placeholder="name@example.com"
                     />
@@ -23,7 +23,7 @@ function SearchBar() {
                   </div>
                 </div>
                 <div className="col-4">
-                  <div class="form-floating">
+                  <div className="form-floating">
                     <select
                       class="form-select"
                       id="floatingSelect"
