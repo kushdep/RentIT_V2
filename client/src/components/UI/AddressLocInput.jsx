@@ -1,5 +1,6 @@
 import { useActionState, useState } from "react";
 import { regionalCode } from "../../config";
+import googleValidateAdderss from "../../utils/addressValidation";
 
 function AddressLocInput() {
   const [addFormStt, setAddFormStt] = useState(false);
@@ -12,7 +13,7 @@ function AddressLocInput() {
     addressLines: [],
   });
 
-  function action(currentState, formData) {
+  async function action(currentState, formData) {
     const administrativeArea = formData.get("state");
     const postalCode = formData.get("postalCode");
     const locality = formData.get("locality");
@@ -20,15 +21,19 @@ function AddressLocInput() {
     const address1 = formData.get("addressOne");
     const address2 = formData.get("addressTwo");
 
-    const address = [];
-    address.push(address1, address2);
+    const addressLines = [];
+    addressLines.push(address1, address2);
     const addState = {
-      administrativeArea,
-      postalCode,
-      locality,
-      subLocality,
-      address,
+      address: {
+        regionCode: "IN",
+        administrativeArea,
+        locality,
+        postalCode,
+        addressLines,
+      },
     };
+
+    await googleValidateAdderss(addState);
 
     console.log(addState);
   }
@@ -143,7 +148,7 @@ function AddressLocInput() {
                   </div>
                 </div>
                 <button type="submit" className="btn btn-primary w-25 mx-3">
-                  Submit
+                  Validate
                 </button>
               </div>
             </div>

@@ -1,9 +1,12 @@
+import SearchBar from "../components/UI/SearchBar";
+
 export default function RentLocs() {
   return (
     <>
-      <header>
-        <div className="page-heading image-fluid p-">
+      <header className="position-relative">
+        <div className="page-heading image-fluid">
           <img src="/images/rent-locs-homepage.png" alt="" />
+          <SearchBar />
         </div>
       </header>
     </>
