@@ -76,12 +76,12 @@ function GoogleMapInput() {
 
   return (
     <>
-      <div className="d-flex align-items-md-center">
+      <div className="d-flex">
         <input
           type="text"
           value={inpVal}
           disabled={!isLoaded}
-          class="form-control dropdown-toggle"
+          className="form-control dropdown-toggle"
           data-bs-toggle="dropdown"
           onChange={(e) => setInpVal(e.target.value)}
           placeholder="Search your location"

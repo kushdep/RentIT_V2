@@ -39,13 +39,15 @@ function AddressLocInput() {
   }
   return (
     <>
-      {addFormStt ? (
-        <button
-          className="btn btn-outline-primary p-1 mx-2 h-50 w-50"
-          onClick={() => setAddFormStt(true)}
-        >
-          Add Location
-        </button>
+      {!addFormStt ? (
+        <div className="w-100 text-center">
+          <button
+            className="btn btn-outline-primary p-1 mx-2 h-50 w-75"
+            onClick={() => setAddFormStt(true)}
+          >
+            Add Location
+          </button>
+        </div>
       ) : (
         <form action={formAcn}>
           <div className="container">

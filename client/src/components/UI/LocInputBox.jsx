@@ -8,14 +8,14 @@ function LocInputBox() {
   console.log("Re-rendereing");
   return (
     <>
-      <div className="mb-3">
+      <div className="mb-3 border border-2 rounded-4 p-4">
         <label className="form-label fw-semibold" htmlFor="LocName">
           Address
         </label>
         <GoogleMapInput />
         <div className="container">
           <div className="row">
-            <div className="col-8 d-flex row justify-content-center">
+            <div className="col d-flex row justify-content-center">
               <div className="d-flex align-items-center my-3 w-50 ">
                 <hr className="flex-grow-1" />
                 <span className="mx-2 text-muted">OR</span>

@@ -31,19 +31,40 @@ function AddLocForm() {
       <div className="container">
         <div className="row">
           <div className="col">
-            <div className="mb-3">
-              <label className="form-label fw-semibold" htmlFor="location">
-                Location Name
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                id="location"
-                name="location"
-                placeholder="Enter the location"
-                required
-              />
-              <div className="valid-feedback">Looks Good!</div>
+            <div className="w-100">
+              <div className="mb-3">
+                <label className="form-label fw-semibold" htmlFor="location">
+                  Location Name
+                </label>
+                <div className="d-flex col">
+                  <input
+                    className="form-control w-75"
+                    type="text"
+                    id="location"
+                    name="location"
+                    placeholder="Enter the location"
+                    required
+                  />
+                <div class="btn-group w-25">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary dropdown-toggle ms-3"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Location type
+                  </button>
+                  <ul class="dropdown-menu">
+                    {locType &&
+                      locType.map((l) => (
+                        <li>
+                          <button class="dropdown-item">{l.title}</button>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+                  </div>
+              </div>
             </div>
             <div className="">
               <LocInputBox />
@@ -72,26 +93,7 @@ function AddLocForm() {
                     <div className="valid-feedback">Looks Good!</div>
                   </div>
                 </div>
-                <div className="col-4">
-                  <div class="btn-group">
-                    <button
-                      type="button"
-                      class="btn btn-outline-primary dropdown-toggle mt-3"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      Location type
-                    </button>
-                    <ul class="dropdown-menu">
-                      {locType &&
-                        locType.map((l) => (
-                          <li>
-                            <button class="dropdown-item">{l.title}</button>
-                          </li>
-                        ))}
-                    </ul>
-                  </div>
-                </div>
+                <div className="col-4"></div>
               </div>
             </div>
             <div className="my-3">
