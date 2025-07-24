@@ -1,9 +1,13 @@
 import { useActionState, useState } from "react";
 import { regionalCode } from "../../config";
 import googleValidateAdderss from "../../utils/addressValidation";
+import { addLocActions } from "../../store/addLoc-slice";
+import { useDispatch } from "react-redux";
+import toast from 'react-hot-toast'
 
 function AddressLocInput() {
   const [addFormStt, setAddFormStt] = useState(false);
+  const dispatch = useDispatch();
   const [formState, formAcn] = useActionState(action, {
     regionCode: "IN",
     administrativeArea: "",
@@ -26,14 +30,23 @@ function AddressLocInput() {
     const addState = {
       address: {
         regionCode: "IN",
-        administrativeArea,
+        // administrativeArea,
         locality,
-        postalCode,
+        // postalCode,
         addressLines,
       },
     };
 
-    await googleValidateAdderss(addState);
+    const res=await googleValidateAdderss(addState);
+    console.log(res)
+    if(res.validation){
+      console.log(res.message)
+      toast.success(res.message)
+      dispatch(addLocActions.addLocCord({location:res.data}))
+      toast.success('Address Added Succesfull!!')
+    }else{
+      toast.error(res.message)
+    }
 
     console.log(addState);
   }
