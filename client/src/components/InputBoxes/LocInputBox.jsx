@@ -4,8 +4,6 @@ import AddressLocInput from "./AddressLocInput";
 
 function LocInputBox() {
   const locData = useSelector((state) => state.addLocData.locAdd);
-  console.log(locData);
-  console.log("Re-rendereing");
   return (
     <>
       <div className="mb-3 border border-2 rounded-4 p-4">

@@ -152,6 +152,13 @@ function AddressLocInput() {
                 <button type="submit" className="btn btn-primary w-25 mx-3">
                   Validate
                 </button>
+                <button
+                  type="submit"
+                  className="btn btn-dark w-25 mx-3"
+                  onClick={() => setAddFormStt(false)}
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           </div>

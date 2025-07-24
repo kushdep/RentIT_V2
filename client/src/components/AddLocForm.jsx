@@ -6,7 +6,7 @@ import AddImagesModal from "./Modals/AddImagesModal";
 import AddAmmenitiesModal from "./Modals/AddAmenitiesModal.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { addLocActions } from "../store/addLoc-slice.js";
-import LocInputBox from "./UI/LocInputBox.jsx";
+import LocInputBox from "./InputBoxes/LocInputBox.jsx";
 
 function AddLocForm() {
   const addImgTtlModal = useRef();

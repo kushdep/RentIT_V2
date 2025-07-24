@@ -25,6 +25,7 @@
 .nav-link.active {
   font-weight: 900;
   color: #f35525 !important;
+  font-size: x-large;
   text-decoration: underline;
 }
 

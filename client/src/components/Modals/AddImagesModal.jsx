@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import AddImagesInputBox from "../UI/AddImagesInputBox";
+import AddImagesInputBox from "../InputBoxes/AddImagesInputBox";
 import { useDispatch, useSelector } from "react-redux";
 import { addLocActions } from "../../store/addLoc-slice";
 
