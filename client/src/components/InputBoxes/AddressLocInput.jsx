@@ -8,7 +8,7 @@ import toast from 'react-hot-toast'
 function AddressLocInput() {
   const [addFormStt, setAddFormStt] = useState(false);
   const dispatch = useDispatch();
-  const [formState, formAcn] = useActionState(action, {
+  const [formState, formAcn,isPending] = useActionState(action, {
     regionCode: "IN",
     administrativeArea: "",
     locality: "",
@@ -30,9 +30,10 @@ function AddressLocInput() {
     const addState = {
       address: {
         regionCode: "IN",
-        // administrativeArea,
+        administrativeArea,
         locality,
-        // postalCode,
+        postalCode,
+        sublocality:subLocality,
         addressLines,
       },
     };
@@ -49,6 +50,10 @@ function AddressLocInput() {
     }
 
     console.log(addState);
+    return {
+      ...currentState,
+      ...addState.address
+    }
   }
   return (
     <>
@@ -90,6 +95,7 @@ function AddressLocInput() {
                             id="floatingSelect"
                             aria-label="Floating label select example"
                             name="state"
+                            defaultValue={formState?.administrativeArea}
                           >
                             <option value="0">Choose your state</option>
                             {regionalCode.map((e) => {
@@ -108,6 +114,7 @@ function AddressLocInput() {
                           id="floatingInput"
                           placeholder="Postal Code"
                           name="postalCode"
+                          defaultValue={formState?.postalCode}
                         />
                         <label htmlFor="floatingInput">Postal Code*</label>
                       </div>
@@ -120,6 +127,7 @@ function AddressLocInput() {
                           id="floatingInput"
                           placeholder="Locality"
                           name="locality"
+                          defaultValue={formState?.locality}
                         />
                         <label htmlFor="floatingInput">Locality</label>
                       </div>
@@ -132,6 +140,7 @@ function AddressLocInput() {
                           id="floatingInput"
                           placeholder="Sub-Locality"
                           name="subLocality"
+                          defaultValue={formState?.sublocality}
                         />
                         <label htmlFor="floatingInput">Sub-locality</label>
                       </div>
@@ -145,6 +154,7 @@ function AddressLocInput() {
                         id="floatingInput"
                         placeholder="Address Line 1 *"
                         name="addressOne"
+                         defaultValue={formState?.address?.[0]}
                       />
                       <label htmlFor="floatingInput">Address Line 1 *</label>
                     </div>
@@ -157,18 +167,20 @@ function AddressLocInput() {
                         id="floatingInput"
                         placeholder="Address Line 2"
                         name="addressTwo"
+                        defaultValue={formState?.address?.[1]}
                       />
                       <label htmlFor="floatingInput">Address Line 2</label>
                     </div>
                   </div>
                 </div>
                 <button type="submit" className="btn btn-primary w-25 mx-3">
-                  Validate
+                  {isPending?'Validating...':'Validate'}
                 </button>
                 <button
                   type="submit"
                   className="btn btn-dark w-25 mx-3"
                   onClick={() => setAddFormStt(false)}
+                  disabled={isPending}
                 >
                   Cancel
                 </button>

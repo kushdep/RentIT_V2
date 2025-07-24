@@ -15,8 +15,8 @@ export default async function googleValidateAdderss(address) {
 
                 const { addressComponents, missingComponentTypes, unresolvedTokens } = result.address
                 if (addressComponents !== undefined && addressComponents !== null) {
-                    const suspiciousAddressComponents = addressComponents.filter((add) => add.confirmationLevel === 'UNCONFIRMED_AND_SUSPICIOUS' && add.componentType);
-                    const plausibleAddressComponents = addressComponents.filter((add) => add.confirmationLevel === 'UNCONFIRMED_BUT_PLAUSIBLE' && add.componentType);
+                    const suspiciousAddressComponents = addressComponents.filter((add) => add.confirmationLevel === 'UNCONFIRMED_AND_SUSPICIOUS' && add.componentType)?.map((add) => add.componentType)
+                    const plausibleAddressComponents = addressComponents.filter((add) => add.confirmationLevel === 'UNCONFIRMED_BUT_PLAUSIBLE' && add.componentType)?.map((add) => add.componentType)
 
                     addressComp.push({
                         suspicious: suspiciousAddressComponents,
@@ -36,17 +36,15 @@ export default async function googleValidateAdderss(address) {
                     })
                 }
 
-                return{
+                return {
                     validation: false,
-                    data:addressComp,
-                    message:'Can\'t Validate entered Address please Update!!'
+                    data: addressComp,
+                    message: 'Can\'t Validate entered Address please Update!!'
                 }
 
             } else {
                 console.error("Error in verdict.possibleNextAction === FIX " + JSON.stringify(verdict))
             }
-        } else if (verdict.possibleNextAction === 'CONFIRM_ADD_SUBPREMISES') {
-
         } else if (verdict.possibleNextAction === 'CONFIRM' || verdict.possibleNextAction === 'ACCEPT') {
             const validAddress = result.address.formattedAddress
             const { latitude, longitude } = result.geocode.location
