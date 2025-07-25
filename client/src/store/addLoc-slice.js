@@ -107,7 +107,15 @@ const addLocSlice = createSlice({
             } catch (error) {
                 console.log(error)
             }
+        },
+        clearLocCord(state,action){
+            try {
+                state.locAdd=''
+            } catch (error) {
+                console.error('Error in clearLocCord() '+error)
+            }
         }
+
     }
 })
 

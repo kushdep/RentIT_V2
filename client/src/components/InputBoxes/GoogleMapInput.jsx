@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { addLocActions } from "../../store/addLoc-slice";
 
-function GoogleMapInput() {
+function GoogleMapInput({ addressVis }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [inpVal, setInpVal] = useState("");
   const [sugg, setSugg] = useState([]);
@@ -45,9 +45,9 @@ function GoogleMapInput() {
               input: inpVal,
               sessionToken: sessionTokenRef.current,
               locationBias: {
-                west: 68.11, 
+                west: 68.11,
                 south: 6.55,
-                east: 97.4, 
+                east: 97.4,
                 north: 35.67,
               },
             }
@@ -72,6 +72,7 @@ function GoogleMapInput() {
     console.log(location);
     dispatch(addLocActions.addLocCord({ location }));
     setInpVal("");
+    addressVis(true)
   };
 
   return (

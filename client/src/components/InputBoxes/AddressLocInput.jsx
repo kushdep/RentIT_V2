@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import Alert from "@mui/material/Alert";
 import toast from "react-hot-toast";
 
-function AddressLocInput() {
+function AddressLocInput({addressVis}) {
   const [addFormStt, setAddFormStt] = useState(false);
   const dispatch = useDispatch();
   const [formState, formAcn, isPending] = useActionState(action, {
@@ -48,6 +48,7 @@ function AddressLocInput() {
       toast.success(res.message);
       dispatch(addLocActions.addLocCord({ location: res.data }));
       toast.success("Address Added Succesfull!!");
+      addressVis(true)
     } else {
       toast.error(res.message);
       const { suspicious, plausible, missing, invalid } = res.data;
@@ -91,6 +92,7 @@ function AddressLocInput() {
     return {
       ...currentState,
       ...addState.address,
+      sublocality:subLocality
     };
   }
   return (
@@ -133,7 +135,6 @@ function AddressLocInput() {
                             id="floatingSelect"
                             aria-label="Floating label select example"
                             name="state"
-                            defaultValue={formState?.administrativeArea}
                           >
                             <option value="0">Choose your state</option>
                             {regionalCode.map((e) => {
@@ -192,7 +193,7 @@ function AddressLocInput() {
                         id="floatingInput"
                         placeholder="Address Line 1 *"
                         name="addressOne"
-                        defaultValue={formState?.address?.[0]}
+                        defaultValue={formState?.addressLines?.[0]}
                       />
                       <label htmlFor="floatingInput">Address Line 1 *</label>
                     </div>
@@ -205,7 +206,7 @@ function AddressLocInput() {
                         id="floatingInput"
                         placeholder="Address Line 2"
                         name="addressTwo"
-                        defaultValue={formState?.address?.[1]}
+                        defaultValue={formState?.addressLines?.[1]}
                       />
                       <label htmlFor="floatingInput">Address Line 2</label>
                     </div>
