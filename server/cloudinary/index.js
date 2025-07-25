@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary'
+import multer from 'multer'
 import {CloudinaryStorage} from 'multer-storage-cloudinary'
  
 cloudinary.config({
@@ -7,13 +8,26 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_SECRET
 })
 
-export const storage = new CloudinaryStorage({
+const storage = new CloudinaryStorage({
     cloudinary,
     params: {
         folder: 'Rent-IT_V2',
         allowedFormats: ['jpeg', 'png', 'jpg','svg']
     }
 })
+
+export function imageUpload(req,res,next){
+    try {
+        const upload = multer({ storage })
+        const {imgTtlData} = req.body
+        imgTtlData.map((e)=>{
+            upload.array('images')
+        })
+        upload.array('images')
+    } catch (error) {
+        console.log("ERROR IN imageUpload()- "+error)
+    }
+}
 
 
 

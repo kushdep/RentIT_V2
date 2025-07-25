@@ -11,7 +11,7 @@ const locSchema = new mongoose.Schema({
             type: String,
             required: true
         },
-        images: [
+        imgTtlData: [
             {
                 title: {
                     type: String,
@@ -36,14 +36,39 @@ const locSchema = new mongoose.Schema({
             required: true
         },
         facilities: [{
+            id: {
+                type: Number,
+                required: true
+            },
             title: {
                 type: String,
                 required: true,
                 enum: ['Parking Faciities', 'Kitchen and dining', 'Connectivity', 'Home Safety', 'Entertainment', 'Bedroom and laundary', 'Bathroom']
             },
-            ammenities: [String]
+            ammenities: [{
+                id: {
+                    type: Number,
+                    required: true
+                },
+                name: String
+            }]
         }],
-        location: String,
+        location: {
+            address:{
+                type:String,
+                required:true
+            },
+            coordinates:{
+                longitude:{
+                    type: Number,
+                    required: true
+                },
+                latitude:{
+                    type: Number,
+                    required: true
+                }
+            }
+        },
         author: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'

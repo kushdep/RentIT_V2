@@ -4,7 +4,8 @@ import jwt from "jsonwebtoken"
 export const authentication = (req, res, next) => {
     const authHeader = req.headers['authorization']
     const token = authHeader.split(' ')[1]
-    
+    console.log(authHeader)
+    console.log(token)
     if (!token) {
         return res.status(401).send({
             success: false,

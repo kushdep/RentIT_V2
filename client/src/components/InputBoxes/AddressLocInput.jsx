@@ -100,7 +100,7 @@ function AddressLocInput({addressVis}) {
       {!addFormStt ? (
         <div className="w-100 text-center">
           <button
-            className="btn btn-outline-primary p-1 mx-2 h-50 w-75"
+            className="btn btn-outline-dark p-1 mx-2 h-50 w-75"
             onClick={() => setAddFormStt(true)}
           >
             Add Location
