@@ -7,16 +7,14 @@ const addLocSlice = createSlice({
     initialState: {
         locName: '',
         locType: '',
-        locAdd: {
-
-        },
+        locAdd: null,
         imgTtlData: [{
             title: '',
             images: []
         }],
         offAmm: [],
         desc: '',
-        price: null
+        price: null,
     },
     reducers: {
         addImgTtlNewData(state, action) {
@@ -88,7 +86,6 @@ const addLocSlice = createSlice({
             } catch (error) {
                 console.log(error)
             }
-
         },
         delAmmenity(state, action) {
             try {
@@ -114,8 +111,39 @@ const addLocSlice = createSlice({
             } catch (error) {
                 console.error('Error in clearLocCord() '+error)
             }
+        },
+        updateLocType(state,action){
+            try {
+                const {type} = action.payload
+                state.locType=type
+            } catch (error) {
+                console.error('Error in updateLocType() '+error)
+            }
+        },
+        updatePrice(state,action){
+            try {
+                const {locPrice} = action.payload
+                state.price=locPrice
+            } catch (error) {
+                console.error('Error in updatePrice() '+error)   
+            }
+        },
+        updateLocName(state,action){
+            try {
+                const {name} = action.payload
+                state.locName=name
+            } catch (error) {
+                console.error('Error in updateName() '+error)   
+            }
+        },
+        addDesc(state,action){
+            try {
+                const {description} = action.payload
+                state.desc=description
+            } catch (error) {
+                console.error('Error in addDesc() '+error)   
+            }
         }
-
     }
 })
 

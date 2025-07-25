@@ -7,7 +7,6 @@ import {useState} from 'react'
 function LocInputBox() {
   const [showAddress,setShowAddress] = useState(false)
   const locData = useSelector((state) => state.addLocData.locAdd);
-    const dispatch = useDispatch();
 
   return (
     <>
