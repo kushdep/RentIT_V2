@@ -3,18 +3,20 @@ import { regionalCode } from "../../config";
 import googleValidateAdderss from "../../utils/addressValidation";
 import { addLocActions } from "../../store/addLoc-slice";
 import { useDispatch } from "react-redux";
-import toast from 'react-hot-toast'
+import Alert from "@mui/material/Alert";
+import toast from "react-hot-toast";
 
 function AddressLocInput() {
   const [addFormStt, setAddFormStt] = useState(false);
   const dispatch = useDispatch();
-  const [formState, formAcn,isPending] = useActionState(action, {
+  const [formState, formAcn, isPending] = useActionState(action, {
     regionCode: "IN",
     administrativeArea: "",
     locality: "",
     sublocality: "",
     postalCode: "",
     addressLines: [],
+    errors: [],
   });
 
   async function action(currentState, formData) {
@@ -33,27 +35,63 @@ function AddressLocInput() {
         administrativeArea,
         locality,
         postalCode,
-        sublocality:subLocality,
         addressLines,
       },
     };
 
-    const res=await googleValidateAdderss(addState);
-    console.log(res)
-    if(res.validation){
-      console.log(res.message)
-      toast.success(res.message)
-      dispatch(addLocActions.addLocCord({location:res.data}))
-      toast.success('Address Added Succesfull!!')
-    }else{
-      toast.error(res.message)
+    currentState.errors = [];
+
+    const res = await googleValidateAdderss(addState);
+    console.log(res);
+    if (res.validation) {
+      console.log(res.message);
+      toast.success(res.message);
+      dispatch(addLocActions.addLocCord({ location: res.data }));
+      toast.success("Address Added Succesfull!!");
+    } else {
+      toast.error(res.message);
+      const { suspicious, plausible, missing, invalid } = res.data;
+      if (
+        (suspicious !== undefined && suspicious !== null) ||
+        (plausible !== undefined && plausible !== null)
+      ) {
+        const suspFeilds = suspicious.length>0 ? suspicious.join(", ") : "";
+        console.log(suspFeilds)
+        const plauseFeilds = plausible.join(", ");
+        console.log(plauseFeilds)
+        currentState.errors.push({
+          error: `Not able to validate ${suspFeilds.length>0?suspFeilds+',':suspFeilds} ${plauseFeilds}`,
+          severity: "error",
+        });
+        console.log("1 " + JSON.stringify(currentState));
+      }
+
+      if (missing !== undefined && missing !== null) {
+        const missingFeilds = missing.join(", ");
+        currentState.errors.push({
+          error: `Please Add ${missingFeilds} feilds`,
+          severity: "error",
+        });
+        console.log("2 " + JSON.stringify(currentState));
+      }
+
+      if (invalid !== undefined && invalid !== null) {
+        const invalidFeilds = missing.join(", ");
+        currentState.errors.push({
+          error: ` ${invalidFeilds} are not valid`,
+          severity: "error",
+        });
+        console.log("3 " + JSON.stringify(currentState));
+      }
     }
+
+    console.log(currentState);
 
     console.log(addState);
     return {
       ...currentState,
-      ...addState.address
-    }
+      ...addState.address,
+    };
   }
   return (
     <>
@@ -154,7 +192,7 @@ function AddressLocInput() {
                         id="floatingInput"
                         placeholder="Address Line 1 *"
                         name="addressOne"
-                         defaultValue={formState?.address?.[0]}
+                        defaultValue={formState?.address?.[0]}
                       />
                       <label htmlFor="floatingInput">Address Line 1 *</label>
                     </div>
@@ -173,8 +211,15 @@ function AddressLocInput() {
                     </div>
                   </div>
                 </div>
+                {
+                  <div className="mb-2 mt-2">
+                    {formState?.errors.map((e) => (
+                      <Alert severity={e.severity}>{e.error}</Alert>
+                    ))}
+                  </div>
+                }
                 <button type="submit" className="btn btn-primary w-25 mx-3">
-                  {isPending?'Validating...':'Validate'}
+                  {isPending ? "Validating..." : "Validate"}
                 </button>
                 <button
                   type="submit"

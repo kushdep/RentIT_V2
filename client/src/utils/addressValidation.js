@@ -8,7 +8,7 @@ export default async function googleValidateAdderss(address) {
         const verdict = result.verdict
         console.log(JSON.stringify(verdict))
         if (verdict.possibleNextAction === 'FIX') {
-            let addressComp = []
+            let addressComp = {}
             if (verdict.inputGranularity === 'OTHER' || verdict.inputGranularity === 'ROUTE'
                 || verdict.validationGranularity === 'OTHER' || verdict.validationGranularity === 'ROUTE'
                 || verdict.geocodeGranularity === 'OTHER' || verdict.geocodeGranularity === 'ROUTE') {
@@ -18,23 +18,25 @@ export default async function googleValidateAdderss(address) {
                     const suspiciousAddressComponents = addressComponents.filter((add) => add.confirmationLevel === 'UNCONFIRMED_AND_SUSPICIOUS' && add.componentType)?.map((add) => add.componentType)
                     const plausibleAddressComponents = addressComponents.filter((add) => add.confirmationLevel === 'UNCONFIRMED_BUT_PLAUSIBLE' && add.componentType)?.map((add) => add.componentType)
 
-                    addressComp.push({
+                    addressComp = {
                         suspicious: suspiciousAddressComponents,
                         plausible: plausibleAddressComponents
-                    })
+                    }
                 }
 
                 if (missingComponentTypes !== undefined && missingComponentTypes !== null) {
-                    addressComp.push({
+                    addressComp = {
                         missing: missingComponentTypes
-                    })
+                    }
                 }
 
                 if (unresolvedTokens !== undefined && unresolvedTokens !== null) {
-                    addressComp.push({
+                    addressComp = {
                         invalid: unresolvedTokens
-                    })
+                    }
                 }
+
+                console.log(addressComp)
 
                 return {
                     validation: false,
