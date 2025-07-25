@@ -9,7 +9,7 @@ export default async function googleValidateAdderss(address) {
         console.log(JSON.stringify(verdict))
         if (verdict.possibleNextAction === 'FIX') {
             let addressComp = {}
-            if (verdict.inputGranularity === 'OTHER' || verdict.inputGranularity === 'ROUTE'
+            if(verdict.inputGranularity ==='PREMISE'&& verdict.validationGranularity==='PREMISE' && verdict.geocodeGranularity==='PREMISE' ||verdict.inputGranularity === 'OTHER' || verdict.inputGranularity === 'ROUTE'
                 || verdict.validationGranularity === 'OTHER' || verdict.validationGranularity === 'ROUTE'
                 || verdict.geocodeGranularity === 'OTHER' || verdict.geocodeGranularity === 'ROUTE') {
 
@@ -63,6 +63,11 @@ export default async function googleValidateAdderss(address) {
             }
         } else {
             console.error("Error in verdict.possibleNextAction " + verdict.possibleNextAction)
+            return{
+                validation:false,
+                data:{},
+                message: 'Can\'t Validate entered Address please Update!!'
+            }
         }
     } catch (error) {
         console.error("Error in googleValidateAdderss()" + error)

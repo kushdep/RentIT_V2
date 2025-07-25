@@ -28,7 +28,7 @@ function AddressLocInput() {
     const address2 = formData.get("addressTwo");
 
     const addressLines = [];
-    addressLines.push(address1, address2);
+    addressLines.push(address1, address2+' '+subLocality);
     const addState = {
       address: {
         regionCode: "IN",
@@ -180,7 +180,7 @@ function AddressLocInput() {
                           name="subLocality"
                           defaultValue={formState?.sublocality}
                         />
-                        <label htmlFor="floatingInput">Sub-locality</label>
+                        <label htmlFor="floatingInput">Street NO./Sub-locality</label>
                       </div>
                     </div>
                   </div>
