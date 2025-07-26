@@ -11,21 +11,24 @@ const locSchema = new mongoose.Schema({
             type: String,
             required: true
         },
-        imgTtlData: [
-            {
-                title: {
-                    type: String,
-                    required: true
-                },
-                url: {
-                    type: String,
-                    required: true
-                },
-                filename: {
-                    type: String,
-                    required: true
+        imgTtlData: [{
+            title: {
+                type: String,
+                required: true
+            },
+            images: [
+                {
+                    url: {
+                        type: String,
+                        required: true
+                    },
+                    filename: {
+                        type: String,
+                        required: true
+                    }
                 }
-            }
+            ]
+        }
         ],
         price: {
             type: Number,
@@ -43,7 +46,7 @@ const locSchema = new mongoose.Schema({
             title: {
                 type: String,
                 required: true,
-                enum: ['Parking Faciities', 'Kitchen and dining', 'Connectivity', 'Home Safety', 'Entertainment', 'Bedroom and laundary', 'Bathroom']
+                enum: ['Services', 'Kitchen and dining', 'Connectivity', 'Home Safety', 'Entertainment', 'Bedroom and laundary', 'Bathroom','Internet and office']
             },
             ammenities: [{
                 id: {
@@ -54,16 +57,16 @@ const locSchema = new mongoose.Schema({
             }]
         }],
         location: {
-            address:{
-                type:String,
-                required:true
+            address: {
+                type: String,
+                required: true
             },
-            coordinates:{
-                longitude:{
+            coordinates: {
+                longitude: {
                     type: Number,
                     required: true
                 },
-                latitude:{
+                latitude: {
                     type: Number,
                     required: true
                 }

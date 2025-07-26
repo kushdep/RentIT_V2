@@ -16,20 +16,37 @@ export function AddImagesInputBox({ ind }) {
   const dispatch = useDispatch();
   const imag = useSelector((state) => state.addLocData.imgTtlData);
 
-  function addImg(file) {
+  async function addImg(file) {
     async function resolveUrls() {
       const url = await getURLs(file);
       setResolvedUrls((prev) => {
         return [...prev, url];
       });
+      return url;
     }
-    resolveUrls();
+    const res = await resolveUrls();
+    return res;
   }
 
   function delImg(index) {
     setResolvedUrls((prev) => {
       return prev.filter((_, eleIn) => eleIn !== index);
     });
+  }
+
+  async function updateInputImg(e) {
+    try {
+      const inpFile = Array.from(e.target.files);
+      const url = await addImg(inpFile[0]);
+      dispatch(
+        addLocActions.addImgFiles({
+          file: url,
+          index: ind,
+        })
+      );
+    } catch (error) {
+      console.error("Error in updateInputImg()- " + error);
+    }
   }
 
   return (
@@ -100,16 +117,7 @@ export function AddImagesInputBox({ ind }) {
                     <input
                       type="file"
                       className="position-absolute top-0 start-0 w-100 h-100 opacity-0"
-                      onInput={(e) => {
-                        const inpFile = Array.from(e.target.files);
-                        addImg(inpFile[0]);
-                        dispatch(
-                          addLocActions.addImgFiles({
-                            file: inpFile[0],
-                            index: ind,
-                          })
-                        );
-                      }}
+                      onInput={updateInputImg}
                     />
                     <img src="/icons/plus-lg.svg" className="mb-1" />
                   </button>
