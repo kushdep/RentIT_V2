@@ -133,6 +133,6 @@ export const googleLogin = async (req, res) => {
             console.log(error)
         }
     } catch (error) {
-
+        console.log('Error in google Login() '+error)
     }
 }

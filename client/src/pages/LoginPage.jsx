@@ -1,11 +1,14 @@
 import axios from "axios";
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 import { useActionState } from "react";
 import GoogleSignIn from "./GoogleSignIn";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { useDispatch } from "react-redux";
+import { authActions } from "../store/auth-slice";
 
 export default function LoginPage() {
+  const dispatch = useDispatch();
   const [formState, formFn] = useActionState(action, {
     email: "",
     errors: [],
@@ -25,9 +28,11 @@ export default function LoginPage() {
       console.log(body);
       try {
         const response = await axios.post("http://localhost:3000/login", body);
+        console.log(response);
         if (response.status === 200) {
           localStorage.setItem("token", response.data);
-          toast.success('Logged In')
+          dispatch(authActions.loginSuccess({token:response.data}))
+          toast.success("Logged In");
           navigate("/rent-locs");
         }
       } catch (error) {
@@ -40,12 +45,12 @@ export default function LoginPage() {
             errors: err,
           };
         }
-        if(error?.response?.status===401){
-          err.push(error?.response?.data?.message)
+        if (error?.response?.status === 401) {
+          err.push(error?.response?.data?.message);
           return {
             ...currentState,
-            errors:err
-          }
+            errors: err,
+          };
         }
       }
     } catch (error) {
@@ -57,11 +62,16 @@ export default function LoginPage() {
     <>
       <form action={formFn}>
         <label htmlFor="email">Email</label>
-        <input type="email" name="email" id="email" defaultValue={formState.email}/>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          defaultValue={formState.email}
+        />
         <label htmlFor="password">password</label>
         <input type="password" name="password" id="password" />
         <button type="submit">Log In</button>
-        {formState.errors && formState.errors.map(e=><li>{e}</li>)}
+        {formState.errors && formState.errors.map((e) => <li>{e}</li>)}
       </form>
       <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
         <GoogleSignIn />

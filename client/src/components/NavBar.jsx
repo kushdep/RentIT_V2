@@ -1,7 +1,24 @@
+import { useDispatch, useSelector } from "react-redux";
 import "../css/navbar.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { authActions } from "../store/auth-slice";
+import toast from "react-hot-toast";
 
 function NavBar() {
+  const { isAuthenticated } = useSelector((state) => state.authData);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  function handleLogout(){
+    try {
+      dispatch(authActions.logout())
+      toast.success('Logged Out')
+      navigate('/')
+    } catch (error) {
+      console.log('Error in handle Logout '+error)
+    }
+  }
+
   return (
     <>
       <header className="sub-header">
@@ -92,80 +109,85 @@ function NavBar() {
                   </NavLink>
                 </div>
               </div>
-
-              <div className="col-3 d-flex justify-content-center btn-group">
-                {/* <NavLink
-                  to="/login"
-                  className={({ isActive }) =>
-                    isActive
-                      ? "btn btn-primary me-1 active"
-                      : "btn btn-primary me-1"
-                  }
-                  id="login"
-                >
-                  Login
-                </NavLink>
-                <NavLink
-                  to="/signup"
-                  className={({ isActive }) =>
-                    isActive
-                      ? "btn btn-outline-primary active"
-                      : "btn btn-outline-primary"
-                  }
-                  id="signup"
-                >
-                  Sign Up
-                </NavLink> */}
-                <div className="container" style={{ width: 80, height: 50 }}>
-                  <div className="row h-100">
-                    <div className="col h-100 p-0">
-                      <div className="dropdown w-100 h-100">
-                        <button
-                          className="btn rounded-pill dropdown-toggle p-2"
-                          type="button"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                          <img
-                            src="/icons/user.png"
-                            alt=""
-                            className="w-50 h-50 position-relative"
-                          />
-                        <span class="position-absolute top-0 start-10 translate-middle badge rounded-pill bg-danger text-light">
-                          99+
-                          <span class="visually-hidden">unread messages</span>
-                        </span>
-                        </button>
-                        <ul className="dropdown-menu">
-                          <li>
-                            <NavLink to="/profile" className="dropdown-item">
-                              Profile
-                            </NavLink>
-                          </li>
-                          <li>
-                            <a className="dropdown-item" href="#">
-                              Another action
-                            </a>
-                          </li>
-                          <li>
-                            <a className="dropdown-item" href="#">
-                              Something else here
-                            </a>
-                          </li>
-                          <li>
-                            <hr className="dropdown-divider" />
-                          </li>
-                          <li>
-                            <a className="dropdown-item" href="#">
-                              Separated link
-                            </a>
-                          </li>
-                        </ul>
+              {!isAuthenticated ? (
+                <div className="col-3 d-flex justify-content-center btn-group">
+                  <NavLink
+                    to="/login"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "btn btn-primary me-1 active"
+                        : "btn btn-primary me-1"
+                    }
+                    id="login"
+                  >
+                    Login
+                  </NavLink>
+                  <NavLink
+                    to="/signup"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "btn btn-outline-primary active"
+                        : "btn btn-outline-primary"
+                    }
+                    id="signup"
+                  >
+                    Sign Up
+                  </NavLink>
+                </div>
+              ) : (
+                <div className="col-3 d-flex justify-content-center btn-group">
+                  <div className="container" style={{ width: 80, height: 50 }}>
+                    <div className="row h-100">
+                      <div className="col h-100 p-0">
+                        <div className="dropdown w-100 h-100">
+                          <button
+                            className="btn rounded-pill dropdown-toggle p-2"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                          >
+                            <img
+                              src="/icons/user.png"
+                              alt=""
+                              className="w-50 h-50 position-relative"
+                            />
+                            <span class="position-absolute top-0 start-10 translate-middle badge rounded-pill bg-danger text-light">
+                              99+
+                              <span class="visually-hidden">
+                                unread messages
+                              </span>
+                            </span>
+                          </button>
+                          <ul className="dropdown-menu">
+                            <li>
+                              <NavLink to="/profile" className="dropdown-item">
+                                Profile
+                              </NavLink>
+                            </li>
+                            <li>
+                              <a className="dropdown-item" href="#">
+                                Another action
+                              </a>
+                            </li>
+                            <li>
+                              <a className="dropdown-item" href="#">
+                                Something else here
+                              </a>
+                            </li>
+                            <li>
+                              <button className="btn dropdown-item"
+                                onClick={handleLogout}
+                              >
+                                Logout
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </nav>

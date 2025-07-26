@@ -141,6 +141,7 @@ function AddLocForm() {
             }
           );
           console.log(res);
+          return res
         } catch (error) {
           console.error("Error in sendFormData() " + error);
         }
