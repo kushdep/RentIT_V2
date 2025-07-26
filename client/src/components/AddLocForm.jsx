@@ -9,6 +9,7 @@ import LocInputBox from "./InputBoxes/LocInputBox.jsx";
 import { useFormStatus } from "react-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function AddLocForm() {
   const {
@@ -18,6 +19,7 @@ function AddLocForm() {
     price: locPrice,
     locAdd,
     locName,
+    errors: imgErr,
     desc,
   } = useSelector((state) => state.addLocData);
   const locStt = useSelector((state) => state.addLocData);
@@ -28,6 +30,7 @@ function AddLocForm() {
   const addAmmModal = useRef();
   const [selAmmenity, setSelAmm] = useState(null);
   const status = useFormStatus();
+  const navigate = useNavigate()
 
   function openModal(id) {
     try {
@@ -51,7 +54,6 @@ function AddLocForm() {
       let tempErr = [];
       setErrors([]);
       if (locTypeStt.length === 0) {
-        console.log("1");
         tempErr.push({
           severity: "error",
           message: "Please choose Location Type",
@@ -59,7 +61,6 @@ function AddLocForm() {
       }
 
       if (locAdd === null || locAdd === undefined) {
-        console.log("2");
         tempErr.push({
           severity: "error",
           message: "Please provide address of your location",
@@ -71,15 +72,13 @@ function AddLocForm() {
         locPrice === undefined ||
         locPrice.length === 0
       ) {
-        console.log("3");
         tempErr.push({
           severity: "error",
           message: "Please provide Rent Price of your location",
         });
       }
 
-      if (selImgStt[0].title === null || selImgStt[0].images.length === 0) {
-        console.log("4");
+      if (selImgStt.length===0) {
         tempErr.push({
           severity: "error",
           message: "At least One image of Location is must",
@@ -87,72 +86,81 @@ function AddLocForm() {
       }
 
       if (selAmmStt.length === 0) {
-        console.log("5");
         tempErr.push({
           severity: "error",
           message: "At least One Ammenity info of Location is must",
         });
       }
       if (desc === null || desc === undefined || desc.length === 0) {
-        console.log("6");
         tempErr.push({
           severity: "error",
           message: "Please provide Description of your location",
         });
       }
       if (locName.length === 0) {
-        console.log("7");
         tempErr.push({
           severity: "error",
           message: "Please provide name of your location",
         });
       }
 
-      async function sendFormData(){
-          try {
-            const facilities=selAmmStt.map((f)=>{
-              return {
-                id:f.id,
-                title:f.title,
-                ammenities:f.opt
-              }
-            })
+      async function sendFormData() {
+        try {
+          const facilities = selAmmStt.map((f) => {
+            return {
+              id: f.id,
+              title: f.title,
+              ammenities: f.opt,
+            };
+          });
 
-            const body = {
-              locType:locTypeStt,
-              locDtl:{
-                title:locName,
-                imgTtlData:selImgStt,
-                  price:locPrice,
-                  description:desc,
-                  facilities,
-                  location:{
-                    address:locAdd.address,
-                    coordinates:locAdd.coordinates
-                  }
-              }
+          const body = {
+            locType: locTypeStt,
+            locDtl: {
+              title: locName,
+              imgTtlData: selImgStt,
+              price: locPrice,
+              description: desc,
+              facilities,
+              location: {
+                address: locAdd.address,
+                coordinates: locAdd.coordinates,
+              },
+            },
+          };
+          console.log(body);
+          const token = localStorage.getItem("token");
+          console.log(token);
+          const res = await axios.post(
+            "http://localhost:3000/profile/new-loc",
+            body,
+            {
+              headers: {
+                authorization: `Bearer ${token}`,
+              },
             }
-            console.log(body)
-            const token = localStorage.getItem('token')
-            console.log(token)
-            const res = await axios.post('http://localhost:3000/profile/new-loc',body,{
-              headers:{
-                'authorization':`Bearer ${token}`
-              }
-            })
-            console.log(res)
-          } catch (error) {
-            console.error('Error in sendFormData() '+error)
-          }
+          );
+          console.log(res);
+        } catch (error) {
+          console.error("Error in sendFormData() " + error);
+        }
       }
-      
-      if(tempErr.length===0){
-        await sendFormData()
-        toast.success('Submitted')
-      }else{
+
+      if (tempErr.length === 0 && Object.keys(imgErr).length === 0) {
+        try {
+          const res = await sendFormData();
+          if (res.status === 201) {
+            toast.success("Location Added Successfully");
+            navigate('/rent-locs')
+          }
+        } catch (error) {
+          if (error?.response?.status === 400) {
+            console.error(error?.response?.data?.message);
+          }
+        }
+      } else {
         setErrors((prev) => [...prev, ...tempErr]);
       }
-      
     } catch (error) {
       console.error("Error in form action() " + error);
     }
@@ -160,7 +168,9 @@ function AddLocForm() {
 
   console.log(locStt);
 
-  console.log(errors);
+  console.log("errror " + JSON.stringify(imgErr));
+
+  console.log(imgErr?.imgTtlErr?.length);
 
   return (
     <div className="container">
@@ -211,7 +221,9 @@ function AddLocForm() {
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    {locTypeStt ? `${locTypeStt}` : "Location type"}
+                    {locTypeStt
+                      ? locType.find(({ id }) => id === locTypeStt).title
+                      : "Location type"}
                   </button>
                   <ul class="dropdown-menu">
                     {locType &&
@@ -270,14 +282,29 @@ function AddLocForm() {
           <div className="my-3">
             <button
               className={
-                selImgStt[0].images.length === 0
+                selImgStt.length === 0
                   ? "btn w-100 fw-semibold btn-outline-primary"
                   : "btn w-100 fw-semibold btn-dark"
               }
-              onClick={() => addImgTtlModal.current.showModal()}
+              onClick={() => {
+                console.log(selImgStt.length);
+                if (selImgStt.length < 1) {
+                  dispatch(addLocActions.addImgTtlNewData());
+                }
+                addImgTtlModal.current.showModal();
+              }}
             >
-              {selImgStt[0].images.length === 0 ? "Add Images" : "Edit Images"}
+              {selImgStt.length === 0 ? "Add Images" : "Edit Images"}
             </button>
+            <div>
+              {imgErr?.imgTtlErr && imgErr?.imgTtlErr.length !== 0 ? (
+                <p className="text-danger fw-normal">
+                  Please Fill this field correctly
+                </p>
+              ) : (
+                ""
+              )}
+            </div>
           </div>
 
           <div className="container my-3">

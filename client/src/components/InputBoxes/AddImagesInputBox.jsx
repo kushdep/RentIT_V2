@@ -11,7 +11,7 @@ function getURLs(file) {
   });
 }
 
-export function AddImagesInputBox({ ind }) {
+export function AddImagesInputBox({ ind, err }) {
   const [resolvedUrls, setResolvedUrls] = useState([]);
   const dispatch = useDispatch();
   const imag = useSelector((state) => state.addLocData.imgTtlData);
@@ -49,6 +49,8 @@ export function AddImagesInputBox({ ind }) {
     }
   }
 
+  console.log(err);
+
   return (
     <>
       <div className="row p-2">
@@ -57,6 +59,7 @@ export function AddImagesInputBox({ ind }) {
             <label className="form-label fw-semibold" htmlFor="title">
               Add Images & title
             </label>
+            
             {ind > 0 && (
               <button
                 type="button"
@@ -69,6 +72,7 @@ export function AddImagesInputBox({ ind }) {
               </button>
             )}
           </div>
+                      {err && <div className="text-danger" style={{fontSize:12}}>{err}</div>}
           <input
             className="form-control"
             type="text"
@@ -124,6 +128,7 @@ export function AddImagesInputBox({ ind }) {
                 </div>
               )}
             </div>
+
           </div>
         </div>
       </div>

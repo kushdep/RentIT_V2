@@ -5,7 +5,7 @@ import { addLocActions } from "../../store/addLoc-slice";
 
 function GoogleMapInput({ addressVis }) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [inpVal, setInpVal] = useState("");
+  const [inpVal, setInpVal] = useState({val:'',index:null});
   const [sugg, setSugg] = useState([]);
   const sessionTokenRef = useRef(null);
   const dispatch = useDispatch();
@@ -42,7 +42,7 @@ function GoogleMapInput({ addressVis }) {
         const { suggestions } =
           await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions(
             {
-              input: inpVal,
+              input: inpVal.val,
               sessionToken: sessionTokenRef.current,
               locationBias: {
                 west: 68.11,
@@ -56,7 +56,7 @@ function GoogleMapInput({ addressVis }) {
       }
       getSuggestions();
     }
-  }, [inpVal]);
+  }, [inpVal.val]);
 
   const handleSelect = async (address) => {
     const result = await getGeocode({ address });
@@ -80,18 +80,18 @@ function GoogleMapInput({ addressVis }) {
       <div className="d-flex">
         <input
           type="text"
-          value={inpVal}
+          value={inpVal.val}
           disabled={!isLoaded}
           className="form-control dropdown-toggle"
           data-bs-toggle="dropdown"
-          onChange={(e) => setInpVal(e.target.value)}
+          onChange={(e) => setInpVal({val:e.target.value,index:null})}
           placeholder="Search your location"
         />
         <ul className="dropdown-menu m-0">
-          {sugg?.map((sug) => (
+          {sugg?.map((sug,i) => (
             <li
               className="dropdown-item"
-              onClick={() => setInpVal(sug?.Dg?.Nh?.[0]?.[2]?.[0])}
+              onClick={() => setInpVal({val:sug?.Dg?.Nh?.[0]?.[2]?.[0],index:i})}
             >
               {sug?.Dg?.Nh?.[0]?.[2]?.[0] || "Unknown"}
             </li>
@@ -99,7 +99,13 @@ function GoogleMapInput({ addressVis }) {
         </ul>
         <button
           className="btn btn-outline-primary p-1 mx-2 h-50 w-25"
-          onClick={() => handleSelect(inpVal)}
+          disabled={inpVal.index===null?true:false}
+          onClick={() => {
+            if(inpVal.index!==null){
+              handleSelect(inpVal.val)
+            }
+          }
+        }
         >
           Add
         </button>

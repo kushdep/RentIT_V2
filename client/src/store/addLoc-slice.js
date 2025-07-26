@@ -8,13 +8,11 @@ const addLocSlice = createSlice({
         locName: '',
         locType: '',
         locAdd: null,
-        imgTtlData: [{
-            title: '',
-            images: []
-        }],
+        imgTtlData: [],
         offAmm: [],
         desc: '',
         price: null,
+        errors:{}
     },
     reducers: {
         addImgTtlNewData(state, action) {
@@ -143,7 +141,21 @@ const addLocSlice = createSlice({
             } catch (error) {
                 console.error('Error in addDesc() '+error)   
             }
-        }
+        },
+        addErr(state,action){
+            try {
+                const {key,errFields} = action.payload
+                if(errFields.length==0){
+                    console.log(state.errors[key])
+                    delete state.errors[key]
+                    console.log(state.errors[key])
+                }else{
+                    state.errors={[key]:errFields}
+                }
+            } catch (error) {
+                console.error('Error in addErr() '+error)   
+            }
+        },
     }
 })
 
