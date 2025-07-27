@@ -1,9 +1,9 @@
-function SearchBar() {
+function SearchBar({props}) {
   return (
     <>
       <div
         className="container d-flex justify-content-center w-50 position-absolute"
-        style={{ height: 100, top: 150, right: 390 }}
+        style={props}
       >
         <div className="row rounded-pill  w-100 bg-body-tertiary d-flex align-content-center">
           <div className="col">

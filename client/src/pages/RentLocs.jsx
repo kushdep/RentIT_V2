@@ -6,14 +6,14 @@ import LocDetails from "../components/LocDetail";
 export default function RentLocs() {
   return (
     <>
+      <Outlet>
+        
       <header className="position-relative">
         <div className="page-heading image-fluid">
           <img src="/images/rent-locs-homepage.png" alt="" />
-          <SearchBar />
+          <SearchBar props={{ height: 100, top: 150, right: 390 }}/>
         </div>
       </header>
-      <Outlet>
-        
         <LocDetails/>
       </Outlet>
           </>
