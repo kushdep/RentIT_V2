@@ -1,12 +1,16 @@
-import { DatePicker, Space } from 'antd';
+import { DatePicker, Space } from "antd";
 const { RangePicker } = DatePicker;
 function DateInputBox() {
-  return <Space direction="horizontal" size={12}>
-    <RangePicker className='rangePicker p-2 fw-bold' style={{
-        border: 'none',
-        color: 'black',
-        backgroundColor: 'transparent',
-      }}/>
-  </Space>
+  return (
+    <div className="container">
+      <div className="row">
+        <div className="col">
+          <Space direction="horizontal" size={12}>
+            <RangePicker className="p-2 border-dark border-2" />
+          </Space>
+        </div>
+      </div>
+    </div>
+  );
 }
-export default DateInputBox
+export default DateInputBox;

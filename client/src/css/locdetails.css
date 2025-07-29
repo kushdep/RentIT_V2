@@ -45,10 +45,25 @@
 
 .rentCol{
   border: 2px solid black;
-  position: sticky;
+  border-radius: 40px;
+}
+
+.rentCol
+button:active 
+button:focus{
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
 }
 
 .rentCol .col{
-  border: 2px solid red;
+  /* border: 2px solid red; */
   padding: 1rem;  
 }
+
+.ammSec{
+  border: solid 2px #1e1e1e;
+  border-radius: 40px;
+  padding: 20px;
+}
+
