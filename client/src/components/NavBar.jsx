@@ -8,23 +8,23 @@ import AuthModal from "./Modals/AuthModal";
 
 function NavBar() {
   const { isAuthenticated } = useSelector((state) => state.authData);
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const authModal = useRef()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const authModal = useRef();
 
-  function handleLogout(){
+  function handleLogout() {
     try {
-      dispatch(authActions.logout())
-      toast.success('Logged Out')
-      navigate('/')
+      dispatch(authActions.logout());
+      toast.success("Logged Out");
+      navigate("/");
     } catch (error) {
-      console.log('Error in handle Logout '+error)
+      console.log("Error in handle Logout " + error);
     }
   }
 
   return (
     <>
-    <AuthModal reference={authModal}/>
+      <AuthModal reference={authModal} />
       <header className="sub-header">
         <nav className="navbar sticky-top border-bottom border-1 p-0">
           <div className="container">
@@ -116,29 +116,19 @@ function NavBar() {
               {!isAuthenticated ? (
                 <div className="col-3 d-flex justify-content-center btn-group">
                   <button
-                    // to="/login"
-                    className="btn btn-primary me-1"
-                    // className={({ isActive }) =>
-                    //   isActive
-                    //     ? "btn btn-primary me-1 active"
-                    //     : "btn btn-primary me-1"
-                    // }
-                    onClick={()=>authModal.current.showModal()}
+                    className="btn btn-primary me-1 shadow"
+                    onClick={() => authModal.current.showModal()}
                     id="login"
                   >
                     Login
                   </button>
-                  <NavLink
-                    to="/signup"
-                    className={({ isActive }) =>
-                      isActive
-                        ? "btn btn-outline-primary active"
-                        : "btn btn-outline-primary"
-                    }
+                  <button
+                    className="btn btn-outline-primary shadow"
+                    onClick={() => authModal.current.showModal()}
                     id="signup"
                   >
                     Sign Up
-                  </NavLink>
+                  </button>
                 </div>
               ) : (
                 <div className="col-3 d-flex justify-content-center btn-group">
@@ -181,7 +171,8 @@ function NavBar() {
                               </a>
                             </li>
                             <li>
-                              <button className="btn dropdown-item"
+                              <button
+                                className="btn dropdown-item"
                                 onClick={handleLogout}
                               >
                                 Logout

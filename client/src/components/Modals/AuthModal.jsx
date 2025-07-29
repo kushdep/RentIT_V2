@@ -1,15 +1,18 @@
 import { createPortal } from "react-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import GoogleSignIn from "/src/pages/GoogleSignIn.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useDispatch } from "react-redux";
 import { authActions } from "/src/store/auth-slice";
+import SignUp from '/src/pages/SignUp.jsx'
 
 function AuthModal({ reference }) {
   const dispatch = useDispatch();
+  const [authStt, setAuthStt] = useState(true);
+
   const [formState, formFn] = useActionState(action, {
     email: "",
     errors: [],
@@ -82,53 +85,64 @@ function AuthModal({ reference }) {
         </form>
         <form action={formFn}>
           <div className="container">
-            <div className="row row-cols-1">
+            {authStt ? (
+              <div className="row row-cols-1">
                 <div className="col">
-                    <h2 className="text-center text-decoration-underline">LOG IN</h2>
+                  <h2 className="text-center text-decoration-underline">
+                    LOG IN
+                  </h2>
                 </div>
-              <div className="col p-4">
-                <div className="form-floating mb-3">
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="floatingInput"
-                    placeholder="name@example.com"
-                    defaultValue={formState?.email}
-                  />
-                  <label for="floatingInput">Email address</label>
-                </div>
-                <div className="form-floating">
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="floatingPassword"
-                    placeholder="Password"
-                  />
-                  <label for="floatingPassword">Password</label>
-                </div>
-                <div>
-                  <button
-                    type="submit"
-                    className="btn btn-primary w-100 fw-semibold mt-3 fs-5"
-                  >
-                    Log In
-                  </button>
-                  <div className="col">
-                    <GoogleOAuthProvider
-                      clientId={import.meta.env.VITE_CLIENT_ID}
+                <div className="col p-4">
+                  <div className="form-floating mb-3">
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="floatingInput"
+                      placeholder="name@example.com"
+                      defaultValue={formState?.email}
+                    />
+                    <label for="floatingInput">Email address</label>
+                  </div>
+                  <div className="form-floating">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="floatingPassword"
+                      placeholder="Password"
+                    />
+                    <label for="floatingPassword">Password</label>
+                  </div>
+                  <div>
+                    <button
+                      type="submit"
+                      className="btn btn-primary w-100 fw-semibold mt-3 fs-5"
                     >
-                      <GoogleSignIn />
-                    </GoogleOAuthProvider>
-                  </div>
-                  <div className="col">
-                    <Link to="/signup" className="text-decoration-none">
-                      New user ?
-                    </Link>
+                      Log In
+                    </button>
+                    <div className="col">
+                      <GoogleOAuthProvider
+                        clientId={import.meta.env.VITE_CLIENT_ID}
+                      >
+                        <GoogleSignIn />
+                      </GoogleOAuthProvider>
+                    </div>
+                    <div className="col">
+                      <button
+                      type="button"
+                        className="btn text-decoration-underline"
+                        onClick={() => setAuthStt(false)}
+                      >
+                        New user ?
+                      </button>
+                    </div>
                   </div>
                 </div>
+                {formState?.errors &&
+                  formState?.errors.map((e) => <li>{e}</li>)}
               </div>
-              {formState?.errors && formState?.errors.map((e) => <li>{e}</li>)}
-            </div>
+            ) : (
+                <SignUp/>
+            )}
           </div>
         </form>
       </dialog>

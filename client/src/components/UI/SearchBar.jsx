@@ -5,7 +5,7 @@ function SearchBar({props}) {
         className="container d-flex justify-content-center w-50 position-absolute"
         style={props}
       >
-        <div className="row rounded-pill  w-100 bg-body-tertiary d-flex align-content-center">
+        <div className="row rounded-pill  w-100 bg-body-tertiary d-flex align-content-center shadow">
           <div className="col">
             <div className="container">
               <div className="row d-flex align-items-center">
@@ -22,10 +22,10 @@ function SearchBar({props}) {
                     </label>
                   </div>
                 </div>
-                <div className="col-4">
+                <div className="col-5">
                   <div className="form-floating">
                     <select
-                      class="form-select"
+                      className="form-select w-100"
                       id="floatingSelect"
                       aria-label="Floating label select example"
                     >
@@ -38,10 +38,10 @@ function SearchBar({props}) {
                   </div>
                 </div>
                 <div
-                  className="col-2 p-0"
-                  style={{ width: 60, height: 50, objectFit: "cover" }}
+                  className="col-1 p-0 align-middle"
+                  style={{ width: 50, height: 54, objectFit: "cover" }}
                 >
-                  <button className="btn btn-primary rounded-pill">
+                  <button className="btn btn-primary rounded-end-pill h-100 shadow">
                     <img src="/icons/search.png" />
                   </button>
                 </div>

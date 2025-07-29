@@ -6,7 +6,7 @@ import { checkPassword } from "../utils/SignupValidations";
 export default function SignUp() {
   const [formState, formFn] = useActionState(action, {
     email: "",
-    otpSent: false,
+    otpSent: true,
     errors: null,
   });
   const navigate = useNavigate();
@@ -68,7 +68,7 @@ export default function SignUp() {
           }
         } catch (err) {
           if (err?.response?.status === 400) {
-            console.log(err)
+            console.log(err);
             error.push(err?.response?.data?.message);
             const newData = {
               ...currentState,
@@ -99,42 +99,78 @@ export default function SignUp() {
   return (
     <>
       <form action={formFn}>
-        <label htmlFor="email">email</label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          defaultValue={formState?.email}
-        />
-        {formState?.otpSent && (
-          <div>
-            <label htmlFor="otp">OTP</label>
-            <input
-              type="text"
-              name="otp"
-              id="otp"
-              defaultValue={formState?.otp}
-            />
-            <label htmlFor="username">username</label>
-            <input
-              type="text"
-              name="username"
-              id="username"
-              defaultValue={formState?.username}
-            />
-            <label htmlFor="password">password</label>
-            <input type="password" name="password" id="password" />
-            <label htmlFor="confirm-password">confirm password</label>
-            <input
-              type="password"
-              name="confirm-password"
-              id="confirm-password"
-            />
+        <div className="row row-cols-1">
+          <div className="col">
+            <h2 className="text-center text-decoration-underline">Sign Up</h2>
           </div>
-        )}
-        <button type="submit">
-          {formState?.otpSent ? "submit" : "send otp"}
-        </button>
+          <div className="col p-4">
+            <div className="form-floating mb-3">
+              <input
+                type="email"
+                className="form-control"
+                name="email"
+                id="floatingInput"
+                defaultValue={formState?.email}
+                placeholder="email"
+              />
+              <label for="floatingInput">Email address</label>
+              {formState?.otpSent && (
+                <div>
+                  <label htmlFor="otp">OTP</label>
+                  <input
+                    type="text"
+                    name="otp"
+                    id="otp"
+                    defaultValue={formState?.otp}
+                  />
+                  <label htmlFor="username">username</label>
+                  <input
+                    type="text"
+                    name="username"
+                    id="username"
+                    defaultValue={formState?.username}
+                  />
+                  <div className="form-floating">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="floatingPassword"
+                      placeholder="Password"
+                    />
+                    <label for="floatingPassword">Password</label>
+                  </div>
+                  <div className="form-floating">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="ConfloatingPassword"
+                      placeholder="Password"
+                    />
+                    <label htmlFor="ConfloatingPassword">
+                      Confirm Password
+                    </label>
+                  </div>
+                  <label htmlFor="password">password</label>
+                  <input type="password" name="password" id="password" />
+                  <label htmlFor="confirm-password">confirm password</label>
+                  <input
+                    type="password"
+                    name="confirm-password"
+                    id="confirm-password"
+                  />
+                </div>
+              )}
+              <div className="col text-center">
+                <button
+                  type="submit"
+                  className="btn btn-primary rounded-pill fs-5 fw-semibold mt-3 w-75"
+                >
+                  {formState?.otpSent ? "submit" : "send otp"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
       {formState.errors && formState.errors.map((e) => <li>{e}</li>)}
     </>
