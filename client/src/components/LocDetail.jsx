@@ -156,8 +156,8 @@ function LocDetails() {
               </div>
             </div>
           </div>
-          <div className="col-4" style={{ overflowY: "auto" }}>
-            <div className="container position-sticky  rentCol shadow">
+          <div className="col-4 ">
+            <div className="container position-sticky  rentCol shadow" style={{top:10}}>
               <div className="row p-0">
                 <div className="col p-0 ">
                   <div className=" w-100">
