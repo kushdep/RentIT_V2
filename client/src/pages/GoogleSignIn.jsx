@@ -4,10 +4,12 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { authActions } from "../store/auth-slice";
 import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 
 export default function GoogleSignIn() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
   async function responseGoogle(authResult) {
     try {
       if (authResult["code"]) {
@@ -16,8 +18,8 @@ export default function GoogleSignIn() {
         );
         const token = response.data;
         localStorage.setItem("token", token);
-        toast.success('Logged In')
-        dispatch(authActions.loginSuccess({token}))
+        toast.success("Logged In");
+        dispatch(authActions.loginSuccess({ token }));
         navigate("/rent-locs");
       } else {
         console.log("auth result ", authResult);
@@ -35,7 +37,9 @@ export default function GoogleSignIn() {
 
   return (
     <>
-      <button onClick={googleLogin}>Sign In with Google</button>
+      <button className="btn btn-dark fw-semibold w-100 mt-2"  onClick={googleLogin}>
+        SignIn with Google
+      </button>
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import { Ammentities } from "../../config";
 import { addLocActions } from "../../store/addLoc-slice";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,7 +11,7 @@ function AddAmmenitiesModal({ reference, id }) {
   const ammenityData = Ammentities.find((e) => e.id === id);
   console.log(ammenityData);
 
-  return (
+  return createPortal(
     <>
       <dialog ref={reference} className="border-0 w-25 rounded-4">
         <form method="dialog" className="container">
@@ -93,7 +94,7 @@ function AddAmmenitiesModal({ reference, id }) {
         </form>
       </dialog>
     </>
-  );
+  ,document.getElementById("modal-root"));
 }
 
 export default AddAmmenitiesModal;

@@ -3,11 +3,14 @@ import "../css/navbar.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { authActions } from "../store/auth-slice";
 import toast from "react-hot-toast";
+import { useRef } from "react";
+import AuthModal from "./Modals/AuthModal";
 
 function NavBar() {
   const { isAuthenticated } = useSelector((state) => state.authData);
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const authModal = useRef()
 
   function handleLogout(){
     try {
@@ -21,6 +24,7 @@ function NavBar() {
 
   return (
     <>
+    <AuthModal reference={authModal}/>
       <header className="sub-header">
         <nav className="navbar sticky-top border-bottom border-1 p-0">
           <div className="container">
@@ -111,17 +115,19 @@ function NavBar() {
               </div>
               {!isAuthenticated ? (
                 <div className="col-3 d-flex justify-content-center btn-group">
-                  <NavLink
-                    to="/login"
-                    className={({ isActive }) =>
-                      isActive
-                        ? "btn btn-primary me-1 active"
-                        : "btn btn-primary me-1"
-                    }
+                  <button
+                    // to="/login"
+                    className="btn btn-primary me-1"
+                    // className={({ isActive }) =>
+                    //   isActive
+                    //     ? "btn btn-primary me-1 active"
+                    //     : "btn btn-primary me-1"
+                    // }
+                    onClick={()=>authModal.current.showModal()}
                     id="login"
                   >
                     Login
-                  </NavLink>
+                  </button>
                   <NavLink
                     to="/signup"
                     className={({ isActive }) =>
