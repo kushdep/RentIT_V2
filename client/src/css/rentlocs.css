@@ -1,0 +1,16 @@
+.sortBtns button:hover {
+  width: 130%;
+
+}
+
+.sortBtns button img {
+  justify-content: start;
+}
+
+.sortBtns button p {
+  display: none;
+}
+.sortBtns button:hover p {
+  display: inline !important;
+  text-align: center;
+}

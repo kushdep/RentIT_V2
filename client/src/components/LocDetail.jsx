@@ -24,11 +24,11 @@ function LocDetails() {
           </div>
         </div>
         <div className="row">
-          <div className="col-8 h-100 p-0 pe-3 ">
+          <div className="col-8 h-100 p-0 pe-3">
             <img
               src="/public/images/hall2.jpg"
               alt="hall"
-              className="w-100 h-100 mainImg position-relative"
+              className="w-100 h-100 mainImg position-relative shadow"
               style={{ objectFit: "cover" }}
             />
             <button className="btn btn-light position-absolute rounded-pill" style={{bottom:50, left:150}}>
@@ -42,7 +42,7 @@ function LocDetails() {
                 <img
                   src="/public/images/bedroom.jpg"
                   alt="bedroom"
-                  className="imgT"
+                  className="imgT shadow"
                   style={{ objectFit: "cover" }}
                 />
               </div>
@@ -51,7 +51,7 @@ function LocDetails() {
                 <img
                   src="/public/images/kitchen.jpg"
                   alt="bedroom"
-                  className="imgB"
+                  className="imgB shadow"
                   style={{ objectFit: "cover" }}
                 />
               </div>

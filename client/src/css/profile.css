@@ -2,3 +2,8 @@
     background-color: #1e1e1e;
     border-top-right-radius: 40px;
 }
+
+.profilebutton:active{
+    background-color: solid white;
+}
+
