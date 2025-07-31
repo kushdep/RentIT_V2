@@ -12,10 +12,11 @@ function Profile() {
               <div className="row row-cols-1 gy-4">
                 <div className="col" style={{ height: 50 }}></div>
                 <ProfileButton active='active' To='/profile' title="Profile" />
-                <ProfileButton To='/profile/my-loc' title="My Location" />
-                <ProfileButton To='/profile/new-loc' title="Add Location" />
-                <ProfileButton title="Requests" />
-                <ProfileButton title="Land-Lord" />
+                <ProfileButton title="Approvals" />
+                <ProfileButton title="Trips" />
+                <button className="btn-primary text-light fw-semibold">
+                  Rent your Location
+                </button>
               </div>
             </div>
           </div>

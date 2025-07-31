@@ -1,6 +1,12 @@
 function ContactUs(){
     return <>
-        <h1>Contact us form</h1>
+    <div className="page-heading image-fluid">
+          <img
+            src="/images/contactUs.png"
+            className="shadow-sm"
+            alt=""
+          />
+        </div>
     </>
 }
 

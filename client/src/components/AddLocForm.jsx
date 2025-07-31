@@ -226,12 +226,12 @@ function AddLocForm() {
                       ? locType.find(({ id }) => id === locTypeStt).title
                       : "Location type"}
                   </button>
-                  <ul class="dropdown-menu">
+                  <ul class="dropdown-menu w-100">
                     {locType &&
                       locType.map((l) => (
                         <li>
                           <button
-                            class="dropdown-item"
+                            className="dropdown-item"
                             onClick={() => handleLocType(l.id)}
                           >
                             {l.title}

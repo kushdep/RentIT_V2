@@ -3,7 +3,7 @@
     border-top-right-radius: 40px;
 }
 
-.profilebutton:active{
+.profilebutton .active{
     background-color: solid white;
 }
 
