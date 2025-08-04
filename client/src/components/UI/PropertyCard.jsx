@@ -1,16 +1,16 @@
 function PropertyCard() {
   return (
     <>
-      <div className="col">
-        <div className="card position-relative border-0 rounded-5 p-0">
+      <div className="col mt-4">
+        <div className="card position-relative border-0 rounded-5 p-0 shadow">
           <div className="p-2 ">
             <img
               src="/images/property-01.jpg"
-              className="card-img-top rounded-4 shadow-sm "
+              className="card-img-top rounded-5 shadow"
             />
             <button
               className="btn d-flextext-decoration-underline align-items-center position-absolute"
-              style={{ top: 1, right: 2 }}
+              style={{ top: 8, right: 9 }}
             >
               <img
                 src="/public/icons/heart-fill.png"
@@ -19,7 +19,7 @@ function PropertyCard() {
                 className="me-1 shadow"
               />
             </button>
-            <div className="d-flex col justify-content-between">
+            <div className="d-flex col justify-content-between mt-3">
               <div className="d-flex row w-75">
                 <p className="mx-2 text-dark fw-semibold mb-0">
                   Flats in Gurugram
