@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./pages/Layout";
 import LoginPage from "./pages/LoginPage";
 import SignUp from "./pages/SignUp";
-import RentLocs from "./pages/RentLocs";
+import RentLocs, { getAllLocLoader } from "./pages/RentLocs";
 import Homepage from "./pages/Homepage";
 import ContactUs from "./pages/ContactUs";
 import Profile from "./pages/Profile";
@@ -17,8 +17,14 @@ const router = createBrowserRouter([
       { path: "", element: <Homepage /> },
       {
         path: "rent-locs",
-        element: <RentLocs />,
-        children: [{ path: "loc", element: <LocDetails /> }],
+        children: [
+          {
+            path: "",
+            element: <RentLocs />,
+            loader: getAllLocLoader,
+          },
+          { path: "loc", element: <LocDetails /> },
+        ],
       },
       { path: "contact-us", element: <ContactUs /> },
       {

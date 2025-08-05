@@ -11,6 +11,7 @@ export function newLocValidation(req, res, next) {
                     images:Joi.array()
                 })).required(),
                 price: Joi.number().required(),
+                guestsCap: Joi.number().required(),
                 desc:Joi.object({
                     bedrooms:Joi.number().required(),
                     beds:Joi.number().required(),

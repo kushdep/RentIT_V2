@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import morgan from 'morgan'
 import express from 'express'
 import ConnectDB from './ConnectDB.js'
+import locRoutes from './routes/locRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import profileRoutes from './routes/profileRoutes.js'
 import { authentication } from './middlewares/authentication..js'
@@ -14,10 +15,14 @@ dotenv.config()
 ConnectDB()
 
 app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-app.use(morgan("dev"));
-app.use(cors())
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
+app.use(morgan("dev")); 
+app.use(cors({
+  origin: '*',
+}))
 app.use('/', userRoutes)
+app.use('/rent-locs', locRoutes)
 app.use('/profile', authentication, profileRoutes)
 
 app.listen(process.env.PORT, () => {

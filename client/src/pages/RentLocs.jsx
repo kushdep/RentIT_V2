@@ -1,13 +1,37 @@
-import { Outlet } from "react-router-dom";
 import PropertyCard from "../components/UI/PropertyCard";
 import SearchBar from "../components/UI/SearchBar";
-import LocDetails from "../components/LocDetail";
 import "../css/rentlocs.css";
+import axios from "axios";
+import { useLoaderData } from "react-router-dom";
+import { curfmt } from "../utils/formatter";
+
+export async function getAllLocLoader() {
+  try {
+    const response = await axios.get("http://localhost:3000/rent-locs");
+    console.log(response);
+    if (response.status === 200) {
+      const resData = await response.data.data;
+      console.log(resData);
+      return resData;
+    }
+    if (response.status === 204) {
+      return null;
+    }
+  } catch (err) {
+    if (err?.response?.status === 400) {
+      console.log(err?.response?.data?.message);
+    }
+  }
+}
 
 export default function RentLocs() {
+  const locData = useLoaderData();
+
+  console.log(JSON.stringify(locData));
+
   return (
     <div>
-      {/* <header className="position-relative">
+      <header className="position-relative">
         <div className="page-heading image-fluid">
           <img
             src="/images/rent-locs-homepage.png"
@@ -46,21 +70,27 @@ export default function RentLocs() {
             <div className="col">
               <div className="container-fluid">
                 <div className="row row-cols-4">
-                  <PropertyCard />
-                  <PropertyCard />
-                  <PropertyCard />
-                  <PropertyCard />
-                  <PropertyCard />
-                  <PropertyCard />
+                  {locData.length !== 0 ? (
+                    locData.map((e) => {
+                      console.log("lement " + JSON.stringify(e));
+                      const formattedPrice = curfmt.format(e.locDtl.price*2);
+                      console.log(formattedPrice)
+                      return (
+                        <PropertyCard
+                          coverImg={e.locDtl?.imgTtlData?.[0]?.images?.[0]?.url}
+                          price={formattedPrice}
+                        />
+                      );
+                    })
+                  ) : (
+                    <h1 className="text-muted">NO Locations to show</h1>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </header> */}
-      <Outlet>
-        <LocDetails />
-      </Outlet>
-      </div>
+      </header>
+    </div>
   );
 }

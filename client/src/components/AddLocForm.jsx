@@ -62,19 +62,18 @@ function AddLocForm() {
       }
 
       if (guestsCap == null) {
-        console.log("Guest Capacity "+guestsCap)
+        console.log("Guest Capacity " + guestsCap);
         tempErr.push({
           severity: "error",
           message: "Please provide Capacity of Guests",
         });
       }
-      
+
       if (
         desc?.bedrooms == null ||
         desc?.beds == null ||
         desc?.bathrooms == null
       ) {
-        console.log("Guest Capacity "+desc)
         tempErr.push({
           severity: "error",
           message: "Please provide complete details of your Location",
@@ -99,7 +98,7 @@ function AddLocForm() {
         });
       }
 
-      if (selImgStt.length === 0) {
+      if (selImgStt.length < 3) {
         tempErr.push({
           severity: "error",
           message: "At least One image of Location is must",
@@ -134,12 +133,11 @@ function AddLocForm() {
               ammenities: f.opt,
             };
           });
-
           const body = {
             locType: locTypeStt,
             locDtl: {
               title: locName,
-              guestCap: guestsCap,
+              guestsCap: guestsCap,
               imgTtlData: selImgStt,
               price: locPrice,
               desc: { ...desc },
@@ -153,17 +151,21 @@ function AddLocForm() {
           console.log(body);
           const token = localStorage.getItem("token");
           console.log(token);
-          const res = await axios.post(
-            "http://localhost:3000/profile/new-loc",
-            body,
-            {
-              headers: {
-                authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          console.log(res);
-          return res;
+          try {
+            const res = await axios.post(
+              "http://localhost:3000/profile/new-loc",
+              body,
+              {
+                headers: {
+                  authorization: `Bearer ${token}`,      
+                },
+              }
+            );
+            console.log(res);
+            return res;
+          } catch (error) {
+            console.log("Error in axios sendFormData() " + error);
+          }
         } catch (error) {
           console.error("Error in sendFormData() " + error);
         }
@@ -172,6 +174,7 @@ function AddLocForm() {
       if (tempErr.length === 0 && Object.keys(imgErr).length === 0) {
         try {
           const res = await sendFormData();
+          console.log(res);
           if (res.status === 201) {
             toast.success("Location Added Successfully");
             // navigate("/rent-locs");
@@ -198,22 +201,22 @@ function AddLocForm() {
   return (
     <div className="container">
       <div className="row">
-              {errors.map((e) => {
-                return (
-                  <div
-                    className="col alert alert-danger alert-dismissible fade show"
-                    role="alert"
-                  >
-                    {e.message}
-                    <button
-                      type="button"
-                      class="btn-close"
-                      data-bs-dismiss="alert"
-                      aria-label="Close"
-                    ></button>
-                  </div>
-                );
-              })}
+        {errors.map((e) => {
+          return (
+            <div
+              className="col alert alert-danger alert-dismissible fade show"
+              role="alert"
+            >
+              {e.message}
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+          );
+        })}
       </div>
       <div className="row">
         <div className="col">
@@ -364,7 +367,7 @@ function AddLocForm() {
                   id="bathrooms"
                   name="bathrooms"
                   placeholder="No of Bathrooms *"
-                 onChange={(e) => {
+                  onChange={(e) => {
                     if (e.target.value > 0) {
                       dispatch(
                         addLocActions.addLocDesc({ bathrooms: e.target.value })
@@ -435,7 +438,7 @@ function AddLocForm() {
                 addImgTtlModal.current.showModal();
               }}
             >
-              {selImgStt.length === 0 ? "Add Images" : "Edit Images"}
+              {selImgStt.length < 3 ? "Add Images" : "Edit Images"}
             </button>
             <div>
               {imgErr?.imgTtlErr && imgErr?.imgTtlErr.length !== 0 ? (

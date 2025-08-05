@@ -1,11 +1,11 @@
-function PropertyCard() {
+function PropertyCard({coverImg,price,ratings}) {
   return (
     <>
       <div className="col mt-4">
         <div className="card position-relative border-0 rounded-5 p-0 shadow">
-          <div className="p-2 ">
+          <div className="p-2">
             <img
-              src="/images/property-01.jpg"
+              src={coverImg}
               className="card-img-top rounded-5 shadow"
             />
             <button
@@ -13,7 +13,7 @@ function PropertyCard() {
               style={{ top: 8, right: 9 }}
             >
               <img
-                src="/public/icons/heart-fill.png"
+                src="/public/icons/heart.png"
                 style={{ width: 20, height: 20, objectFit: "cover" }}
                 alt=""
                 className="me-1 shadow"
@@ -24,7 +24,7 @@ function PropertyCard() {
                 <p className="mx-2 text-dark fw-semibold mb-0">
                   Flats in Gurugram
                 </p>
-                <p className="mx-3 text-muted form p-0">₹4,940 for 2 nights</p>
+                <p className="mx-3 text-muted form p-0">{`${price}`} for 2 nights</p>
               </div>
               <div className="d-flex row justify-content-center align-items-center me-0 w-25">
                 <img
@@ -33,7 +33,7 @@ function PropertyCard() {
                   className=""
                   style={{ width: 45, height: 20, objectFit: "cover" }}
                 />
-                <p className="mx-3 text-muted text-center form p-0" style={{fontSize:12}}>4.9 rating</p>
+                <p className="mx-3 text-muted text-center form p-0" style={{fontSize:12}}>{ratings?`${ratings} rating`:'No ratings'}</p>
               </div>
             </div>
           </div>

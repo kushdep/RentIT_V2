@@ -34,7 +34,7 @@ const locSchema = new mongoose.Schema({
             type: Number,
             required: true
         },
-        guestCap: {
+        guestsCap: {
             type: Number,
             required: true
         },
@@ -65,7 +65,6 @@ const locSchema = new mongoose.Schema({
             title: {
                 type: String,
                 required: true,
-                enum: ['Services', 'Kitchen and dining', 'Connectivity', 'Home Safety', 'Entertainment', 'Bedroom and laundary', 'Bathroom', 'Internet and office']
             },
             ammenities: [{
                 id: {
