@@ -11,7 +11,12 @@ export function newLocValidation(req, res, next) {
                     images:Joi.array()
                 })).required(),
                 price: Joi.number().required(),
-                description: Joi.string().required(),
+                desc:Joi.object({
+                    bedrooms:Joi.number().required(),
+                    beds:Joi.number().required(),
+                    bathrooms:Joi.number().required(),
+                    others:Joi.string().required()
+                }),
                 facilities: Joi.array().items(
                     Joi.object({
                         id: Joi.number().required(),

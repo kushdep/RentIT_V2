@@ -19,6 +19,7 @@ function AddLocForm() {
     price: locPrice,
     locAdd,
     locName,
+    guestsCap,
     errors: imgErr,
     desc,
   } = useSelector((state) => state.addLocData);
@@ -30,7 +31,7 @@ function AddLocForm() {
   const addAmmModal = useRef();
   const [selAmmenity, setSelAmm] = useState(null);
   const status = useFormStatus();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   function openModal(id) {
     try {
@@ -60,6 +61,26 @@ function AddLocForm() {
         });
       }
 
+      if (guestsCap == null) {
+        console.log("Guest Capacity "+guestsCap)
+        tempErr.push({
+          severity: "error",
+          message: "Please provide Capacity of Guests",
+        });
+      }
+      
+      if (
+        desc?.bedrooms == null ||
+        desc?.beds == null ||
+        desc?.bathrooms == null
+      ) {
+        console.log("Guest Capacity "+desc)
+        tempErr.push({
+          severity: "error",
+          message: "Please provide complete details of your Location",
+        });
+      }
+
       if (locAdd === null || locAdd === undefined) {
         tempErr.push({
           severity: "error",
@@ -78,7 +99,7 @@ function AddLocForm() {
         });
       }
 
-      if (selImgStt.length===0) {
+      if (selImgStt.length === 0) {
         tempErr.push({
           severity: "error",
           message: "At least One image of Location is must",
@@ -94,7 +115,7 @@ function AddLocForm() {
       if (desc === null || desc === undefined || desc.length === 0) {
         tempErr.push({
           severity: "error",
-          message: "Please provide Description of your location",
+          message: "Please provide description of your location",
         });
       }
       if (locName.length === 0) {
@@ -118,9 +139,10 @@ function AddLocForm() {
             locType: locTypeStt,
             locDtl: {
               title: locName,
+              guestCap: guestsCap,
               imgTtlData: selImgStt,
               price: locPrice,
-              description: desc,
+              desc: { ...desc },
               facilities,
               location: {
                 address: locAdd.address,
@@ -141,7 +163,7 @@ function AddLocForm() {
             }
           );
           console.log(res);
-          return res
+          return res;
         } catch (error) {
           console.error("Error in sendFormData() " + error);
         }
@@ -152,7 +174,7 @@ function AddLocForm() {
           const res = await sendFormData();
           if (res.status === 201) {
             toast.success("Location Added Successfully");
-            navigate('/rent-locs')
+            // navigate("/rent-locs");
           }
         } catch (error) {
           if (error?.response?.status === 400) {
@@ -176,15 +198,10 @@ function AddLocForm() {
   return (
     <div className="container">
       <div className="row">
-        <div className="col">
-          <div className="w-100">
-            <div className="mb-3">
-              <AddAmmenitiesModal id={selAmmenity} reference={addAmmModal} />
-              <AddImagesModal reference={addImgTtlModal}></AddImagesModal>
               {errors.map((e) => {
                 return (
                   <div
-                    class="alert alert-danger alert-dismissible fade show"
+                    className="col alert alert-danger alert-dismissible fade show"
                     role="alert"
                   >
                     {e.message}
@@ -197,6 +214,13 @@ function AddLocForm() {
                   </div>
                 );
               })}
+      </div>
+      <div className="row">
+        <div className="col">
+          <div className="w-100">
+            <div className="mb-3">
+              <AddAmmenitiesModal id={selAmmenity} reference={addAmmModal} />
+              <AddImagesModal reference={addImgTtlModal}></AddImagesModal>
 
               <label className="form-label fw-semibold" htmlFor="location">
                 Location Name
@@ -243,7 +267,123 @@ function AddLocForm() {
               </div>
             </div>
           </div>
-          <div className="">
+          <div className="container p-0">
+            <div className="row">
+              <div className="col">
+                <label htmlFor="guests" className="form-label fw-semibold">
+                  Guests
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  className="form-control"
+                  id="guests"
+                  name="guests"
+                  placeholder="Max guests allowed *"
+                  onChange={(e) => {
+                    if (e.target.value > 0) {
+                      dispatch(
+                        addLocActions.addLocDesc({ guestCap: e.target.value })
+                      );
+                    } else {
+                      setErrors((prev) => {
+                        let err = {
+                          severity: "error",
+                          message: "Please enter correct guest capacity",
+                        };
+                        return [...prev, err];
+                      });
+                    }
+                  }}
+                />
+              </div>
+              <div className="col">
+                <label htmlFor="bedroom" className="form-label fw-semibold">
+                  Bedroom
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  className="form-control"
+                  id="guests"
+                  name="bedrooms"
+                  placeholder="No of Bedrooms *"
+                  onChange={(e) => {
+                    if (e.target.value > 0) {
+                      dispatch(
+                        addLocActions.addLocDesc({ bedrooms: e.target.value })
+                      );
+                    } else {
+                      setErrors((prev) => {
+                        let err = {
+                          severity: "error",
+                          message: "Please enter correct bedrooms",
+                        };
+                        return [...prev, err];
+                      });
+                    }
+                  }}
+                />
+              </div>
+              <div className="col">
+                <label htmlFor="beds" className="form-label fw-semibold">
+                  Beds
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  className="form-control"
+                  id="beds"
+                  name="beds"
+                  placeholder="No of Beds *"
+                  onChange={(e) => {
+                    if (e.target.value > 0) {
+                      dispatch(
+                        addLocActions.addLocDesc({ beds: e.target.value })
+                      );
+                    } else {
+                      setErrors((prev) => {
+                        let err = {
+                          severity: "error",
+                          message: "Please enter correct beds number",
+                        };
+                        return [...prev, err];
+                      });
+                    }
+                  }}
+                />
+              </div>
+              <div className="col">
+                <label htmlFor="bathroom" className="form-label fw-semibold">
+                  Bathroom
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  className="form-control"
+                  id="bathrooms"
+                  name="bathrooms"
+                  placeholder="No of Bathrooms *"
+                 onChange={(e) => {
+                    if (e.target.value > 0) {
+                      dispatch(
+                        addLocActions.addLocDesc({ bathrooms: e.target.value })
+                      );
+                    } else {
+                      setErrors((prev) => {
+                        let err = {
+                          severity: "error",
+                          message: "Please enter correct bathrooms number",
+                        };
+                        return [...prev, err];
+                      });
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="mt-3">
             <LocInputBox />
           </div>
           <div className="container">
@@ -393,7 +533,9 @@ function AddLocForm() {
               rows="3"
               placeholder="About this space"
               onChange={(e) =>
-                dispatch(addLocActions.addDesc({ description: e.target.value }))
+                dispatch(
+                  addLocActions.addOtherDesc({ description: e.target.value })
+                )
               }
               required
             ></textarea>

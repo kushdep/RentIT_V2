@@ -34,9 +34,28 @@ const locSchema = new mongoose.Schema({
             type: Number,
             required: true
         },
-        description: {
-            type: String,
+        guestCap: {
+            type: Number,
             required: true
+        },
+        desc: {
+            bedrooms: {
+                type: Number,
+                required: true
+            },
+            bathrooms: {
+                type: Number,
+                required: true
+            },
+            beds: {
+                type: Number,
+                required: true
+            },
+            others:{
+                type:String,
+                required:true
+            }
+
         },
         facilities: [{
             id: {
@@ -46,7 +65,7 @@ const locSchema = new mongoose.Schema({
             title: {
                 type: String,
                 required: true,
-                enum: ['Services', 'Kitchen and dining', 'Connectivity', 'Home Safety', 'Entertainment', 'Bedroom and laundary', 'Bathroom','Internet and office']
+                enum: ['Services', 'Kitchen and dining', 'Connectivity', 'Home Safety', 'Entertainment', 'Bedroom and laundary', 'Bathroom', 'Internet and office']
             },
             ammenities: [{
                 id: {
@@ -72,6 +91,7 @@ const locSchema = new mongoose.Schema({
                 }
             }
         },
+
         author: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'

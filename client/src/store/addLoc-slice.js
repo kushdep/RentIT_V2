@@ -6,11 +6,17 @@ const addLocSlice = createSlice({
     name: 'addLoc',
     initialState: {
         locName: '',
+        guestsCap:null,
         locType: '',
         locAdd: null,
         imgTtlData: [],
         offAmm: [],
-        desc: '',
+        desc: {
+            bedrooms:null,
+            bathrooms:null,
+            beds:null,
+            others:''
+        },
         price: null,
         errors:{}
     },
@@ -134,21 +140,40 @@ const addLocSlice = createSlice({
                 console.error('Error in updateName() '+error)   
             }
         },
-        addDesc(state,action){
+        addOtherDesc(state,action){
             try {
                 const {description} = action.payload
-                state.desc=description
+                state.desc.others=description
             } catch (error) {
-                console.error('Error in addDesc() '+error)   
+                console.error('Error in addOtherDesc() '+error)   
+            }
+        },
+        addLocDesc(state,action){
+            try {
+                const {bedrooms,beds,bathrooms,guestCap} = action.payload 
+                console.log(action.payload)
+                if(guestCap!==undefined && guestCap!==null){
+                    state.guestsCap=guestCap
+                }
+                if(bedrooms!==undefined && bedrooms!==null){
+                    state.desc.bedrooms=bedrooms
+                }
+                if(beds!==undefined && beds!==null){
+                    state.desc.beds=beds
+                }
+                if(bathrooms!==undefined && bathrooms!==null){
+                    state.desc.bathrooms=bathrooms
+                }
+                
+            } catch (error) {
+                console.error('Error in addLocDesc() '+error)   
             }
         },
         addErr(state,action){
             try {
                 const {key,errFields} = action.payload
                 if(errFields.length==0){
-                    console.log(state.errors[key])
                     delete state.errors[key]
-                    console.log(state.errors[key])
                 }else{
                     state.errors={[key]:errFields}
                 }

@@ -6,8 +6,8 @@ import "../css/rentlocs.css";
 
 export default function RentLocs() {
   return (
-    <>
-      <header className="position-relative">
+    <div>
+      {/* <header className="position-relative">
         <div className="page-heading image-fluid">
           <img
             src="/images/rent-locs-homepage.png"
@@ -57,10 +57,10 @@ export default function RentLocs() {
             </div>
           </div>
         </div>
-      </header>
+      </header> */}
       <Outlet>
         <LocDetails />
       </Outlet>
-    </>
+      </div>
   );
 }

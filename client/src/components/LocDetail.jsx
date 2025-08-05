@@ -14,7 +14,7 @@ function LocDetails() {
             </h4>
             <button className="btn d-flex h-50 text-decoration-underline align-items-center">
               <img
-                src="/public/icons/heart.png"
+                src="/public/icons/heart-fill.png"
                 style={{ width: 20, height: 20, objectFit: "cover" }}
                 alt=""
                 className="me-1"
