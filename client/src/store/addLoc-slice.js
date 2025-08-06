@@ -6,19 +6,19 @@ const addLocSlice = createSlice({
     name: 'addLoc',
     initialState: {
         locName: '',
-        guestsCap:null,
+        guestsCap: null,
         locType: '',
         locAdd: null,
         imgTtlData: [],
         offAmm: [],
         desc: {
-            bedrooms:null,
-            bathrooms:null,
-            beds:null,
-            others:''
+            bedrooms: null,
+            bathrooms: null,
+            beds: null,
+            others: ''
         },
         price: null,
-        errors:{}
+        errors: {}
     },
     reducers: {
         addImgTtlNewData(state, action) {
@@ -109,76 +109,76 @@ const addLocSlice = createSlice({
                 console.log(error)
             }
         },
-        clearLocCord(state,action){
+        clearLocCord(state, action) {
             try {
-                state.locAdd=''
+                state.locAdd = ''
             } catch (error) {
-                console.error('Error in clearLocCord() '+error)
+                console.error('Error in clearLocCord() ' + error)
             }
         },
-        updateLocType(state,action){
+        updateLocType(state, action) {
             try {
-                const {type} = action.payload
-                state.locType=type
+                const { type } = action.payload
+                state.locType = type
             } catch (error) {
-                console.error('Error in updateLocType() '+error)
+                console.error('Error in updateLocType() ' + error)
             }
         },
-        updatePrice(state,action){
+        updatePrice(state, action) {
             try {
-                const {locPrice} = action.payload
-                state.price=locPrice
+                const { locPrice } = action.payload
+                state.price = locPrice
             } catch (error) {
-                console.error('Error in updatePrice() '+error)   
+                console.error('Error in updatePrice() ' + error)
             }
         },
-        updateLocName(state,action){
+        updateLocName(state, action) {
             try {
-                const {name} = action.payload
-                state.locName=name
+                const { name } = action.payload
+                state.locName = name
             } catch (error) {
-                console.error('Error in updateName() '+error)   
+                console.error('Error in updateName() ' + error)
             }
         },
-        addOtherDesc(state,action){
+        addOtherDesc(state, action) {
             try {
-                const {description} = action.payload
-                state.desc.others=description
+                const { description } = action.payload
+                state.desc.others = description
             } catch (error) {
-                console.error('Error in addOtherDesc() '+error)   
+                console.error('Error in addOtherDesc() ' + error)
             }
         },
-        addLocDesc(state,action){
+        addLocDesc(state, action) {
             try {
-                const {bedrooms,beds,bathrooms,guestCap} = action.payload 
+                const { bedrooms, beds, bathrooms, guestCap } = action.payload
                 console.log(action.payload)
-                if(guestCap!==undefined && guestCap!==null){
-                    state.guestsCap=guestCap
+                if (guestCap !== undefined && guestCap !== null) {
+                    state.guestsCap = guestCap
                 }
-                if(bedrooms!==undefined && bedrooms!==null){
-                    state.desc.bedrooms=bedrooms
+                if (bedrooms !== undefined && bedrooms !== null) {
+                    state.desc.bedrooms = bedrooms
                 }
-                if(beds!==undefined && beds!==null){
-                    state.desc.beds=beds
+                if (beds !== undefined && beds !== null) {
+                    state.desc.beds = beds
                 }
-                if(bathrooms!==undefined && bathrooms!==null){
-                    state.desc.bathrooms=bathrooms
+                if (bathrooms !== undefined && bathrooms !== null) {
+                    state.desc.bathrooms = bathrooms
                 }
-                
+
             } catch (error) {
-                console.error('Error in addLocDesc() '+error)   
+                console.error('Error in addLocDesc() ' + error)
             }
         },
-        addErr(state,action){
+        addErr(state, action) {
             try {
-                const {key,errFields} = action.payload
-                if(errFields.length==0){
+                const { key, errFields } = action.payload
+                if (errFields.length == 0) {
                     delete state.errors[key]
-                }else{
-                    state.errors={[key]:errFields}
+                } else {
+                    state.errors = { [key]: errFields }
                 }
             } catch (error) {
-                console.error('Error in addErr() '+error)   
+                console.error('Error in addErr() ' + error)
             }
         },
     }

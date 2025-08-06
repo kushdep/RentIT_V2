@@ -4,8 +4,8 @@ export default async function googleValidateAdderss(address) {
     try {
         const res = await axios.post(`https://addressvalidation.googleapis.com/v1:validateAddress?key=${import.meta.env.VITE_PLACES_MAP_KEY}`, address)
         console.log(res)
-        const result = res.data.result
-        const verdict = result.verdict
+        const {result} = res.data
+        const {verdict} = result
         console.log(JSON.stringify(verdict))
         if (verdict.possibleNextAction === 'FIX') {
             let addressComp = {}
@@ -50,6 +50,8 @@ export default async function googleValidateAdderss(address) {
         } else if (verdict.possibleNextAction === 'CONFIRM' || verdict.possibleNextAction === 'ACCEPT') {
             const validAddress = result.address.formattedAddress
             const { latitude, longitude } = result.geocode.location
+            const { placeId, plusCode } = result.geocode
+            console.log("geocode "+result.geocode)
             return {
                 validation: true,
                 data: {
@@ -57,6 +59,10 @@ export default async function googleValidateAdderss(address) {
                     coordinates: {
                         latitude,
                         longitude,
+                    },
+                    place_id:placeId,
+                    plus_code:{
+                        global_code:plusCode.globalCode
                     }
                 },
                 message: 'Address Validation Successfull'

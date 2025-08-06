@@ -79,6 +79,18 @@ const locSchema = new mongoose.Schema({
                 type: String,
                 required: true
             },
+            placeId: {
+                type: String,
+                required: true
+            },
+            plusCode: {
+                compound_code:{
+                    type: String,
+                },
+                global_code:{
+                    type: String,
+                }
+            },
             coordinates: {
                 longitude: {
                     type: Number,
@@ -90,7 +102,6 @@ const locSchema = new mongoose.Schema({
                 }
             }
         },
-
         author: {
             email:{
                 type:String,

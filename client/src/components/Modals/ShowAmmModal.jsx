@@ -33,9 +33,6 @@ function ShowAmmModal({ reference, facilities }) {
     }
   });
 
-  console.log(JSON.stringify(availableFac));
-  console.log(JSON.stringify(notAvailableFac));
-
   return createPortal(
     <>
       <dialog ref={reference} className="border-0 w-25 rounded-4">

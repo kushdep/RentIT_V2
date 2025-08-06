@@ -7,16 +7,16 @@ export function newLocValidation(req, res, next) {
             locDtl: Joi.object({
                 title: Joi.string().required(),
                 imgTtlData: Joi.array().items(Joi.object({
-                    title:Joi.string(),
-                    images:Joi.array()
+                    title: Joi.string(),
+                    images: Joi.array()
                 })).required(),
                 price: Joi.number().required(),
                 guestsCap: Joi.number().required(),
-                desc:Joi.object({
-                    bedrooms:Joi.number().required(),
-                    beds:Joi.number().required(),
-                    bathrooms:Joi.number().required(),
-                    others:Joi.string().required()
+                desc: Joi.object({
+                    bedrooms: Joi.number().required(),
+                    beds: Joi.number().required(),
+                    bathrooms: Joi.number().required(),
+                    others: Joi.string().required()
                 }),
                 facilities: Joi.array().items(
                     Joi.object({
@@ -29,11 +29,18 @@ export function newLocValidation(req, res, next) {
                     })
                 ).required(),
                 location: Joi.object({
-                    address:Joi.string().required(),
-                    coordinates:Joi.object({
-                        longitude:Joi.number(),
-                        latitude:Joi.number()
-                    }).required()
+                    address: Joi.string().required(),
+                    coordinates: Joi.object({
+                        longitude: Joi.number(),
+                        latitude: Joi.number()
+                    },
+
+                    ).required(),
+                    placeId: Joi.string().required(),
+                    plusCode: Joi.object({
+                        compound_code: Joi.string().optional(),
+                        global_code: Joi.string().optional()
+                    }).optional()
                 }).required()
             }).required()
         })
@@ -47,7 +54,7 @@ export function newLocValidation(req, res, next) {
         }
         next()
     } catch (error) {
-        console.log("ERROR IN newLocValidation()- "+error)
+        console.log("ERROR IN newLocValidation()- " + error)
     }
 
 } 

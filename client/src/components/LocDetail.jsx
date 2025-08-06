@@ -6,6 +6,7 @@ import { useNavigate, useParams, useRouteLoaderData } from "react-router-dom";
 import { useRef } from "react";
 import ShowAmmModal from "./Modals/showAmmModal";
 import { curfmt } from "../utils/formatter";
+import GoogleMap from "./GoogleMap";
 
 function LocDetails() {
   const showAmmModal = useRef();
@@ -13,17 +14,17 @@ function LocDetails() {
   const locDetails = useRouteLoaderData("rentLocs");
   const { locId } = useParams();
 
-  let location = null;
-  location = locDetails.find((loc) => loc._id === locId);
-  const { title, imgTtlData, desc, guestsCap, facilities, price } =
-    location.locDtl;
+  let loc = null;
+  loc = locDetails.find((loc) => loc._id === locId);
+  const { title, imgTtlData, desc, guestsCap, facilities, price,author,location } =
+    loc.locDtl;
 
   const { options } = Ammentities.find((a) => a.id === facilities[0].id);
 
   return (
     <>
       <ShowAmmModal reference={showAmmModal} facilities={facilities} />
-      {location && (
+      {loc && (
         <div className="container">
           <div className="row">
             <div className="col d-flex justify-content-between align-items-center">
@@ -103,7 +104,7 @@ function LocDetails() {
                       style={{ height: 50, width: 50, borderRadius: 50 }}
                     />
                     <div className="ms-3">
-                      <h6 className="fw-medium mb-0">Hosted by Swati</h6>
+                      <h6 className="fw-medium mb-0">Hosted by {author.username}</h6>
                       <p
                         className="p-0 text-muted form "
                         style={{ fontSize: 12 }}
@@ -228,6 +229,9 @@ function LocDetails() {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="row mt-4">
+              <GoogleMap placeId = {location.placeId}/>
           </div>
           <hr />
           <div className="row mt-4">

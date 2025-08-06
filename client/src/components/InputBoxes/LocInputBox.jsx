@@ -1,8 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
+import {useState} from 'react'
+import { useSelector } from "react-redux";
 import GoogleMapInput from "./GoogleMapInput";
 import AddressLocInput from "./AddressLocInput";
-import { addLocActions } from "../../store/addLoc-slice";
-import {useState} from 'react'
 
 function LocInputBox() {
   const [showAddress,setShowAddress] = useState(false)

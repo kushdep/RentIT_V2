@@ -5,6 +5,7 @@ import { addLocActions } from "../../store/addLoc-slice";
 import { useDispatch } from "react-redux";
 import Alert from "@mui/material/Alert";
 import toast from "react-hot-toast";
+import { getGeocode } from "use-places-autocomplete";
 
 function AddressLocInput({addressVis}) {
   const [addFormStt, setAddFormStt] = useState(false);
@@ -42,7 +43,7 @@ function AddressLocInput({addressVis}) {
     currentState.errors = [];
 
     const res = await googleValidateAdderss(addState);
-    console.log(res);
+    console.log("address validation response "+JSON.stringify(res));
     if (res.validation) {
       console.log(res.message);
       toast.success(res.message);

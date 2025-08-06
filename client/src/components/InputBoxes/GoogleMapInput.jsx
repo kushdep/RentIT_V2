@@ -60,7 +60,9 @@ function GoogleMapInput({ addressVis }) {
 
   const handleSelect = async (address) => {
     const result = await getGeocode({ address });
+    console.log("Location search result "+JSON.stringify(result))
     const { lat, lng } = getLatLng(result[0]);
+    const {place_id,plus_code} = result[0]
     console.log(`${address} Cordinates --> lat: ${lat} lng:${lng}`);
     const location = {
       address,
@@ -68,6 +70,8 @@ function GoogleMapInput({ addressVis }) {
         latitude: lat,
         longitude: lng,
       },
+      place_id,
+      plus_code
     };
     console.log(location);
     dispatch(addLocActions.addLocCord({ location }));

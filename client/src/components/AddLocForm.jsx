@@ -145,6 +145,8 @@ function AddLocForm() {
               location: {
                 address: locAdd.address,
                 coordinates: locAdd.coordinates,
+                placeId:locAdd.place_id,
+                plusCode:locAdd.plus_code
               },
             },
           };
