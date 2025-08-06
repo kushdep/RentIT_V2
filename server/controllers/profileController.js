@@ -1,8 +1,15 @@
 import Location from '../models/location.js'
+import User from '../models/user.js'
 
 export const addLocation = async (req, res) => {
     try {
-        const newLoc = { ...req.body, locDtl: { ...req.body.locDtl, author: req.user._id } }
+        const {_id} = req.user
+        const user = await User.findById({_id})
+        const author = {
+            username:user.username,
+            email:user.email,
+        }
+        const newLoc = { ...req.body, locDtl: { ...req.body.locDtl, author: { ...author } } }
         const locRes = await Location.create(newLoc)
         console.log(locRes)
         return res.status(201).send({

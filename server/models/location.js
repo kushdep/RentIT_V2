@@ -92,8 +92,14 @@ const locSchema = new mongoose.Schema({
         },
 
         author: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
+            email:{
+                type:String,
+                required:true
+            },
+            username:{
+                type:String,
+                required:true
+            }
         },
         reviews: [
             {
