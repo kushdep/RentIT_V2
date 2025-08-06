@@ -34,7 +34,6 @@ function AuthModal({ reference }) {
         const response = await axios.post("http://localhost:3000/login", body);
         console.log(response);
         if (response.status === 200) {
-          localStorage.setItem("token", response.data);
           dispatch(authActions.loginSuccess({ token: response.data }));
           toast.success("Logged In");
           navigate("/rent-locs");
@@ -101,16 +100,16 @@ function AuthModal({ reference }) {
                       placeholder="name@example.com"
                       defaultValue={formState?.email}
                     />
-                    <label for="floatingInput">Email address</label>
+                    <label htmlFor="floatingInput">Email address</label>
                   </div>
                   <div className="form-floating">
                     <input
                       type="password"
-                      class="form-control"
+                      className="form-control"
                       id="floatingPassword"
                       placeholder="Password"
                     />
-                    <label for="floatingPassword">Password</label>
+                    <label htmlFor="floatingPassword">Password</label>
                   </div>
                   <div>
                     <button

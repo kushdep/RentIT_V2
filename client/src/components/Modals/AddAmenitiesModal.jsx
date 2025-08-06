@@ -7,7 +7,6 @@ function AddAmmenitiesModal({ reference, id }) {
   const offAmm = useSelector((state) => state.addLocData.offAmm);
   const mmStt = offAmm.find((e) => e.id === id)?.opt; //got the options array
   const dispatch = useDispatch();
-  const clss = "";
   const ammenityData = Ammentities.find((e) => e.id === id);
   console.log(ammenityData);
 

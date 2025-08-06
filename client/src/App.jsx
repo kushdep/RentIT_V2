@@ -1,13 +1,13 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./pages/Layout";
-import LoginPage from "./pages/LoginPage";
-import SignUp from "./pages/SignUp";
 import RentLocs, { getAllLocLoader } from "./pages/RentLocs";
 import Homepage from "./pages/Homepage";
 import ContactUs from "./pages/ContactUs";
 import Profile from "./pages/Profile";
 import AddLocForm from "./components/AddLocForm";
 import LocDetails from "./components/LocDetail";
+import { useDispatch } from "react-redux";
+import { authActions } from "./store/auth-slice";
 
 const router = createBrowserRouter([
   {
@@ -17,13 +17,14 @@ const router = createBrowserRouter([
       { path: "", element: <Homepage /> },
       {
         path: "rent-locs",
+        id:"rentLocs",
+        loader: getAllLocLoader,
         children: [
           {
             path: "",
             element: <RentLocs />,
-            loader: getAllLocLoader,
           },
-          { path: "loc", element: <LocDetails /> },
+          { path: ":locId", element: <LocDetails /> },
         ],
       },
       { path: "contact-us", element: <ContactUs /> },
@@ -40,6 +41,12 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const token = localStorage.getItem('token')
+  const dispatch = useDispatch()
+
+  if(token){
+    dispatch(authActions.loginSuccess({token:token}))  
+  }
   return <RouterProvider router={router} />;
 }
 

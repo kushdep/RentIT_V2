@@ -2,7 +2,7 @@ import PropertyCard from "../components/UI/PropertyCard";
 import SearchBar from "../components/UI/SearchBar";
 import "../css/rentlocs.css";
 import axios from "axios";
-import { useLoaderData } from "react-router-dom";
+import { useRouteLoaderData } from "react-router-dom";
 import { curfmt } from "../utils/formatter";
 
 export async function getAllLocLoader() {
@@ -25,9 +25,8 @@ export async function getAllLocLoader() {
 }
 
 export default function RentLocs() {
-  const locData = useLoaderData();
+  const locData = useRouteLoaderData("rentLocs")
 
-  console.log(JSON.stringify(locData));
 
   return (
     <div>
@@ -72,18 +71,17 @@ export default function RentLocs() {
                 <div className="row row-cols-4">
                   {locData.length !== 0 ? (
                     locData.map((e) => {
-                      console.log("lement " + JSON.stringify(e));
                       const formattedPrice = curfmt.format(e.locDtl.price*2);
-                      console.log(formattedPrice)
                       return (
                         <PropertyCard
                           coverImg={e.locDtl?.imgTtlData?.[0]?.images?.[0]?.url}
                           price={formattedPrice}
+                          locId={e._id}
                         />
                       );
                     })
                   ) : (
-                    <h1 className="text-muted">NO Locations to show</h1>
+                    <h1 className="text-muted">No Locations to show</h1>
                   )}
                 </div>
               </div>
