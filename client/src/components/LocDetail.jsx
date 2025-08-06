@@ -2,13 +2,14 @@ import { Ammentities } from "../config";
 import "../css/locdetails.css";
 import DateInputBox from "./UI/DateInputBox";
 import Reviews from "./Reviews";
-import { useParams, useRouteLoaderData } from "react-router-dom";
+import { useNavigate, useParams, useRouteLoaderData } from "react-router-dom";
 import { useRef } from "react";
 import ShowAmmModal from "./Modals/showAmmModal";
 import { curfmt } from "../utils/formatter";
 
 function LocDetails() {
   const showAmmModal = useRef();
+  const navigate = useNavigate()
   const locDetails = useRouteLoaderData("rentLocs");
   const { locId } = useParams();
 
@@ -51,6 +52,7 @@ function LocDetails() {
               <button
                 className="btn btn-light position-absolute rounded-pill"
                 style={{ bottom: 50, left: 150 }}
+                onClick={()=>navigate(`photos`)}
               >
                 Show all Photos
               </button>
@@ -84,9 +86,8 @@ function LocDetails() {
                 Entire rental unit in Gurugram, India
               </h5>
               <p className="p-0 text-muted form ">
-                {guestsCap} Guests &#10022; {desc.bedrooms} bedroom &#10022;{" "}
-                {desc.beds}
-                bed &#10022; {desc.bathrooms} bathroom
+                {guestsCap} Guests &#10022; {desc.bedrooms} bedroom &#10022;
+                {desc.beds} bed &#10022; {desc.bathrooms} bathroom
               </p>
             </div>
           </div>
