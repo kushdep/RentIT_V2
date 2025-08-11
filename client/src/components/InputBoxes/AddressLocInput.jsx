@@ -5,7 +5,6 @@ import { addLocActions } from "../../store/addLoc-slice";
 import { useDispatch } from "react-redux";
 import Alert from "@mui/material/Alert";
 import toast from "react-hot-toast";
-import { getGeocode } from "use-places-autocomplete";
 
 function AddressLocInput({addressVis}) {
   const [addFormStt, setAddFormStt] = useState(false);
