@@ -12,6 +12,7 @@ function Profile() {
               <div className="row row-cols-1 gy-4">
                 <div className="col" style={{ height: 50 }}></div>
                 <ProfileButton active='active' To='/profile' title="Profile" />
+                <ProfileButton title="Whishlist" />
                 <ProfileButton title="Approvals" />
                 <ProfileButton title="Trips" />
                 <button className="btn-primary text-light fw-semibold">
