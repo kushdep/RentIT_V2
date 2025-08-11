@@ -18,11 +18,10 @@ export function useGoogleAutoComp() {
 
     useEffect(() => {
         if (window.google) {
-            if (inpVal.val.length === 0) {
+            if (inpVal.val.length < 4) {
                 setSugg([]);
+                return;
             }
-
-            if (inpVal.val.length < 4) return;
 
             if (!sessionTokenRef.current) {
                 const token = getSessionToken();
@@ -49,7 +48,15 @@ export function useGoogleAutoComp() {
     }, [inpVal.val]);
 
     function handleInpVal(value){
-        setInpVal(value)
+        try {
+            if (value.hasOwnProperty("val") && value.hasOwnProperty("index")) {
+                setInpVal(value);
+            } else {
+                console.error("state value is incomplete");
+            }
+        } catch (error) {
+            console.error("Error in handleInpVal "+error)
+        }
     }
 
     return {

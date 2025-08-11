@@ -21,7 +21,7 @@ function GoogleMapInput({ addressVis }) {
       plus_code,
     };
     dispatch(addLocActions.addLocCord({ location }));
-    handleInpVal("");
+      handleInpVal({ val: "", index: null })
     addressVis(true);
   };
 

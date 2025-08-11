@@ -14,7 +14,7 @@ function SearchBar({ props }) {
       console.log(lat);
       console.log(lng);
       console.log(locId);
-      
+      handleInpVal({ val: "", index: null })
     } catch (error) {
       console.log("Error in Search Bar handleSelect " + error);
     }
