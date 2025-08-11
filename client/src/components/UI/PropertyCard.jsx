@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 
-function PropertyCard({ locId,coverImg, price, ratings }) {
-  const navigate = useNavigate()
-  async function handleClick(){
+function PropertyCard({ locId, coverImg, price, ratings }) {
+  const navigate = useNavigate();
+  async function handleClick() {
     try {
-      navigate(`${locId}`)
-      console.log(locId)
+      navigate(`${locId}`);
+      console.log(locId);
     } catch (error) {
-      console.error('Error in handleClick() '+error)
+      console.error("Error in handleClick() " + error);
     }
   }
 
@@ -41,20 +41,22 @@ function PropertyCard({ locId,coverImg, price, ratings }) {
                   {`${price}`} for 2 nights
                 </p>
               </div>
-              <div className="d-flex row justify-content-center align-items-center me-0 w-25">
-                <img
-                  src="/public/icons/star-fill.svg"
-                  alt=""
-                  className=""
-                  style={{ width: 45, height: 20, objectFit: "cover" }}
-                />
-                <p
-                  className="mx-3 text-muted text-center form p-0"
-                  style={{ fontSize: 12 }}
-                >
-                  {ratings ? `${ratings} rating` : "No ratings"}
-                </p>
-              </div>
+              {ratings && (
+                <div className="d-flex row justify-content-center align-items-center me-0 w-25">
+                  <img
+                    src="/public/icons/star-fill.svg"
+                    alt=""
+                    className=""
+                    style={{ width: 45, height: 20, objectFit: "cover" }}
+                  />
+                  <p
+                    className="mx-3 text-muted text-center form p-0"
+                    style={{ fontSize: 12 }}
+                  >
+                    {ratings && `${ratings} rating`}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

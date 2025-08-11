@@ -2,10 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { addLocActions } from "../../store/addLoc-slice";
+import {
+  getSessionToken,
+  getSuggestions,
+} from "../../../../server/utils/googleAutoComp";
 
 function GoogleMapInput({ addressVis }) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [inpVal, setInpVal] = useState({val:'',index:null});
+  const [inpVal, setInpVal] = useState({ val: "", index: null });
   const [sugg, setSugg] = useState([]);
   const sessionTokenRef = useRef(null);
   const dispatch = useDispatch();
@@ -29,40 +33,43 @@ function GoogleMapInput({ addressVis }) {
 
   useEffect(() => {
     if (window.google) {
-      if (!sessionTokenRef.current) {
-        sessionTokenRef.current =
-          new google.maps.places.AutocompleteSessionToken();
+      if (inpVal.length === 0) {
+        setSugg([]);
       }
 
-      async function getSuggestions() {
-        if (inpVal.length === 0) {
-          setSugg([]);
+      if (inpVal.length < 4) return;
+
+      if (!sessionTokenRef.current) {
+        const token = getSessionToken();
+        if (!token) {
+          console.error("Cannot get token");
+          return;
         }
-        if (inpVal.length < 4) return;
-        const { suggestions } =
-          await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions(
-            {
-              input: inpVal.val,
-              sessionToken: sessionTokenRef.current,
-              locationBias: {
-                west: 68.11,
-                south: 6.55,
-                east: 97.4,
-                north: 35.67,
-              },
-            }
-          );
-        setSugg(suggestions);
+        sessionTokenRef.current = token;
       }
-      getSuggestions();
+
+      async function sugg() {
+        try {
+          const {suggestions} = await getSuggestions(
+            sessionTokenRef.current,
+            inpVal.val
+          );
+        console.log("suggestions in "+JSON.stringify(suggestions))
+          setSugg(suggestions);
+        } catch (error) {
+          console.log("Error while getting sugg()" + error);
+        }
+      }
+
+      sugg();
     }
   }, [inpVal.val]);
 
   const handleSelect = async (address) => {
     const result = await getGeocode({ address });
-    console.log("Location search result "+JSON.stringify(result))
+    console.log("Location search result " + JSON.stringify(result));
     const { lat, lng } = getLatLng(result[0]);
-    const {place_id,plus_code} = result[0]
+    const { place_id, plus_code } = result[0];
     console.log(`${address} Cordinates --> lat: ${lat} lng:${lng}`);
     const location = {
       address,
@@ -71,13 +78,15 @@ function GoogleMapInput({ addressVis }) {
         longitude: lng,
       },
       place_id,
-      plus_code
+      plus_code,
     };
     console.log(location);
     dispatch(addLocActions.addLocCord({ location }));
     setInpVal("");
-    addressVis(true)
+    addressVis(true);
   };
+
+  console.log(sugg)
 
   return (
     <>
@@ -88,14 +97,16 @@ function GoogleMapInput({ addressVis }) {
           disabled={!isLoaded}
           className="form-control dropdown-toggle"
           data-bs-toggle="dropdown"
-          onChange={(e) => setInpVal({val:e.target.value,index:null})}
+          onChange={(e) => setInpVal({ val: e.target.value, index: null })}
           placeholder="Search your location"
         />
         <ul className="dropdown-menu m-0">
-          {sugg?.map((sug,i) => (
+          {sugg?.map((sug, i) => (
             <li
               className="dropdown-item"
-              onClick={() => setInpVal({val:sug?.Dg?.Nh?.[0]?.[2]?.[0],index:i})}
+              onClick={() =>
+                setInpVal({ val: sug?.Dg?.Nh?.[0]?.[2]?.[0], index: i })
+              }
             >
               {sug?.Dg?.Nh?.[0]?.[2]?.[0] || "Unknown"}
             </li>
@@ -103,13 +114,12 @@ function GoogleMapInput({ addressVis }) {
         </ul>
         <button
           className="btn btn-outline-primary p-1 mx-2 h-50 w-25"
-          disabled={inpVal.index===null?true:false}
+          disabled={inpVal.index === null ? true : false}
           onClick={() => {
-            if(inpVal.index!==null){
-              handleSelect(inpVal.val)
+            if (inpVal.index !== null) {
+              handleSelect(inpVal.val);
             }
-          }
-        }
+          }}
         >
           Add
         </button>
