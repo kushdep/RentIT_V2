@@ -193,13 +193,7 @@ function AddLocForm() {
       console.error("Error in form action() " + error);
     }
   }
-
-  console.log(locStt);
-
-  console.log("errror " + JSON.stringify(imgErr));
-
-  console.log(imgErr?.imgTtlErr?.length);
-
+  
   return (
     <div className="container">
       <div className="row" id="ErrorELE">

@@ -1,60 +1,11 @@
-import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { addLocActions } from "../../store/addLoc-slice";
-import {
-  getSessionToken,
-  getSuggestions,
-  loadGoogleScript,
-} from "../../utils/googleAutoComp";
+import { useGoogleAutoComp } from "../../hooks/useGoogleAutoComp";
 
 function GoogleMapInput({ addressVis }) {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [inpVal, setInpVal] = useState({ val: "", index: null });
-  const [sugg, setSugg] = useState([]);
-  const sessionTokenRef = useRef(null);
+  const { isLoaded, sugg, inpVal, handleInpVal } = useGoogleAutoComp();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (!window.google) {
-      loadGoogleScript(setIsLoaded);
-    } else {
-      setIsLoaded(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (window.google) {
-      if (inpVal.length === 0) {
-        setSugg([]);
-      }
-
-      if (inpVal.length < 4) return;
-
-      if (!sessionTokenRef.current) {
-        const token = getSessionToken();
-        if (!token) {
-          console.error("Cannot get token");
-          return;
-        }
-        sessionTokenRef.current = token;
-      }
-
-      async function sugg() {
-        try {
-          const { suggestions } = await getSuggestions(
-            sessionTokenRef.current,
-            inpVal.val
-          );
-          setSugg(suggestions);
-        } catch (error) {
-          console.error("Error while getting sugg()" + error);
-        }
-      }
-
-      sugg();
-    }
-  }, [inpVal.val]);
 
   const handleSelect = async (address) => {
     const result = await getGeocode({ address });
@@ -70,10 +21,9 @@ function GoogleMapInput({ addressVis }) {
       plus_code,
     };
     dispatch(addLocActions.addLocCord({ location }));
-    setInpVal("");
+    handleInpVal("");
     addressVis(true);
   };
-
 
   return (
     <div className="col">
@@ -84,7 +34,7 @@ function GoogleMapInput({ addressVis }) {
           disabled={!isLoaded}
           className="form-control dropdown-toggle"
           data-bs-toggle="dropdown"
-          onChange={(e) => setInpVal({ val: e.target.value, index: null })}
+          onChange={(e) => handleInpVal({ val: e.target.value, index: null })}
           placeholder="Search your location"
         />
         <ul className="dropdown-menu m-0">
@@ -92,7 +42,7 @@ function GoogleMapInput({ addressVis }) {
             <li
               className="dropdown-item"
               onClick={() =>
-                setInpVal({ val: sug?.Dg?.Ph?.[0]?.[2]?.[0], index: i })
+                handleInpVal({ val: sug?.Dg?.Ph?.[0]?.[2]?.[0], index: i })
               }
             >
               {sug?.Dg?.Ph?.[0]?.[2]?.[0] || "Unknown"}
