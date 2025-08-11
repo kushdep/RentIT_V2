@@ -5,7 +5,8 @@ import { addLocActions } from "../../store/addLoc-slice";
 import {
   getSessionToken,
   getSuggestions,
-} from "../../../../server/utils/googleAutoComp";
+  loadGoogleScript,
+} from "../../utils/googleAutoComp";
 
 function GoogleMapInput({ addressVis }) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -16,16 +17,7 @@ function GoogleMapInput({ addressVis }) {
 
   useEffect(() => {
     if (!window.google) {
-      const script = document.createElement("script");
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${
-        import.meta.env.VITE_PLACES_MAP_KEY
-      }&libraries=places`;
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        setIsLoaded(true);
-      };
-      document.body.appendChild(script);
+      loadGoogleScript(setIsLoaded);
     } else {
       setIsLoaded(true);
     }
@@ -50,14 +42,13 @@ function GoogleMapInput({ addressVis }) {
 
       async function sugg() {
         try {
-          const {suggestions} = await getSuggestions(
+          const { suggestions } = await getSuggestions(
             sessionTokenRef.current,
             inpVal.val
           );
-        console.log("suggestions in "+JSON.stringify(suggestions))
           setSugg(suggestions);
         } catch (error) {
-          console.log("Error while getting sugg()" + error);
+          console.error("Error while getting sugg()" + error);
         }
       }
 
@@ -67,10 +58,8 @@ function GoogleMapInput({ addressVis }) {
 
   const handleSelect = async (address) => {
     const result = await getGeocode({ address });
-    console.log("Location search result " + JSON.stringify(result));
     const { lat, lng } = getLatLng(result[0]);
     const { place_id, plus_code } = result[0];
-    console.log(`${address} Cordinates --> lat: ${lat} lng:${lng}`);
     const location = {
       address,
       coordinates: {
@@ -80,13 +69,11 @@ function GoogleMapInput({ addressVis }) {
       place_id,
       plus_code,
     };
-    console.log(location);
     dispatch(addLocActions.addLocCord({ location }));
     setInpVal("");
     addressVis(true);
   };
 
-  console.log(sugg)
 
   return (
     <>
@@ -105,10 +92,10 @@ function GoogleMapInput({ addressVis }) {
             <li
               className="dropdown-item"
               onClick={() =>
-                setInpVal({ val: sug?.Dg?.Nh?.[0]?.[2]?.[0], index: i })
+                setInpVal({ val: sug?.Dg?.Ph?.[0]?.[2]?.[0], index: i })
               }
             >
-              {sug?.Dg?.Nh?.[0]?.[2]?.[0] || "Unknown"}
+              {sug?.Dg?.Ph?.[0]?.[2]?.[0] || "Unknown"}
             </li>
           ))}
         </ul>
