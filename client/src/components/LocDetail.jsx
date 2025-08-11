@@ -5,7 +5,7 @@ import Reviews from "./Reviews";
 import { useNavigate, useParams, useRouteLoaderData } from "react-router-dom";
 import { useRef } from "react";
 import ShowAmmModal from "./Modals/showAmmModal";
-import { curfmt } from "../utils/formatter";
+import { curfmt } from "../utils/formatter";  
 import GoogleMap from "./GoogleMap";
 
 function LocDetails() {

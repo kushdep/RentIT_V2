@@ -515,7 +515,6 @@ function AddLocForm() {
                         >
                           <img src="/icons/x-circle-fill.svg" alt="" />
                         </button>
-                        <p class="fs-6 text-center">{e?.title}</p>
                       </div>
                     );
                   })
