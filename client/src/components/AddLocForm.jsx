@@ -145,8 +145,8 @@ function AddLocForm() {
               location: {
                 address: locAdd.address,
                 coordinates: locAdd.coordinates,
-                placeId:locAdd.place_id,
-                plusCode:locAdd.plus_code
+                placeId: locAdd.place_id,
+                plusCode: locAdd.plus_code,
               },
             },
           };
@@ -159,7 +159,7 @@ function AddLocForm() {
               body,
               {
                 headers: {
-                  authorization: `Bearer ${token}`,      
+                  authorization: `Bearer ${token}`,
                 },
               }
             );
@@ -179,7 +179,7 @@ function AddLocForm() {
           console.log(res);
           if (res.status === 201) {
             toast.success("Location Added Successfully");
-            // navigate("/rent-locs");
+            navigate("/rent-locs");
           }
         } catch (error) {
           if (error?.response?.status === 400) {
@@ -202,7 +202,7 @@ function AddLocForm() {
 
   return (
     <div className="container">
-      <div className="row">
+      <div className="row" id="ErrorELE">
         {errors.map((e) => {
           return (
             <div
@@ -388,8 +388,10 @@ function AddLocForm() {
               </div>
             </div>
           </div>
-          <div className="mt-3">
+          <div className="container">
+            <div className="row mt-3">
             <LocInputBox />
+            </div>
           </div>
           <div className="container">
             <div className="row align-items-center">

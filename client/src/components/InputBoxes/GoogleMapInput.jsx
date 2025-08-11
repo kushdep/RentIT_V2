@@ -80,7 +80,7 @@ function GoogleMapInput({ addressVis }) {
   };
 
   return (
-    <>
+    <div className="col">
       <div className="d-flex">
         <input
           type="text"
@@ -114,7 +114,7 @@ function GoogleMapInput({ addressVis }) {
           Add
         </button>
       </div>
-    </>
+    </div>
   );
 }
 

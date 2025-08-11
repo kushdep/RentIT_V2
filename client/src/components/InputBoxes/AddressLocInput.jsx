@@ -97,7 +97,7 @@ function AddressLocInput({addressVis}) {
     };
   }
   return (
-    <>
+    <div className="col">
       {!addFormStt ? (
         <div className="w-100 text-center">
           <button
@@ -236,7 +236,7 @@ function AddressLocInput({addressVis}) {
           </div>
         </form>
       )}
-    </>
+    </div>
   );
 }
 export default AddressLocInput;

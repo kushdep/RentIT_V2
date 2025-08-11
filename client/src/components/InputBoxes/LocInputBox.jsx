@@ -8,13 +8,13 @@ function LocInputBox() {
   const locData = useSelector((state) => state.addLocData.locAdd);
 
   return (
-    <>
+    <div className='col'>
       <div className="mb-3 border border-2 rounded-4 p-4">
         <label className="form-label fw-semibold" htmlFor="LocName">
           Address
         </label>
         {!showAddress ? (
-          <>
+          <div>
             <GoogleMapInput addressVis={setShowAddress}/>
             <div className="container">
               <div className="row">
@@ -28,7 +28,7 @@ function LocInputBox() {
               </div>
             </div>
             <AddressLocInput addressVis={setShowAddress}/>
-          </>
+          </div>
         ) : (
           <div className="d-flex row">
             <textarea
@@ -52,7 +52,7 @@ function LocInputBox() {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 

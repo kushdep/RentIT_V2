@@ -11,7 +11,6 @@ export async function getAllLocLoader() {
     console.log(response);
     if (response.status === 200) {
       const resData = await response.data.data;
-      console.log(resData);
       return resData;
     }
     if (response.status === 204) {
