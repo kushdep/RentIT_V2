@@ -4,6 +4,10 @@ import "../css/rentlocs.css";
 import axios from "axios";
 import { useRouteLoaderData } from "react-router-dom";
 import { curfmt } from "../utils/formatter";
+import { useRef } from "react";
+import { Slider } from "antd";
+import SortAndFilterModal from "../components/Modals/SortAndFilterModal";
+import { priceRange } from "../config";
 
 export async function getAllLocLoader() {
   try {
@@ -24,8 +28,9 @@ export async function getAllLocLoader() {
 }
 
 export default function RentLocs() {
-  const locData = useRouteLoaderData("rentLocs")
-
+  const locData = useRouteLoaderData("rentLocs");
+  const sortModalRef = useRef();
+  const filterModalRef = useRef();
 
   return (
     <div>
@@ -42,7 +47,12 @@ export default function RentLocs() {
           <div className="row" style={{ height: 500 }}>
             <div className="col-1 sortBtns">
               <div className="sortBtns mt-3">
-                <button className="btn btn-dark fs-5 rounded-pill d-flex align-items-center shadow">
+                <button
+                  className="btn btn-dark fs-5 rounded-pill d-flex align-items-center shadow"
+                  onClick={() => {
+                    filterModalRef.current.showModal();
+                  }}
+                >
                   <img
                     src={`/public/icons/filter.png`}
                     alt=""
@@ -54,7 +64,10 @@ export default function RentLocs() {
               </div>
 
               <div className="sortBtns mt-3">
-                <button className="btn btn-dark fs-5 rounded-pill d-flex align-items-center shadow">
+                <button
+                  className="btn btn-dark fs-5 rounded-pill d-flex align-items-center shadow"
+                  onClick={() => sortModalRef.current.showModal()}
+                >
                   <img
                     src={`/public/icons/sortBy.png`}
                     alt=""
@@ -64,13 +77,110 @@ export default function RentLocs() {
                   <p className="mb-0 fs-6 fw-semibold">Sort-By</p>
                 </button>
               </div>
+              <SortAndFilterModal title="Sort By" reference={sortModalRef}>
+                <div className="row">
+                  <div className="col">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="checkDefault"
+                      />
+                      <label class="form-check-label" for="checkDefault">
+                        Ratings
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="checkDefault"
+                      />
+                      <label class="form-check-label" for="checkDefault">
+                        Distance
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="checkDefault"
+                      />
+                      <label class="form-check-label" for="checkDefault">
+                        Newest
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </SortAndFilterModal>
+              <SortAndFilterModal title="Filter" reference={filterModalRef}>
+                <div className="row-cols-1">
+                  <div className="col p-2">
+                    <div className="fs-5 fw-medium">Price</div>
+                    <Slider
+                      range
+                      marks={priceRange}
+                      step={null}
+                      defaultValue={[0, 50]}
+                    />
+                  </div>
+                  <div className="col p-2">
+                    <div className="fs-5 fw-medium">Type</div>
+                    <div class="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="checkDefault"
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="checkDefault"
+                      >
+                        Appartment
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="checkDefault"
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="checkDefault"
+                      >
+                        Villa
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="checkDefault"
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor="checkDefault"
+                      >
+                        Pent-House
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </SortAndFilterModal>
             </div>
             <div className="col">
               <div className="container-fluid">
                 <div className="row row-cols-4">
                   {locData.length !== 0 ? (
                     locData.map((e) => {
-                      const formattedPrice = curfmt.format(e.locDtl.price*2);
+                      const formattedPrice = curfmt.format(e.locDtl.price * 2);
                       return (
                         <PropertyCard
                           coverImg={e.locDtl?.imgTtlData?.[0]?.images?.[0]?.url}

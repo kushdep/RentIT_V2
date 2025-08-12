@@ -130,3 +130,10 @@ export const regionalCode = [
 ];
 
 
+export const priceRange = {
+    0:'₹1000',
+    25:'₹2000',
+    50:'₹4000',
+    75:'₹6000',
+    100:'₹8000',
+}
