@@ -80,38 +80,53 @@ export default function RentLocs() {
               <SortAndFilterModal title="Sort By" reference={sortModalRef}>
                 <div className="row">
                   <div className="col">
-                    <div class="form-check">
+                    <div className="form-check">
                       <input
-                        class="form-check-input"
+                        className="form-check-input"
                         type="checkbox"
-                        value=""
-                        id="checkDefault"
+                        value="Ratings"
+                        id="Ratings"
                       />
-                      <label class="form-check-label" for="checkDefault">
+                      <label className="form-check-label" htmlFor="Ratings">
                         Ratings
                       </label>
                     </div>
-                    <div class="form-check">
+                    <div className="form-check">
                       <input
-                        class="form-check-input"
+                        className="form-check-input"
                         type="checkbox"
-                        value=""
-                        id="checkDefault"
+                        value="Distance"
+                        id="Distance"
                       />
-                      <label class="form-check-label" for="checkDefault">
+                      <label className="form-check-label" htmlFor="Distance">
                         Distance
                       </label>
                     </div>
-                    <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        value=""
-                        id="checkDefault"
-                      />
-                      <label class="form-check-label" for="checkDefault">
-                        Newest
-                      </label>
+                    <div className="border rounded-end-pill p-3">
+                      <div class="form-check">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="exampleRadios"
+                          id="exampleRadios1"
+                          value="NTO"
+                        />
+                        <label className="form-check-label" htmlFor="exampleRadios1">
+                          Newest to Oldest
+                        </label>
+                      </div>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="exampleRadios"
+                          id="exampleRadios2"
+                          value="OTN"
+                        />
+                        <label className="form-check-label" htmlFor="exampleRadios2">
+                          Oldest to Newest
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -133,13 +148,10 @@ export default function RentLocs() {
                       <input
                         className="form-check-input"
                         type="checkbox"
-                        value=""
-                        id="checkDefault"
+                        value="A01"
+                        id="Appartment"
                       />
-                      <label
-                        className="form-check-label"
-                        htmlFor="checkDefault"
-                      >
+                      <label className="form-check-label" htmlFor="Appartment">
                         Appartment
                       </label>
                     </div>
@@ -147,13 +159,10 @@ export default function RentLocs() {
                       <input
                         className="form-check-input"
                         type="checkbox"
-                        value=""
-                        id="checkDefault"
+                        value="V01"
+                        id="Villa"
                       />
-                      <label
-                        className="form-check-label"
-                        htmlFor="checkDefault"
-                      >
+                      <label className="form-check-label" htmlFor="Villa">
                         Villa
                       </label>
                     </div>
@@ -161,13 +170,10 @@ export default function RentLocs() {
                       <input
                         className="form-check-input"
                         type="checkbox"
-                        value=""
-                        id="checkDefault"
+                        value="P01"
+                        id="Pent-House"
                       />
-                      <label
-                        className="form-check-label"
-                        htmlFor="checkDefault"
-                      >
+                      <label className="form-check-label" htmlFor="Pent-House">
                         Pent-House
                       </label>
                     </div>
