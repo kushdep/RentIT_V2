@@ -2,22 +2,33 @@ import { Ammentities } from "../config";
 import "../css/locdetails.css";
 import DateInputBox from "./UI/DateInputBox";
 import Reviews from "./Reviews";
-import { useNavigate, useParams, useRouteLoaderData } from "react-router-dom";
-import { useRef } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useRef } from "react";
 import ShowAmmModal from "./Modals/showAmmModal";
-import { curfmt } from "../utils/formatter";  
+import { curfmt } from "../utils/formatter";
 import GoogleMap from "./GoogleMap";
+import { useDispatch, useSelector } from "react-redux";
 
 function LocDetails() {
   const showAmmModal = useRef();
-  const navigate = useNavigate()
-  const locDetails = useRouteLoaderData("rentLocs");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { rentLocData: locDetails } = useSelector((state) => state.rentLocs);
   const { locId } = useParams();
 
   let loc = null;
   loc = locDetails.find((loc) => loc._id === locId);
-  const { title, imgTtlData, desc, guestsCap, facilities, price,author,location } =
-    loc.locDtl;
+  const {
+    title,
+    imgTtlData,
+    desc,
+    guestsCap,
+    facilities,
+    price,
+    author,
+    location,
+  } = loc.locDtl;
 
   const { options } = Ammentities.find((a) => a.id === facilities[0].id);
 
@@ -53,7 +64,7 @@ function LocDetails() {
               <button
                 className="btn btn-light position-absolute rounded-pill"
                 style={{ bottom: 50, left: 150 }}
-                onClick={()=>navigate(`photos`)}
+                onClick={() => navigate(`photos`)}
               >
                 Show all Photos
               </button>
@@ -104,7 +115,9 @@ function LocDetails() {
                       style={{ height: 50, width: 50, borderRadius: 50 }}
                     />
                     <div className="ms-3">
-                      <h6 className="fw-medium mb-0">Hosted by {author.username}</h6>
+                      <h6 className="fw-medium mb-0">
+                        Hosted by {author.username}
+                      </h6>
                       <p
                         className="p-0 text-muted form "
                         style={{ fontSize: 12 }}
@@ -231,7 +244,7 @@ function LocDetails() {
             </div>
           </div>
           <div className="row mt-4">
-              <GoogleMap placeId = {location.placeId}/>
+            <GoogleMap placeId={location.placeId} />
           </div>
           <hr />
           <div className="row mt-4">

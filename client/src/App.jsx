@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./pages/Layout";
-import RentLocs, { getAllLocLoader } from "./pages/RentLocs";
+import RentLocs from "./pages/RentLocs";
 import Homepage from "./pages/Homepage";
 import ContactUs from "./pages/ContactUs";
 import Profile from "./pages/Profile";
@@ -19,7 +19,6 @@ const router = createBrowserRouter([
       {
         path: "rent-locs",
         id:"rentLocs",
-        loader: getAllLocLoader,
         children: [
           {
             path: "",

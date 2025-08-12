@@ -4,34 +4,25 @@ import "../css/rentlocs.css";
 import axios from "axios";
 import { useRouteLoaderData } from "react-router-dom";
 import { curfmt } from "../utils/formatter";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Slider } from "antd";
 import SortAndFilterModal from "../components/Modals/SortAndFilterModal";
 import { priceRange } from "../config";
-
-export async function getAllLocLoader() {
-  try {
-    const response = await axios.get("http://localhost:3000/rent-locs");
-    console.log(response);
-    if (response.status === 200) {
-      const resData = await response.data.data;
-      return resData;
-    }
-    if (response.status === 204) {
-      return null;
-    }
-  } catch (err) {
-    if (err?.response?.status === 400) {
-      console.log(err?.response?.data?.message);
-    }
-  }
-}
+import { useDispatch, useSelector } from "react-redux";
+import { getAllLoc } from "../store/rentloc-slice";
 
 export default function RentLocs() {
-  const locData = useRouteLoaderData("rentLocs");
+  const {rentLocData:locData} = useSelector((state)=>state.rentLocs)
+  const dispatch = useDispatch()
+  
   const sortModalRef = useRef();
   const filterModalRef = useRef();
+  
+  useEffect(()=>{
+    dispatch(getAllLoc())
+  },[dispatch])
 
+console.log(locData)
   return (
     <div>
       <header className="position-relative">
