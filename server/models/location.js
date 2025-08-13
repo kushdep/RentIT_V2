@@ -1,6 +1,11 @@
 import mongoose from "mongoose"
 
 const locSchema = new mongoose.Schema({
+    Sno:{
+        type:Number,
+        required:true,
+        unique:true
+    },
     locType: {
         type: String,
         required: true,

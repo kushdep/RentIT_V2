@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, useParams } from "react-router-dom";
 import Layout from "./pages/Layout";
 import RentLocs from "./pages/RentLocs";
 import Homepage from "./pages/Homepage";
@@ -17,7 +17,7 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <Homepage /> },
       {
-        path: "rent-locs",
+        path: `rent-locs`,
         id:"rentLocs",
         children: [
           {
