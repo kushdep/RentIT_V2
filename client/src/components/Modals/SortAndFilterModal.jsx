@@ -18,22 +18,15 @@ function SortAndFilterModal({ reference,title,children}) {
             </div>
           </div>
         </form>
-        <div className="col d-flex justify-content-center">
-          <p className="fs-4 fw-medium">{title}</p>
+        <div className="d-flex justify-content-center">
+          <p className="fs-2 fw-medium">{title}</p>
         </div>
         <div className="mb-3">
           <div className="container border rounded-4 p-4">
              {children}
           </div>
         </div>
-        <form method="dialog">
-          <button
-            type="submit"
-            className="btn w-100 fw-semibold btn-outline-primary"
-          >
-            Done
-          </button>
-        </form>
+        
       </dialog>
   ,document.getElementById("modal-root"));
 }

@@ -9,14 +9,21 @@ const rentLocSlice = createSlice({
     reducers: {
         addRentLoc(state, action) {
             try {
-                console.log(action)
                 state.rentLocData = action.payload
-                console.log(state.rentLocData)
             } catch (error) {
                 console.error("Error in addRentLoc() " + error)
             }
         },
-
+        filterLoc(state,action){
+            try {
+                const {locType,priceRng} = action.payload
+                if(locType.length===0){
+                    
+                }
+            } catch (error) {
+                console.error("Error in filterLoc() " + error)
+            }
+        }
     }
 })
 

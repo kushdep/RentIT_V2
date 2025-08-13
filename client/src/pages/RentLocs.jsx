@@ -1,28 +1,56 @@
 import PropertyCard from "../components/UI/PropertyCard";
 import SearchBar from "../components/UI/SearchBar";
 import "../css/rentlocs.css";
-import axios from "axios";
-import { useRouteLoaderData } from "react-router-dom";
 import { curfmt } from "../utils/formatter";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Slider } from "antd";
 import SortAndFilterModal from "../components/Modals/SortAndFilterModal";
 import { priceRange } from "../config";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllLoc } from "../store/rentloc-slice";
+import { getAllLoc, rentLocActions } from "../store/rentloc-slice";
 
 export default function RentLocs() {
-  const {rentLocData:locData} = useSelector((state)=>state.rentLocs)
-  const dispatch = useDispatch()
-  
+  const { rentLocData: locData } = useSelector((state) => state.rentLocs);
+  const dispatch = useDispatch();
+  const [silderVal, setSliderVal] = useState({ min: 0, max: 50 });
+
   const sortModalRef = useRef();
   const filterModalRef = useRef();
-  
-  useEffect(()=>{
-    dispatch(getAllLoc())
-  },[dispatch])
 
-console.log(locData)
+  useEffect(() => {
+    dispatch(getAllLoc());
+  }, [dispatch]);
+
+  function handleSliderVal(values) {
+    const [min, max] = values;
+    if (min === max) {
+      toast.error("please choose valid price range");
+    }
+    setSliderVal((prev) => {
+      const minprice = priceRange[min];
+      const maxprice = priceRange[max];
+      return {
+        min: minprice,
+        max: maxprice,
+      };
+    });
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    if (silderVal.min === silderVal.max) {
+      toast.error("please choose valid price range");
+      return;
+    }
+    const fd = new FormData(event.target);
+    const locationType = fd.getAll("loctype");
+    dispatch(
+      rentLocActions.filterLoc({ locType: locationType, priceRng: silderVal })
+    );
+    filterModalRef.current.close()
+  }
+
   return (
     <div>
       <header className="position-relative">
@@ -102,7 +130,10 @@ console.log(locData)
                           id="exampleRadios1"
                           value="NTO"
                         />
-                        <label className="form-check-label" htmlFor="exampleRadios1">
+                        <label
+                          className="form-check-label"
+                          htmlFor="exampleRadios1"
+                        >
                           Newest to Oldest
                         </label>
                       </div>
@@ -114,7 +145,10 @@ console.log(locData)
                           id="exampleRadios2"
                           value="OTN"
                         />
-                        <label className="form-check-label" htmlFor="exampleRadios2">
+                        <label
+                          className="form-check-label"
+                          htmlFor="exampleRadios2"
+                        >
                           Oldest to Newest
                         </label>
                       </div>
@@ -123,53 +157,75 @@ console.log(locData)
                 </div>
               </SortAndFilterModal>
               <SortAndFilterModal title="Filter" reference={filterModalRef}>
-                <div className="row-cols-1">
-                  <div className="col p-2">
-                    <div className="fs-5 fw-medium">Price</div>
-                    <Slider
-                      range
-                      marks={priceRange}
-                      step={null}
-                      defaultValue={[0, 50]}
-                    />
+                <form onSubmit={handleSubmit}>
+                  <div className="row-cols-1">
+                    <div className="col p-2">
+                      <div className="fs-5 fw-medium">Price</div>
+                      <Slider
+                        range
+                        marks={priceRange}
+                        step={null}
+                        defaultValue={[0, 50]}
+                        onChange={(values) => {
+                          handleSliderVal(values);
+                        }}
+                      />
+                    </div>
+                    <div className="col p-2">
+                      <div className="fs-5 fw-medium">Type</div>
+                      <fieldset>
+                        <div class="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            name="loctype"
+                            value="A01"
+                            id="Appartment"
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="Appartment"
+                          >
+                            Appartment
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            name="loctype"
+                            value="V01"
+                            id="Villa"
+                          />
+                          <label className="form-check-label" htmlFor="Villa">
+                            Villa
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            name="loctype"
+                            value="P01"
+                            id="Pent-House"
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="Pent-House"
+                          >
+                            Pent-House
+                          </label>
+                        </div>
+                      </fieldset>
+                    </div>
                   </div>
-                  <div className="col p-2">
-                    <div className="fs-5 fw-medium">Type</div>
-                    <div class="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        value="A01"
-                        id="Appartment"
-                      />
-                      <label className="form-check-label" htmlFor="Appartment">
-                        Appartment
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        value="V01"
-                        id="Villa"
-                      />
-                      <label className="form-check-label" htmlFor="Villa">
-                        Villa
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        value="P01"
-                        id="Pent-House"
-                      />
-                      <label className="form-check-label" htmlFor="Pent-House">
-                        Pent-House
-                      </label>
-                    </div>
-                  </div>
-                </div>
+                  <button
+                    type="submit"
+                    className="btn w-100 mt-3 fw-semibold btn-outline-primary"
+                  >
+                    Filter-IT
+                  </button>
+                </form>
               </SortAndFilterModal>
             </div>
             <div className="col">
