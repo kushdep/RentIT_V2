@@ -16,27 +16,29 @@ export default function RentLocs() {
     rentLocData: locData,
     totalPages,
     currPage,
+    chckPts,
   } = useSelector((state) => state.rentLocs);
   const dispatch = useDispatch();
   const [silderVal, setSliderVal] = useState({ min: 0, max: 50 });
+  const [pages, setPagesVal] = useState(null);
 
   const sortModalRef = useRef();
   const filterModalRef = useRef();
-  let { pageNum } = useParams();
 
-  if (!pageNum || pageNum <= 0 || pageNum > totalPages) {
-    pageNum = 1;
-  }
-
-  let pages = totalPages
-  if(totalPages>4){
-    pages=5
-  }
-
+  useEffect(() => {
+    console.log("useEffect called");
+    if (chckPts < 1) {
+      const lastPages = totalPages - Math.floor(totalPages / 4) * 4;
+      console.log(lastPages);
+      setPagesVal(lastPages);
+    } else {
+      setPagesVal(4);
+    }
+  }, [chckPts]);
 
   useEffect(() => {
     dispatch(getAllLoc(1));
-    dispatch(rentLocActions.changeCurrPage(1));
+    dispatch(rentLocActions.incCurrPage());
   }, [dispatch]);
 
   function handleSliderVal(values) {
@@ -68,7 +70,7 @@ export default function RentLocs() {
     filterModalRef.current.close();
   }
 
-  console.log(locData);
+  console.log(pages);
 
   return (
     <div>
@@ -253,7 +255,7 @@ export default function RentLocs() {
               <div className="row row-cols-4">
                 {locData.length !== 0 ? (
                   locData.map((e, i) => {
-                    if (i + 1 > (currPage - 1) * 5 && i < currPage * 5) {
+                    if (e.Sno > (currPage - 1) * 5 && e.Sno <= currPage * 5) {
                       const formattedPrice = curfmt.format(e.locDtl.price * 2);
                       return (
                         <PropertyCard
@@ -284,43 +286,70 @@ export default function RentLocs() {
                       currPage === 1 ? "page-item disabled" : "page-item"
                     }
                   >
-                    <button className="page-link" onClick={()=>dispatch(rentLocActions.changeCurrPage(currPage-1))}>&laquo;</button>
-                  </li>
-                  {Array.from({ length: pages }).map((_, i) => (
-                    <li className="page-item">
-                      <button
-                        className={
-                          currPage === i + 1 ? "page-link active" : "page-link"
-                        }
-                        onClick={() => {
-                          if (i + 1 > 2 && i % 2 === 0) {
-                            let reqNum = (i * 5) / 10 + 1;
-                            dispatch(getAllLoc(reqNum));
-                          } else {
-                            dispatch(rentLocActions.changeCurrPage(i + 1));
-                          }
-                        }}
-                      >
-                        {i + 1}
-                      </button>
-                    </li>
-                  ))}
-                  {totalPages>4 &&
-                  <li className="page-item">
                     <button
                       className="page-link"
-                      onClick={() => {
-                        dispatch(getAllLoc(reqNum));
-                      }}
-                    >....</button>
-                  </li>}
+                      onClick={() => dispatch(rentLocActions.decCurrPage())}
+                    >
+                      &laquo;
+                    </button>
+                  </li>
+                  {Array.from({ length: pages }).map((_, i) => {
+                    return (
+                      <li className="page-item">
+                        <button
+                          className={
+                            currPage === i + 1
+                              ? "page-link active"
+                              : "page-link"
+                          }
+                          onClick={() => {
+                            if (i + 1 > 2 && i % 2 === 0) {
+                              let reqNum = (i * 5) / 10 + 1;
+                              console.log("reqNum " + reqNum);
+                              // dispatch(getAllLoc(reqNum));
+                            }
+                            dispatch(rentLocActions.incCurrPage());
+                          }}
+                        >
+                          {(Math.floor((totalPages * 5) / 4) - chckPts) * 4 +
+                            i +
+                            1}
+                        </button>
+                      </li>
+                    );
+                  })}
+                  {chckPts > 0 && (
+                    <li className="page-item">
+                      <button
+                        className="page-link"
+                        onClick={() => {
+                          let reqNum = (Math.floor((totalPages * 5) / 4) - chckPts)
+                          dispatch(rentLocActions.decChkPts());
+                          dispatch(getAllLoc(reqNum+3));
+                          console.log("chk "+reqNum);
+                          dispatch(rentLocActions.chngCurrPage((reqNum+1)*5))
+                        }}
+                        >
+                        ....
+                      </button>
+                    </li>
+                  )}
                   <li
                     className={
                       currPage === totalPages
-                        ? "page-item disabled"
-                        : "page-item"
+                      ? "page-item disabled"
+                      : "page-item"
                     }
-                    onClick={()=>dispatch(rentLocActions.changeCurrPage(pageNum+1))}
+                    onClick={() => {
+                      dispatch(rentLocActions.incCurrPage());
+                      if (currPage % 4 === 0) {
+                        dispatch(rentLocActions.decChkPts());
+                        let reqNum = (Math.floor((totalPages * 5) / 4) - chckPts)+3
+                        dispatch(rentLocActions.decChkPts());
+                        dispatch(getAllLoc(reqNum+1));
+                        console.log("req num "+reqNum);
+                      }
+                    }}
                   >
                     <button className="page-link" href="#">
                       &raquo;

@@ -7,10 +7,11 @@ export const getAllLocs = async (req, res) => {
         if (dataReq <= 0) {
             dataReq = 1
         }
-        let totalLoc = dataReq * 10
-        let from = totalLoc - 9
+        let totalLoc = dataReq * 20
+        let from = totalLoc - 19
         let to = totalLoc
         const rentLocs = await Location.find({ Sno: { $gte: from, $lte: to } })
+        const locData = await Location.countDocuments()
         console.log(rentLocs)
         if (rentLocs.length === 0) {
             return res.status(204).send({
@@ -22,7 +23,7 @@ export const getAllLocs = async (req, res) => {
         return res.status(200).send({
             success: true,
             data: rentLocs,
-            totalLoc: rentLocs.length,
+            totalLoc: locData,
             message: 'Rent Locations Data fetched'
         })
     } catch (error) {
