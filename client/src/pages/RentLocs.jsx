@@ -339,7 +339,6 @@ export default function RentLocs() {
                         : "page-item"
                     }
                     onClick={() => {
-                      dispatch(rentLocActions.incCurrPage());
                       if (currPage % 4 === 0) {
                         let reqNum = currPage / 4;
                         const page = 4 * reqNum + 1;
