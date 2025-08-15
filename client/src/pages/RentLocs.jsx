@@ -320,13 +320,12 @@ export default function RentLocs() {
                       <button
                         className="page-link"
                         onClick={() => {
-                          let reqNum =
-                            Math.floor((totalPages * 5) / 4) - chckPts;
                           dispatch(rentLocActions.decChkPts());
+                          let totalChkPts = Math.floor(totalPages / 4);
+                          let reqNum = totalChkPts + 1 - chckPts;
+                          let chngPage = 4 * reqNum + 1;
                           dispatch(getAllLoc(reqNum + 1));
-                          dispatch(
-                            rentLocActions.chngCurrPage((reqNum + 1) * 5)
-                          );
+                          dispatch(rentLocActions.chngCurrPage(chngPage));
                         }}
                       >
                         ....
