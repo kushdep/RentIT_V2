@@ -7,8 +7,8 @@ export const getAllLocs = async (req, res) => {
         if (dataReq <= 0) {
             dataReq = 1
         }
-        let totalLoc = dataReq * 20
-        let from = totalLoc - 19
+        let totalLoc = dataReq * 32
+        let from = totalLoc - 31
         let to = totalLoc
         const rentLocs = await Location.find({ Sno: { $gte: from, $lte: to } })
         const locData = await Location.countDocuments()

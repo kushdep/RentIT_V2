@@ -3,13 +3,12 @@ import SearchBar from "../components/UI/SearchBar";
 import "../css/rentlocs.css";
 import { curfmt } from "../utils/formatter";
 import { useEffect, useRef, useState } from "react";
-import { Button, Slider } from "antd";
+import { Slider } from "antd";
 import SortAndFilterModal from "../components/Modals/SortAndFilterModal";
 import { priceRange } from "../config";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllLoc, rentLocActions } from "../store/rentloc-slice";
-import { useParams } from "react-router-dom";
 
 export default function RentLocs() {
   const {
@@ -26,10 +25,8 @@ export default function RentLocs() {
   const filterModalRef = useRef();
 
   useEffect(() => {
-    console.log("useEffect called");
     if (chckPts < 1) {
       const lastPages = totalPages - Math.floor(totalPages / 4) * 4;
-      console.log(lastPages);
       setPagesVal(lastPages);
     } else {
       setPagesVal(4);
@@ -38,7 +35,7 @@ export default function RentLocs() {
 
   useEffect(() => {
     dispatch(getAllLoc(1));
-    dispatch(rentLocActions.incCurrPage());
+    dispatch(rentLocActions.chngCurrPage(1));
   }, [dispatch]);
 
   function handleSliderVal(values) {
@@ -69,8 +66,6 @@ export default function RentLocs() {
     );
     filterModalRef.current.close();
   }
-
-  console.log(pages);
 
   return (
     <div>
@@ -255,7 +250,7 @@ export default function RentLocs() {
               <div className="row row-cols-4">
                 {locData.length !== 0 ? (
                   locData.map((e, i) => {
-                    if (e.Sno > (currPage - 1) * 5 && e.Sno <= currPage * 5) {
+                    if (e.Sno > (currPage - 1) * 8 && e.Sno <= currPage * 8) {
                       const formattedPrice = curfmt.format(e.locDtl.price * 2);
                       return (
                         <PropertyCard
@@ -288,32 +283,34 @@ export default function RentLocs() {
                   >
                     <button
                       className="page-link"
-                      onClick={() => dispatch(rentLocActions.decCurrPage())}
+                      onClick={() => {
+                        if (currPage % 4 === 1) {
+                          let reqNum = Math.floor(currPage / 4);
+                          dispatch(getAllLoc(reqNum));
+                          dispatch(rentLocActions.incChkPt());
+                        }
+                        dispatch(rentLocActions.decCurrPage());
+                      }}
                     >
                       &laquo;
                     </button>
                   </li>
                   {Array.from({ length: pages }).map((_, i) => {
+                    let pageNo = Math.ceil(locData[0].Sno / 8) + i;
+
                     return (
                       <li className="page-item">
                         <button
                           className={
-                            currPage === i + 1
+                            currPage === pageNo
                               ? "page-link active"
                               : "page-link"
                           }
                           onClick={() => {
-                            if (i + 1 > 2 && i % 2 === 0) {
-                              let reqNum = (i * 5) / 10 + 1;
-                              console.log("reqNum " + reqNum);
-                              // dispatch(getAllLoc(reqNum));
-                            }
-                            dispatch(rentLocActions.incCurrPage());
+                            dispatch(rentLocActions.chngCurrPage(pageNo));
                           }}
                         >
-                          {(Math.floor((totalPages * 5) / 4) - chckPts) * 4 +
-                            i +
-                            1}
+                          {pageNo}
                         </button>
                       </li>
                     );
@@ -323,13 +320,15 @@ export default function RentLocs() {
                       <button
                         className="page-link"
                         onClick={() => {
-                          let reqNum = (Math.floor((totalPages * 5) / 4) - chckPts)
+                          let reqNum =
+                            Math.floor((totalPages * 5) / 4) - chckPts;
                           dispatch(rentLocActions.decChkPts());
-                          dispatch(getAllLoc(reqNum+3));
-                          console.log("chk "+reqNum);
-                          dispatch(rentLocActions.chngCurrPage((reqNum+1)*5))
+                          dispatch(getAllLoc(reqNum + 1));
+                          dispatch(
+                            rentLocActions.chngCurrPage((reqNum + 1) * 5)
+                          );
                         }}
-                        >
+                      >
                         ....
                       </button>
                     </li>
@@ -337,17 +336,19 @@ export default function RentLocs() {
                   <li
                     className={
                       currPage === totalPages
-                      ? "page-item disabled"
-                      : "page-item"
+                        ? "page-item disabled"
+                        : "page-item"
                     }
                     onClick={() => {
                       dispatch(rentLocActions.incCurrPage());
                       if (currPage % 4 === 0) {
+                        let reqNum = currPage / 4;
+                        const page = 4 * reqNum + 1;
+                        dispatch(getAllLoc(reqNum + 1));
+                        dispatch(rentLocActions.chngCurrPage(page));
                         dispatch(rentLocActions.decChkPts());
-                        let reqNum = (Math.floor((totalPages * 5) / 4) - chckPts)+3
-                        dispatch(rentLocActions.decChkPts());
-                        dispatch(getAllLoc(reqNum+1));
-                        console.log("req num "+reqNum);
+                      } else {
+                        dispatch(rentLocActions.chngCurrPage(currPage + 1));
                       }
                     }}
                   >
