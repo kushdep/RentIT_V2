@@ -250,7 +250,14 @@ export default function RentLocs() {
               <div className="row row-cols-4">
                 {locData.length !== 0 ? (
                   locData.map((e, i) => {
-                    if (e.Sno > (currPage - 1) * 8 && e.Sno <= currPage * 8) {
+                    const totalChkPts = Math.floor(totalPages / 4);
+                    const currChkPt = totalChkPts - chckPts;
+                    let fr = (currPage - (4 * currChkPt))
+                    let tcr=(currPage - (4 * currChkPt))
+                    const from = (fr * 8) - 8;
+                    const to = (tcr * 8) - 1;
+
+                    if (i >= from && i <= to) {
                       const formattedPrice = curfmt.format(e.locDtl.price * 2);
                       return (
                         <PropertyCard
@@ -296,7 +303,8 @@ export default function RentLocs() {
                     </button>
                   </li>
                   {Array.from({ length: pages }).map((_, i) => {
-                    let pageNo = Math.ceil(locData[0].Sno / 8) + i;
+                    let totalChkPts = Math.floor(totalPages / 4);
+                    let pageNo = (totalChkPts - chckPts) * 4 + i + 1;
 
                     return (
                       <li className="page-item">
