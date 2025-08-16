@@ -2,13 +2,11 @@ import PropertyCard from "../components/UI/PropertyCard";
 import SearchBar from "../components/UI/SearchBar";
 import "../css/rentlocs.css";
 import { curfmt } from "../utils/formatter";
-import { useEffect, useRef, useState } from "react";
-import { Slider } from "antd";
+import {useEffect, useRef, useState } from "react";
 import SortAndFilterModal from "../components/Modals/SortAndFilterModal";
-import { priceRange } from "../config";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllLoc, rentLocActions } from "../store/rentloc-slice";
+import { getAllLoc, getFilteredLoc, rentLocActions } from "../store/rentloc-slice";
 
 export default function RentLocs() {
   const {
@@ -18,7 +16,6 @@ export default function RentLocs() {
     chckPts,
   } = useSelector((state) => state.rentLocs);
   const dispatch = useDispatch();
-  const [silderVal, setSliderVal] = useState({ min: 0, max: 50 });
   const [pages, setPagesVal] = useState(null);
 
   const sortModalRef = useRef();
@@ -38,32 +35,24 @@ export default function RentLocs() {
     dispatch(rentLocActions.chngCurrPage(1));
   }, [dispatch]);
 
-  function handleSliderVal(values) {
-    const [min, max] = values;
-    if (min === max) {
-      toast.error("please choose valid price range");
-    }
-    setSliderVal((prev) => {
-      const minprice = priceRange[min];
-      const maxprice = priceRange[max];
-      return {
-        min: minprice,
-        max: maxprice,
-      };
-    });
-  }
 
   function handleSubmit(event) {
     event.preventDefault();
-    if (silderVal.min === silderVal.max) {
-      toast.error("please choose valid price range");
-      return;
-    }
+    
     const fd = new FormData(event.target);
-    const locationType = fd.getAll("loctype");
-    dispatch(
-      rentLocActions.filterLoc({ locType: locationType, priceRng: silderVal })
-    );
+    let guests = fd.get("guests");
+    guests > 0 ? guests : (guests = null);
+    let priceRng = fd.get("exampleRadios");
+
+    if(!guests && !priceRng){
+      console.log("inside")
+      toast.error('Apply atleast one filter!')
+      return 
+    }
+
+    let data = { priceRng,guestCnt :guests};
+    dispatch(getFilteredLoc(1,data))
+    dispatch(rentLocActions.filterLoc(true));
     filterModalRef.current.close();
   }
 
@@ -175,70 +164,68 @@ export default function RentLocs() {
             </SortAndFilterModal>
             <SortAndFilterModal title="Filter" reference={filterModalRef}>
               <form onSubmit={handleSubmit}>
-                <div className="row-cols-1">
-                  <div className="col p-2">
-                    <div className="fs-5 fw-medium">Price</div>
-                    <Slider
-                      range
-                      marks={priceRange}
-                      step={null}
-                      defaultValue={[0, 50]}
-                      onChange={(values) => {
-                        handleSliderVal(values);
-                      }}
-                    />
+                <div className="row-cols-1 mb-4">
+                  <div className="col">
+                    <div className="dropdown-center mb-4">
+                      <select
+                        className="form-select btn fw-medium dropdown-toggle w-100 border-bottom"
+                        name="guests"
+                      >
+                        <option value="0">
+                          Guests
+                        </option>
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <option value={i + 1}>{i + 1}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                  <div className="col p-2">
-                    <div className="fs-5 fw-medium">Type</div>
-                    <fieldset>
-                      <div class="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          name="loctype"
-                          value="A01"
-                          id="Appartment"
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="Appartment"
-                        >
-                          Appartment
-                        </label>
-                      </div>
-                      <div class="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          name="loctype"
-                          value="V01"
-                          id="Villa"
-                        />
-                        <label className="form-check-label" htmlFor="Villa">
-                          Villa
-                        </label>
-                      </div>
-                      <div class="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          name="loctype"
-                          value="P01"
-                          id="Pent-House"
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="Pent-House"
-                        >
-                          Pent-House
-                        </label>
-                      </div>
-                    </fieldset>
+                  <div className="col">
+                    <div className="fs-5 fw-medium">Price</div>
+                    <div className="col">
+                      {Array.from({ length:3 }).map((_, i) => {
+                        let priceDiff = 2000;
+                        let from = curfmt.format(priceDiff * (i+1))
+                        let to = curfmt.format(priceDiff * (i+2))
+                        return (
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="exampleRadios"
+                              value={i}
+                              id={`exampleRadios${i+1}`}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor={`exampleRadios${i+1}`}
+                            >
+                              {from}-{to}
+                            </label>
+                          </div>
+                        );
+                      })}
+                      <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="exampleRadios"
+                              value={3}
+                              id={`exampleRadios4`}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="exampleRadios4"
+                            >
+                              more than ₹8,000
+                            </label>
+                          </div>
+                    </div>
                   </div>
                 </div>
                 <button
                   type="submit"
-                  className="btn w-100 mt-3 fw-semibold btn-outline-primary"
+                  className="btn w-100 mt-3 fw-semibold btn-primary rounded-pill shadow"
                 >
                   Filter-IT
                 </button>

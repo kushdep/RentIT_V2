@@ -129,11 +129,14 @@ export const regionalCode = [
     { code: "PY", state: "Puducherry" },
 ];
 
+function handleSubmit(prevState,formdata) {
+    let guests = formdata.get("guests");
+    let priceRng = formdata.get("exampleRadios");
+    guests > 0 ? guests : (guests = null);
+    let body = { priceRng,guestCnt :guests};
 
-export const priceRange = {
-    0:'₹1000',
-    25:'₹2000',
-    50:'₹4000',
-    75:'₹6000',
-    100:'₹8000',
-}
+    console.log(body);
+    dispatch(getFilteredLoc(1,body))
+    dispatch(rentLocActions.filterLoc(true));
+    filterModalRef.current.close();
+  }
