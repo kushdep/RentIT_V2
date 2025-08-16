@@ -1,9 +1,50 @@
 import Location from '../models/location.js'
 
+export const getRentLocs = async (req, res) => {
+    try {
+        const { filter } = req?.query
+        if (filter !== undefined && filter) {
+            getFilterLocs(req, res)
+        } else {
+            getAllLocs(req, res)
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(400).send({
+            success: false,
+            message: error
+        })
+    }
+}
+
+export const getFilterLocs = async (req, res) => {
+    try {
+        let dataReq = !isNaN(req?.query.dataReq) ? Number(req.query.dataReq) : null
+        let guests = !isNaN(req?.query.guests) ? Number(req.query.guests) : null
+        let range = !isNaN(req?.query.range) ? Number(req.query.range) : null
+
+        if ((dataReq === null || dataReq <= 0) &&
+            (guests !== null || range !== null)) {
+            dataReq = 1
+        }
+
+        if (guests === null && range === null) {
+            res.status(400).send({
+                success: false,
+                message: error
+            })
+        }
+
+         
+
+    } catch (error) {
+
+    }
+}
+
 export const getAllLocs = async (req, res) => {
     try {
-        console.log(req.query)
-        let dataReq = Number(req.query.dataReq) || 1
+        let dataReq = isNaN(req.query.dataReq) ? 1 : Number(req.query.dataReq)
         if (dataReq <= 0) {
             dataReq = 1
         }

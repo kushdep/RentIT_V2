@@ -2,11 +2,15 @@ import PropertyCard from "../components/UI/PropertyCard";
 import SearchBar from "../components/UI/SearchBar";
 import "../css/rentlocs.css";
 import { curfmt } from "../utils/formatter";
-import {useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SortAndFilterModal from "../components/Modals/SortAndFilterModal";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllLoc, getFilteredLoc, rentLocActions } from "../store/rentloc-slice";
+import {
+  getAllLoc,
+  getFilteredLoc,
+  rentLocActions,
+} from "../store/rentloc-slice";
 
 export default function RentLocs() {
   const {
@@ -35,23 +39,22 @@ export default function RentLocs() {
     dispatch(rentLocActions.chngCurrPage(1));
   }, [dispatch]);
 
-
   function handleSubmit(event) {
     event.preventDefault();
-    
+
     const fd = new FormData(event.target);
     let guests = fd.get("guests");
     guests > 0 ? guests : (guests = null);
     let priceRng = fd.get("exampleRadios");
 
-    if(!guests && !priceRng){
-      console.log("inside")
-      toast.error('Apply atleast one filter!')
-      return 
+    if (!guests && !priceRng) {
+      console.log("inside");
+      toast.error("Apply atleast one filter!");
+      return;
     }
 
-    let data = { priceRng,guestCnt :guests};
-    dispatch(getFilteredLoc(1,data))
+    let data = { priceRng, guestCnt: guests };
+    dispatch(getFilteredLoc(1, data));
     dispatch(rentLocActions.filterLoc(true));
     filterModalRef.current.close();
   }
@@ -171,9 +174,7 @@ export default function RentLocs() {
                         className="form-select btn fw-medium dropdown-toggle w-100 border-bottom"
                         name="guests"
                       >
-                        <option value="0">
-                          Guests
-                        </option>
+                        <option value="0">Guests</option>
                         {Array.from({ length: 5 }).map((_, i) => (
                           <option value={i + 1}>{i + 1}</option>
                         ))}
@@ -183,10 +184,10 @@ export default function RentLocs() {
                   <div className="col">
                     <div className="fs-5 fw-medium">Price</div>
                     <div className="col">
-                      {Array.from({ length:3 }).map((_, i) => {
+                      {Array.from({ length: 3 }).map((_, i) => {
                         let priceDiff = 2000;
-                        let from = curfmt.format(priceDiff * (i+1))
-                        let to = curfmt.format(priceDiff * (i+2))
+                        let from = curfmt.format(priceDiff * (i + 1));
+                        let to = curfmt.format(priceDiff * (i + 2));
                         return (
                           <div className="form-check">
                             <input
@@ -194,11 +195,11 @@ export default function RentLocs() {
                               type="radio"
                               name="exampleRadios"
                               value={i}
-                              id={`exampleRadios${i+1}`}
+                              id={`exampleRadios${i + 1}`}
                             />
                             <label
                               className="form-check-label"
-                              htmlFor={`exampleRadios${i+1}`}
+                              htmlFor={`exampleRadios${i + 1}`}
                             >
                               {from}-{to}
                             </label>
@@ -206,20 +207,20 @@ export default function RentLocs() {
                         );
                       })}
                       <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="radio"
-                              name="exampleRadios"
-                              value={3}
-                              id={`exampleRadios4`}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="exampleRadios4"
-                            >
-                              more than ₹8,000
-                            </label>
-                          </div>
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="exampleRadios"
+                          value={3}
+                          id={`exampleRadios4`}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="exampleRadios4"
+                        >
+                          more than ₹8,000
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -233,7 +234,55 @@ export default function RentLocs() {
             </SortAndFilterModal>
           </div>
           <div className="col">
-            <div className="container-fluid">
+            <div className="container-fluid border">
+              <div className="row border border-danger mt-2">
+                <div className="col-9">
+                  <div className="container">
+                    <div className="row row-cols-6">
+                  <div
+                    className="alert alert-primary rounded-pill alert-dismissible shadow d-flex"
+                    role="alert"
+                  >
+                    
+                    <button
+                      type="button"
+                      className="btn-close h-25"
+                      data-bs-dismiss="alert"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-2 border p-0">
+                  <div class="btn-group w-100">
+                  <button
+                    type="button"
+                    class="btn btn-primary dropdown-toggle ms-3 fw-semibold"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    All
+                    {/* {locTypeStt
+                      ? locType.find(({ id }) => id === locTypeStt).title
+                      : "Location type"} */}
+                  </button>
+                  <ul class="dropdown-menu w-100">
+                    {/* {locType &&
+                      locType.map((l) => (
+                        <li>
+                          <button
+                            className="dropdown-item"
+                            onClick={() => handleLocType(l.id)}
+                          >
+                            {l.title}
+                          </button>
+                        </li>
+                      ))} */}
+                  </ul>
+                </div>
+                </div>
+              </div>
               <div className="row row-cols-4">
                 {locData.length !== 0 ? (
                   locData.map((e, i) => {

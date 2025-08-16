@@ -84,14 +84,11 @@ const rentLocSlice = createSlice({
 
 export const getFilteredLoc = (reqNum, body) => {
     return async (dispatch) => {
-        const getFltLoc = async () => {
+        const getFltrLoc = async () => {
             console.log(body)
             let range = body.priceRng
             let guests = body.guestCnt
-            console.log(range)
-            console.log(guests)
-            console.log(`http://localhost:3000/rent-locs?filter&dataReq=${reqNum}&range=${range}&guests=${guests}`)
-            // const response = await axios.get(`http://localhost:3000/rent-locs?filter&dataReq=${reqNum}&range=${range}&guests=${guests}`);
+            const response = await axios.get(`http://localhost:3000/rent-locs?filter=true&dataReq=${reqNum}&range=${range}&guests=${guests}`);
             // if (response.status === 200) {
             //     const resData = response.data.data
             //     const data = resData.slice(0, 32);
@@ -103,7 +100,7 @@ export const getFilteredLoc = (reqNum, body) => {
         }
 
         try {
-            getFltLoc()
+            getFltrLoc()
             // const { locs, totalLocs } = await ()
             // dispatch(rentLocActions.addRentLoc({ locData: locs, totalLocs: totalLocs }))
         } catch (error) {

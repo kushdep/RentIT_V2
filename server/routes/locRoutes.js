@@ -1,8 +1,8 @@
 import express from "express";
-import { getAllLocs } from "../controllers/locController.js";
+import { getRentLocs } from "../controllers/locController.js";
 const router = express.Router()
 
-router.get('/',getAllLocs)
+router.get('/',getRentLocs)
 
 export default router;
 
