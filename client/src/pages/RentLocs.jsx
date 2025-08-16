@@ -258,7 +258,7 @@ export default function RentLocs() {
                   <div class="btn-group w-100">
                   <button
                     type="button"
-                    class="btn btn-primary dropdown-toggle ms-3 fw-semibold"
+                    class="btn btn-primary dropdown-toggle ms-3 fw-semibold rounded-pill shadow"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >

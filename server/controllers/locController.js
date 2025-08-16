@@ -35,10 +35,42 @@ export const getFilterLocs = async (req, res) => {
             })
         }
 
-         
+        let rentLocs = []
+        let query = {}
+
+        if (guests !== null) {
+            query["locDtl.guestsCap"] = guests
+        }
+
+        if (guests !== null && range !== null) {
+            const from = 2000 * (range + 1)
+            const to = 2000 * (range + 2)
+            query["locDtl.price"] = { $gt: from, $lt: to }
+        }
+        let skipLoc = (dataReq - 1) * 32
+        const locData = Location.countDocuments(query)
+        rentLocs = await Location.find(query).skip(skipLoc).limit(32)
+
+        if (rentLocs.length === 0) {
+            return res.status(204).send({
+                success: false,
+                totalLoc: 0,
+                message: "No Filtered Rent Locations Data"
+            })
+        }
+        return res.status(200).send({
+            success: true,
+            data: rentLocs,
+            totalLoc: locData,
+            message: 'Filtered Rent Locations Data fetched'
+        })
 
     } catch (error) {
-
+        console.log(error)
+        res.status(400).send({
+            success: false,
+            message: error
+        })
     }
 }
 
