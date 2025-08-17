@@ -8,13 +8,15 @@ const rentLocSlice = createSlice({
         totalPages: null,
         currPage: 0,
         chckPts: null,
-        filter: false,
-        sort: {
+        filter: {
+            guestCap:null,
+            priceRange:''
+        },
+        sortBy: {
             distance: false,
             ratings: false,
-            NTO: false,
-            OTN: false
-        }
+        },
+        rentLocType:''
     },
     reducers: {
         addRentLoc(state, action) {
@@ -35,13 +37,6 @@ const rentLocSlice = createSlice({
                 state.chckPts = state.chckPts + 1
             } catch (error) {
                 console.error("Error in UpdateChkPoint " + error)
-            }
-        },
-        filterLoc(state, action) {
-            try {
-                state.filter = action.payload
-            } catch (error) {
-                console.error("Error in filterLoc() " + error)
             }
         },
         incCurrPage(state, action) {
@@ -89,20 +84,21 @@ export const getFilteredLoc = (reqNum, body) => {
             let range = body.priceRng
             let guests = body.guestCnt
             const response = await axios.get(`http://localhost:3000/rent-locs?filter=true&dataReq=${reqNum}&range=${range}&guests=${guests}`);
-            // if (response.status === 200) {
-            //     const resData = response.data.data
-            //     const data = resData.slice(0, 32);
-            //     return { locs: data, totalLocs: response.data.totalLoc };
-            // }
-            // if (response.status === 204) {
-            //     return null;
-            // }
+            if (response.status === 200) {
+                const resData = response.data.data
+                const data = resData.slice(0, 32);
+                return { locs: data, totalLocs: response.data.totalLoc };
+            }
+            if (response.status === 204) {
+                return null;
+            }
         }
 
         try {
-            getFltrLoc()
-            // const { locs, totalLocs } = await ()
-            // dispatch(rentLocActions.addRentLoc({ locData: locs, totalLocs: totalLocs }))
+            const { locs, totalLocs } = await getFltrLoc()
+            console.log(locs)
+            console.log("Total Locations "+totalLocs)
+            dispatch(rentLocActions.addRentLoc({ locData: locs, totalLocs: totalLocs }))
         } catch (error) {
             console.error("Error while Getting Data")
         }

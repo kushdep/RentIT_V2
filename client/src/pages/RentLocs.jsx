@@ -11,6 +11,7 @@ import {
   getFilteredLoc,
   rentLocActions,
 } from "../store/rentloc-slice";
+import { locType } from "../config";
 
 export default function RentLocs() {
   const {
@@ -18,7 +19,10 @@ export default function RentLocs() {
     totalPages,
     currPage,
     chckPts,
+    rentLocType:locTypeStt,
+    filter,sortBy
   } = useSelector((state) => state.rentLocs);
+
   const dispatch = useDispatch();
   const [pages, setPagesVal] = useState(null);
 
@@ -55,9 +59,17 @@ export default function RentLocs() {
 
     let data = { priceRng, guestCnt: guests };
     dispatch(getFilteredLoc(1, data));
-    dispatch(rentLocActions.filterLoc(true));
     filterModalRef.current.close();
   }
+
+  let fltrSrtBy = [];
+
+if (filter.guestCap !== null) fltrSrtBy.push(`${filter.guestCap} guests`);
+if (filter.priceRange !== '') fltrSrtBy.push(filter.priceRange);
+if (sortBy.distance) fltrSrtBy.push('🏝️ Distance');
+if (sortBy.ratings) fltrSrtBy.push('⭐ Ratings');
+
+console.log(fltrSrtBy)
 
   return (
     <div>
@@ -234,27 +246,34 @@ export default function RentLocs() {
             </SortAndFilterModal>
           </div>
           <div className="col">
-            <div className="container-fluid border">
-              <div className="row border border-danger mt-2">
-                <div className="col-9">
+            <div className="container-fluid">
+              <div className="row  mb-3">
+                <div className="col-10">
                   <div className="container">
                     <div className="row row-cols-6">
-                  <div
-                    className="alert alert-primary rounded-pill alert-dismissible shadow d-flex"
+                      {
+                        fltrSrtBy.length>0 && fltrSrtBy.map((e,i)=>{
+
+                  return <div
+                    className="col p-0 me-3 alert alert-success rounded-pill alert-dismissible shadow "
                     role="alert"
                   >
-                    
+                    <div className="d-flex">
+                    <div className="p-2">{e}</div>
                     <button
                       type="button"
-                      className="btn-close h-25"
+                      className="btn-close p-2 my-1"
                       data-bs-dismiss="alert"
                       aria-label="Close"
                     ></button>
+                    </div>
                   </div>
+                        })
+                      }
                     </div>
                   </div>
                 </div>
-                <div className="col-2 border p-0">
+                <div className="col-2 p-0">
                   <div class="btn-group w-100">
                   <button
                     type="button"
@@ -262,23 +281,20 @@ export default function RentLocs() {
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    All
-                    {/* {locTypeStt
+                    {locTypeStt
                       ? locType.find(({ id }) => id === locTypeStt).title
-                      : "Location type"} */}
+                      : "All"}
                   </button>
                   <ul class="dropdown-menu w-100">
-                    {/* {locType &&
-                      locType.map((l) => (
+                    {locType.map((a) => (
                         <li>
                           <button
                             className="dropdown-item"
-                            onClick={() => handleLocType(l.id)}
                           >
-                            {l.title}
+                            {a.title}
                           </button>
                         </li>
-                      ))} */}
+                      ))}
                   </ul>
                 </div>
                 </div>
@@ -294,7 +310,7 @@ export default function RentLocs() {
                     const to = (tcr * 8) - 1;
 
                     if (i >= from && i <= to) {
-                      const formattedPrice = curfmt.format(e.locDtl.price * 2);
+                      const formattedPrice = curfmt.format(e.locDtl.price );
                       return (
                         <PropertyCard
                           coverImg={e.locDtl?.imgTtlData?.[0]?.images?.[0]?.url}

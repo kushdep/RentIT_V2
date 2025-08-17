@@ -38,7 +38,7 @@ function PropertyCard({ locId, coverImg, price, ratings }) {
                   Flats in Gurugram
                 </p>
                 <p className="mx-3 text-muted form p-0">
-                  {`${price}`} for 2 nights
+                  {`${price}`} per night
                 </p>
               </div>
               {ratings && (

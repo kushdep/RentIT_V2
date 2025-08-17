@@ -42,15 +42,23 @@ export const getFilterLocs = async (req, res) => {
             query["locDtl.guestsCap"] = guests
         }
 
-        if (guests !== null && range !== null) {
-            const from = 2000 * (range + 1)
-            const to = 2000 * (range + 2)
-            query["locDtl.price"] = { $gt: from, $lt: to }
+        if (range !== null) {
+            const priceDiff = 2000
+            const from = priceDiff * (range + 1)
+            if(range>=0 && range<=2){
+                const to = priceDiff * (range + 2)
+                query["locDtl.price"] = { $gt: from, $lt: to }
+            }else{
+                query["locDtl.price"] = { $gt: from}
+            }
         }
+        console.log(query)
         let skipLoc = (dataReq - 1) * 32
-        const locData = Location.countDocuments(query)
+        const locData =await Location.countDocuments(query)
         rentLocs = await Location.find(query).skip(skipLoc).limit(32)
-
+        console.log("skipLoc "+skipLoc)
+        console.log("locData "+locData)
+        // console.log(rentLocs)
         if (rentLocs.length === 0) {
             return res.status(204).send({
                 success: false,

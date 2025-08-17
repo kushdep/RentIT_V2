@@ -201,7 +201,7 @@ function LocDetails() {
                           {curfmt.format(price)}
                         </p>
                         <p className="fs-6 fw-medium text-muted ms-1">
-                          for 2 nights
+                          / night
                         </p>
                       </div>
                     </div>
