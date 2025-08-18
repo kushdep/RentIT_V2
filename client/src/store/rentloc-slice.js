@@ -28,8 +28,8 @@ const rentLocSlice = createSlice({
                 let totalPages = Math.ceil(action.payload.totalLocs / 8)
                 if (state.totalPages !== totalPages && totalPages > 4) {
                     state.chckPts = Math.floor(totalPages / 4)
-                }else if(totalPages<=4){
-                    state.chckPts=0
+                } else if (totalPages <= 4) {
+                    state.chckPts = 0
                 }
                 state.totalPages = totalPages
             } catch (error) {
@@ -98,29 +98,48 @@ const rentLocSlice = createSlice({
                 console.error("Error in updateFilterStt() " + error)
             }
         },
-        updateSortingStt(state,action){
+        updateSortingStt(state, action) {
             try {
-                const {srtBy,isChk} = action.payload 
-                if(srtBy==='Distance'){
-                    state.sortBy.distance=isChk
+                const { srtBy, isChk } = action.payload
+                if (srtBy === 'Distance') {
+                    state.sortBy.distance = isChk
                 }
-                if(srtBy==='Ratings'){
-                    state.sortBy.ratings=isChk
+                if (srtBy === 'Ratings') {
+                    state.sortBy.ratings = isChk
                 }
+                console.log(action.payload)
             } catch (error) {
-                console.log("Error in updateSortingStt() "+error)
+                console.log("Error in updateSortingStt() " + error)
             }
         }
     }
 })
 
 export const getFilteredLoc = (reqNum) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         const getFltrLoc = async () => {
-            console.log(body)
-            let range = body.priceRng
-            let guests = body.guestCnt
-            const response = await axios.get(`http://localhost:3000/rent-locs?filter=true&dataReq=${reqNum}&range=${range}&guests=${guests}`);
+            const { filter, sortBy } = getState().rentLocs
+            const { guestCap, priceRange } = filter
+            const { distance, ratings } = sortBy
+
+            let url = `http://localhost:3000/rent-locs?dataReq=${reqNum}`
+
+            const queryParams = []
+            if (guestCap !== null || priceRange.ind !== null) queryParams.push(`filter=true`)
+            if (distance || ratings) queryParams.push(`sortBy=true`)
+
+            if (guestCap !== null) queryParams.push(`guests=${guestCap}`)
+            if (priceRange.ind !== null) queryParams.push(`range=${priceRange.ind}`)
+
+            if (distance) queryParams.push(`distance=true`)
+            if (ratings) queryParams.push(`ratings=true`)
+
+            if (queryParams.length > 0) {
+                url += `&${queryParams.join("&")}`
+            }
+
+            console.log("URL "+url)
+            const response = await axios.get(url);
             if (response.status === 200) {
                 const resData = response.data.data
                 const data = resData.slice(0, 32);

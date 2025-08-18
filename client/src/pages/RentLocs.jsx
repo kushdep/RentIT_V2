@@ -56,29 +56,28 @@ export default function RentLocs() {
       toast.error("Apply atleast one filter!");
       return;
     }
-    
-    dispatch(getFilteredLoc(1));
     if(priceRng!==null)dispatch(rentLocActions.updateFilterStt({prcRngIn:priceRng}))
     if(guests!==null)dispatch(rentLocActions.updateFilterStt({guests:guests}))
+    dispatch(getFilteredLoc(1));
     filterModalRef.current.close();
   }
 
   function handleSortSubmit(event){
-    event.preventDefault();
-    const fd = new FormData(event.target)
-    const dst = fd.get('Distance')
-    const rtng = fd.get('Ratings')
-    if(dst===null && rtng===null){
-      toast.error('Select at least One To sort on!!')
-      return 
-    }
-    if(dst!==null && dst === 'Distance'){
-      dispatch(rentLocActions.updateSortingStt({srtBy:dst,isChk:true}))
-    }
-    if(rtng!==null && rtng === 'Ratings'){
-      dispatch(rentLocActions.updateSortingStt({srtBy:rtng,isChk:true}))
-    }
-    sortModalRef.current.close()
+     event.preventDefault();
+  const form = event.target;
+  const dstChk = form.Distance.checked;
+  const rngChk = form.Ratings.checked; 
+
+  if (!dstChk && !rngChk) {
+    toast.error('Select at least one to sort on!!')
+    return;
+  }
+
+    dispatch(rentLocActions.updateSortingStt({ srtBy: "Distance", isChk: dstChk }))
+    dispatch(rentLocActions.updateSortingStt({ srtBy: "Ratings", isChk: rngChk }))
+
+  dispatch(getFilteredLoc(1));
+  sortModalRef.current.close();
   }
 
   let fltrSrtBy = [];
@@ -88,7 +87,6 @@ if (filter.priceRange.ind !== null) fltrSrtBy.push(filter.priceRange.range);
 if (sortBy.distance) fltrSrtBy.push('🏝️ Distance');
 if (sortBy.ratings) fltrSrtBy.push('⭐ Ratings');
 
-console.log(sortBy)
 
   return (
     <div>
