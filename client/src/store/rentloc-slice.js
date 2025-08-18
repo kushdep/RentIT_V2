@@ -9,25 +9,29 @@ const rentLocSlice = createSlice({
         currPage: 0,
         chckPts: null,
         filter: {
-            guestCap:null,
-            priceRange:''
+            guestCap: null,
+            priceRange: {
+                ind: null,
+                range: ''
+            }
         },
         sortBy: {
             distance: false,
             ratings: false,
         },
-        rentLocType:''
+        rentLocType: ''
     },
     reducers: {
         addRentLoc(state, action) {
             try {
                 state.rentLocData = action.payload.locData
-                if (state.totalPages === null) {
-                    state.totalPages = Math.ceil(action.payload.totalLocs / 8)
-                    if (state.totalPages > 4) {
-                        state.chckPts = Math.floor(state.totalPages / 4)
-                    }
+                let totalPages = Math.ceil(action.payload.totalLocs / 8)
+                if (state.totalPages !== totalPages && totalPages > 4) {
+                    state.chckPts = Math.floor(totalPages / 4)
+                }else if(totalPages<=4){
+                    state.chckPts=0
                 }
+                state.totalPages = totalPages
             } catch (error) {
                 console.error("Error in addRentLoc() " + error)
             }
@@ -73,11 +77,44 @@ const rentLocSlice = createSlice({
             } catch (error) {
                 console.error("Error in chngChkPts() " + error)
             }
+        },
+        updateFilterStt(state, action) {
+            try {
+                const { prcRngIn = null, guests = null } = action.payload
+                if (prcRngIn !== null) {
+                    const from = 2 * (Number(prcRngIn) + 1)
+                    if (prcRngIn >= 0 && prcRngIn <= 2) {
+                        const to = 2 * (Number(prcRngIn) + 2)
+                        state.filter.priceRange.range = `₹${from},000 - ₹${to},000`
+                    } else {
+                        state.filter.priceRange.range = `more than ${from},000`
+                    }
+                    state.filter.priceRange.ind = Number(prcRngIn)
+                }
+                if (guests !== null && guests > 0) {
+                    state.filter.guestCap = Number(guests)
+                }
+            } catch (error) {
+                console.error("Error in updateFilterStt() " + error)
+            }
+        },
+        updateSortingStt(state,action){
+            try {
+                const {srtBy,isChk} = action.payload 
+                if(srtBy==='Distance'){
+                    state.sortBy.distance=isChk
+                }
+                if(srtBy==='Ratings'){
+                    state.sortBy.ratings=isChk
+                }
+            } catch (error) {
+                console.log("Error in updateSortingStt() "+error)
+            }
         }
     }
 })
 
-export const getFilteredLoc = (reqNum, body) => {
+export const getFilteredLoc = (reqNum) => {
     return async (dispatch) => {
         const getFltrLoc = async () => {
             console.log(body)
@@ -90,14 +127,14 @@ export const getFilteredLoc = (reqNum, body) => {
                 return { locs: data, totalLocs: response.data.totalLoc };
             }
             if (response.status === 204) {
-                return null;
+                return { locs: [], totalLocs: null };
             }
         }
 
         try {
             const { locs, totalLocs } = await getFltrLoc()
             console.log(locs)
-            console.log("Total Locations "+totalLocs)
+            console.log("Total Locations " + totalLocs)
             dispatch(rentLocActions.addRentLoc({ locData: locs, totalLocs: totalLocs }))
         } catch (error) {
             console.error("Error while Getting Data")
@@ -114,7 +151,7 @@ export const getAllLoc = (reqNum) => {
                 return { locs: data, totalLocs: response.data.totalLoc };
             }
             if (response.status === 204) {
-                return null;
+                return { locs: [], totalLocs: null };
             }
         }
 

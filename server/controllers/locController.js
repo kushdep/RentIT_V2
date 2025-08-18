@@ -31,7 +31,7 @@ export const getFilterLocs = async (req, res) => {
         if (guests === null && range === null) {
             res.status(400).send({
                 success: false,
-                message: error
+                message: "Invalid filter request"
             })
         }
 

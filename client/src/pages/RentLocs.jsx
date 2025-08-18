@@ -56,20 +56,39 @@ export default function RentLocs() {
       toast.error("Apply atleast one filter!");
       return;
     }
-
-    let data = { priceRng, guestCnt: guests };
-    dispatch(getFilteredLoc(1, data));
+    
+    dispatch(getFilteredLoc(1));
+    if(priceRng!==null)dispatch(rentLocActions.updateFilterStt({prcRngIn:priceRng}))
+    if(guests!==null)dispatch(rentLocActions.updateFilterStt({guests:guests}))
     filterModalRef.current.close();
+  }
+
+  function handleSortSubmit(event){
+    event.preventDefault();
+    const fd = new FormData(event.target)
+    const dst = fd.get('Distance')
+    const rtng = fd.get('Ratings')
+    if(dst===null && rtng===null){
+      toast.error('Select at least One To sort on!!')
+      return 
+    }
+    if(dst!==null && dst === 'Distance'){
+      dispatch(rentLocActions.updateSortingStt({srtBy:dst,isChk:true}))
+    }
+    if(rtng!==null && rtng === 'Ratings'){
+      dispatch(rentLocActions.updateSortingStt({srtBy:rtng,isChk:true}))
+    }
+    sortModalRef.current.close()
   }
 
   let fltrSrtBy = [];
 
 if (filter.guestCap !== null) fltrSrtBy.push(`${filter.guestCap} guests`);
-if (filter.priceRange !== '') fltrSrtBy.push(filter.priceRange);
+if (filter.priceRange.ind !== null) fltrSrtBy.push(filter.priceRange.range);
 if (sortBy.distance) fltrSrtBy.push('🏝️ Distance');
 if (sortBy.ratings) fltrSrtBy.push('⭐ Ratings');
 
-console.log(fltrSrtBy)
+console.log(sortBy)
 
   return (
     <div>
@@ -86,7 +105,7 @@ console.log(fltrSrtBy)
       <div className="container-fluid mt-3" style={{ height: 1000 }}>
         <div className="row" style={{ height: 500 }}>
           <div className="col-1 sortBtns">
-            <div className="sortBtns mt-3">
+            <div className="sortBtns mt-5">
               <button
                 className="btn btn-dark fs-5 rounded-pill d-flex align-items-center shadow"
                 onClick={() => {
@@ -118,12 +137,14 @@ console.log(fltrSrtBy)
               </button>
             </div>
             <SortAndFilterModal title="Sort By" reference={sortModalRef}>
+              <form onSubmit={handleSortSubmit}>
               <div className="row">
                 <div className="col">
                   <div className="form-check">
                     <input
                       className="form-check-input"
                       type="checkbox"
+                      name="Ratings"
                       value="Ratings"
                       id="Ratings"
                     />
@@ -136,46 +157,22 @@ console.log(fltrSrtBy)
                       className="form-check-input"
                       type="checkbox"
                       value="Distance"
+                      name="Distance"
                       id="Distance"
                     />
                     <label className="form-check-label" htmlFor="Distance">
                       Distance
                     </label>
                   </div>
-                  <div className="border rounded-end-pill p-3">
-                    <div class="form-check">
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        name="exampleRadios"
-                        id="exampleRadios1"
-                        value="NTO"
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="exampleRadios1"
-                      >
-                        Newest to Oldest
-                      </label>
-                    </div>
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        name="exampleRadios"
-                        id="exampleRadios2"
-                        value="OTN"
-                      />
-                      <label
-                        className="form-check-label"
-                        htmlFor="exampleRadios2"
-                      >
-                        Oldest to Newest
-                      </label>
-                    </div>
-                  </div>
+                  <button
+                  type="submit"
+                  className="btn w-100 mt-3 fw-semibold btn-primary rounded-pill shadow"
+                >
+                  Sort-IT
+                </button>
                 </div>
               </div>
+              </form>
             </SortAndFilterModal>
             <SortAndFilterModal title="Filter" reference={filterModalRef}>
               <form onSubmit={handleSubmit}>
@@ -188,7 +185,7 @@ console.log(fltrSrtBy)
                       >
                         <option value="0">Guests</option>
                         {Array.from({ length: 5 }).map((_, i) => (
-                          <option value={i + 1}>{i + 1}</option>
+                          <option value={i + 1} >{i + 1}</option>
                         ))}
                       </select>
                     </div>
@@ -206,8 +203,8 @@ console.log(fltrSrtBy)
                               className="form-check-input"
                               type="radio"
                               name="exampleRadios"
-                              value={i}
                               id={`exampleRadios${i + 1}`}
+                              value={i}
                             />
                             <label
                               className="form-check-label"
@@ -259,7 +256,7 @@ console.log(fltrSrtBy)
                     role="alert"
                   >
                     <div className="d-flex">
-                    <div className="p-2">{e}</div>
+                    <div className="p-2 ms-2">{e}</div>
                     <button
                       type="button"
                       className="btn-close p-2 my-1"
@@ -300,7 +297,7 @@ console.log(fltrSrtBy)
                 </div>
               </div>
               <div className="row row-cols-4">
-                {locData.length !== 0 ? (
+                {locData.length > 0 ? (
                   locData.map((e, i) => {
                     const totalChkPts = Math.floor(totalPages / 4);
                     const currChkPt = totalChkPts - chckPts;
