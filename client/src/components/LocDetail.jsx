@@ -273,11 +273,6 @@ function LocDetails() {
             </div>
             <button className="btn btn-dark mb-5">See More Reviews</button>
           </div>
-          <div className="row">
-            <div className="col-6">
-              <AddReview/>
-            </div>
-          </div>
         </div>
       )}
     </>

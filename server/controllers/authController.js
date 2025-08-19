@@ -127,6 +127,7 @@ export const googleLogin = async (req, res) => {
                 })
             }
             const token = jwt.sign({ _id: user._id, email }, process.env.JWT_SECRET, { expiresIn: '7d' })
+            console.log("token ",token)
             res.header('auth-token', token).send(token)
         }
         catch (error) {

@@ -2,8 +2,7 @@ import Rating from "@mui/material/Rating";
 import Box from "@mui/material/Box";
 import StarRoundedIcon from "@mui/icons-material/Star";
 import { useActionState } from "react";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 function AddReview() {
@@ -12,8 +11,9 @@ function AddReview() {
     review: "",
     errors: [],
   });
-  const { token } = useSelector((state) => state.authData);
-
+  const token = localStorage.getItem("token");
+  const { locId } = useParams();
+  const navigate = useNavigate();
   async function submitReview(prevStt, formData) {
     const stars = formData.get("stars");
     const review = formData.get("Review");
@@ -35,23 +35,42 @@ function AddReview() {
         errors: err,
       };
     }
-    const { locId } = useParams();
     let body = {
       locId,
       stars,
       review,
     };
-    const response = await axios.post("http://localhost:3000/profile/review", body, {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    });
-    console.log(response)
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/profile/add-review",
+        body,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 201) {
+        toast.success("Review Added Successfully");
+        navigate(`/rent-locs/${locId}`);
+      }
+    } catch (error) {
+      if (error?.response?.status === 400) {
+        err.push("Something Went Wrong")
+        return {
+          ...prevStt,
+          stars,
+          review,
+          errors: err,
+        };
+        console.error(error?.response?.data?.message);
+      }
+    }
   }
 
   return (
     <>
-      {formStt.errors.length > 0 &&
+      {formStt?.errors.length > 0 &&
         formStt.errors.map((f) => {
           return <p className="fs-6 text-danger">{f}</p>;
         })}
@@ -66,7 +85,6 @@ function AddReview() {
         >
           <Rating
             name="hover-feedback"
-            value={formStt.stars}
             precision={0.5}
             onChange={(event, newValue) => {
               const hiddenInput = document.querySelector("input[name='stars']");
@@ -97,8 +115,13 @@ function AddReview() {
           ></textarea>
           <label htmlFor="floatingTextarea2">Add a Review</label>
         </div>
-        <button type="submit" className="btn btn-dark mt-2">
-          {isPending ? "Submitting" : "Submit"}
+        <button
+          type="submit"
+          className="btn btn-dark mt-2"
+          defaultValue={0}
+          disabled={isPending}
+        >
+          {isPending ? "Submitting...." : "Submit"}
         </button>
       </form>
     </>

@@ -13,7 +13,7 @@ export const authentication = (req, res, next) => {
 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) {
-            return res.Status(403).send({
+            return res.status(403).send({
                 success: false,
                 message: "Invalid Access"
             })
