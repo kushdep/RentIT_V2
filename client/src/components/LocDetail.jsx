@@ -3,11 +3,13 @@ import "../css/locdetails.css";
 import DateInputBox from "./UI/DateInputBox";
 import Reviews from "./Reviews";
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import ShowAmmModal from "./Modals/showAmmModal";
 import { curfmt } from "../utils/formatter";
 import GoogleMap from "./GoogleMap";
 import { useDispatch, useSelector } from "react-redux";
+
+import AddReview from "./AddReview";
 
 function LocDetails() {
   const showAmmModal = useRef();
@@ -270,6 +272,11 @@ function LocDetails() {
               </div>
             </div>
             <button className="btn btn-dark mb-5">See More Reviews</button>
+          </div>
+          <div className="row">
+            <div className="col-6">
+              <AddReview/>
+            </div>
           </div>
         </div>
       )}
