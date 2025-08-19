@@ -56,10 +56,10 @@ export const login = async (req, res) => {
         })
     }
     const user = await User.findOne({ email })
-    if(user && !user.password){
+    if (user && !user.password) {
         return res.status(401).send({
-            success:false,
-            message:'Sign In with your google Account'
+            success: false,
+            message: 'Sign In with your google Account'
         })
     }
     console.log(user)
@@ -76,7 +76,7 @@ export const login = async (req, res) => {
             message: 'Email or password incorrect'
         })
     }
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
+    const token = jwt.sign({ _id: user._id, email }, process.env.JWT_SECRET, { expiresIn: '7d' })
     res.header('auth-token', token).send(token)
 }
 
@@ -126,13 +126,13 @@ export const googleLogin = async (req, res) => {
                     email
                 })
             }
-            const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
+            const token = jwt.sign({ _id: user._id, email }, process.env.JWT_SECRET, { expiresIn: '7d' })
             res.header('auth-token', token).send(token)
         }
         catch (error) {
             console.log(error)
         }
     } catch (error) {
-        console.log('Error in google Login() '+error)
+        console.log('Error in google Login() ' + error)
     }
 }

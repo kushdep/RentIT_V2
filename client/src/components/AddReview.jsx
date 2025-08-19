@@ -41,7 +41,7 @@ function AddReview() {
       stars,
       review,
     };
-    const response = await axios.post("http://localhost:3000/rent-locs/review", body, {
+    const response = await axios.post("http://localhost:3000/profile/review", body, {
       headers: {
         authorization: `Bearer ${token}`,
       },
