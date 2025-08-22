@@ -123,8 +123,12 @@ const locSchema = new mongoose.Schema({
                 ref: "Review",
             },
         ],
+        ratings:{
+            type:Number,
+            default:0
+        }
     }
-}, { timestamps: { createdAt: 'createdAt' } })
+}, { timestamps: true })
 
 const Location = mongoose.model('Location', locSchema)
 export default Location

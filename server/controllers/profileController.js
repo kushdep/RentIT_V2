@@ -42,7 +42,10 @@ export const addReview = async (req, res) => {
         const reviewRes = await Review.create(newReview)
         const loc = await Location.findById({ _id: locId })
         loc.locDtl.reviews.push(reviewRes._id)
-
+        if(loc.locDtl.reviews.length>0){
+            const total=loc.locDtl.reviews.reduce((prev,e)=>prev+e.ratings,0)
+            loc.locDtl.ratings = total / loc.locDtl.reviews.length;  
+        }
         await loc.save()
         return res.status(201).send({
             success: true,
