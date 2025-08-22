@@ -62,8 +62,30 @@ export default function RentLocs() {
     filterModalRef.current.close();
   }
 
-  function handleSortSubmit(event){
-     event.preventDefault();
+
+  function fecthLoc(navDtl){
+    return new Promise((res,rej)=>{
+      if(!navigator.geolocation){
+      toast.error('Not able to get curr Location')  
+      toast.error('Cannot sort by Distance')  
+      return 
+    }
+    navigator.geolocation.getCurrentPosition((pos)=>{
+      navDtl['long']=pos.coords.latitude
+      navDtl['lat']=pos.coords.latitude
+      console.log(navDtl)
+      res(navDtl)
+    },(err)=>{
+      console.log("Not able to get Location "+JSON.stringify(err))
+      toast.error('Not able to get curr Location')  
+      toast.error('Cannot sort by Distance')
+      rej(err)
+      })
+    })
+  }
+
+ async function handleSortSubmit(event){
+  event.preventDefault();
   const form = event.target;
   const dstChk = form.Distance.checked;
   const rngChk = form.Ratings.checked; 
@@ -73,21 +95,25 @@ export default function RentLocs() {
     return;
   }
 
-    dispatch(rentLocActions.updateSortingStt({ srtBy: "Distance", isChk: dstChk }))
+  if(dstChk){
+      let navDtl = {}
+    await fecthLoc(navDtl)
+    dispatch(rentLocActions.updateSortingStt({ srtBy: "Distance", isChk: dstChk, currLocDtl:navDtl }))
+  }
     dispatch(rentLocActions.updateSortingStt({ srtBy: "Ratings", isChk: rngChk }))
-
   dispatch(getFilteredLoc(1));
   sortModalRef.current.close();
   }
 
   let fltrSrtBy = [];
 
-if (filter.guestCap !== null) fltrSrtBy.push(`${filter.guestCap} guests`);
-if (filter.priceRange.ind !== null) fltrSrtBy.push(filter.priceRange.range);
-if (sortBy.distance) fltrSrtBy.push('🏝️ Distance');
-if (sortBy.ratings) fltrSrtBy.push('⭐ Ratings');
+if (filter.guestCap !== null) fltrSrtBy.push({title:'guests',val:`${filter.guestCap} guests`});
+if (filter.priceRange.ind !== null) fltrSrtBy.push({title:'priceRng',val:filter.priceRange.range});
+if (sortBy.distance.inc) fltrSrtBy.push({title:'dst',val:'🏝️ Distance'});
+if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
 
-
+console.log("pages "+pages)
+console.log("check points"+chckPts)
   return (
     <div>
       <header className="position-relative">
@@ -100,8 +126,11 @@ if (sortBy.ratings) fltrSrtBy.push('⭐ Ratings');
           <SearchBar props={{ height: 100, top: 150, right: 390 }} />
         </div>
       </header>
-      <div className="container-fluid mt-3" style={{ height: 1000 }}>
-        <div className="row" style={{ height: 500 }}>
+      <div className="container-fluid">
+        <div className="row">
+<div className="col ">
+      <div className="container-fluid mt-3">
+        <div className="row">
           <div className="col-1 sortBtns">
             <div className="sortBtns mt-5">
               <button
@@ -248,18 +277,27 @@ if (sortBy.ratings) fltrSrtBy.push('⭐ Ratings');
                     <div className="row row-cols-6">
                       {
                         fltrSrtBy.length>0 && fltrSrtBy.map((e,i)=>{
-
                   return <div
-                    className="col p-0 me-3 alert alert-success rounded-pill alert-dismissible shadow "
+                    className="col p-0 me-3 alert alert-success rounded-pill"
                     role="alert"
+                    key={e.title}
                   >
                     <div className="d-flex">
-                    <div className="p-2 ms-2">{e}</div>
+                    <div className="p-2 ms-2">{e.val}</div>
                     <button
                       type="button"
                       className="btn-close p-2 my-1"
-                      data-bs-dismiss="alert"
                       aria-label="Close"
+                      onClick={()=>{
+                          if(e.title==='guests' || e.title === 'priceRng'){
+                            dispatch(rentLocActions.resetFltrStt(e.title))
+                          }
+                          if(e.title==='dst' || e.title === 'rtng'){
+                            dispatch(rentLocActions.resetSrtStt(e.title))
+                          }                        
+                          dispatch(getFilteredLoc(1))
+                          }
+                      }
                     ></button>
                     </div>
                   </div>
@@ -285,6 +323,11 @@ if (sortBy.ratings) fltrSrtBy.push('⭐ Ratings');
                         <li>
                           <button
                             className="dropdown-item"
+                            onClick={()=>{
+                              dispatch(rentLocActions.updateFilterStt({locFltr:a.id}))
+                              dispatch(getFilteredLoc(1))
+                              }
+                            }
                           >
                             {a.title}
                           </button>
@@ -324,6 +367,11 @@ if (sortBy.ratings) fltrSrtBy.push('⭐ Ratings');
           </div>
         </div>
       </div>
+
+</div>
+        </div>
+        <div className="row mt-4">
+<div className="col">
       <div className="container">
         <div className="row">
           <div className="col">
@@ -379,7 +427,12 @@ if (sortBy.ratings) fltrSrtBy.push('⭐ Ratings');
                           let totalChkPts = Math.floor(totalPages / 4);
                           let reqNum = totalChkPts + 1 - chckPts;
                           let chngPage = 4 * reqNum + 1;
-                          dispatch(getAllLoc(reqNum + 1));
+                          if(sortBy.distance.inc || sortBy.ratings || filter.guestCap || filter.priceRange.ind){
+                            console.log(reqNum+1)  
+                            dispatch(getFilteredLoc(reqNum+1));
+                          }else{
+                            dispatch(getAllLoc(reqNum + 1));
+                          }
                           dispatch(rentLocActions.chngCurrPage(chngPage));
                         }}
                       >
@@ -393,19 +446,23 @@ if (sortBy.ratings) fltrSrtBy.push('⭐ Ratings');
                         ? "page-item disabled"
                         : "page-item"
                     }
-                    onClick={() => {
+                  >
+                    <button className="page-link" disabled={currPage === totalPages?true:false} onClick={() => {
                       if (currPage % 4 === 0) {
                         let reqNum = currPage / 4;
                         const page = 4 * reqNum + 1;
-                        dispatch(getAllLoc(reqNum + 1));
+                        if(sortBy.distance.inc || sortBy.ratings || filter.guestCap || filter.priceRange.ind){
+                          console.log(reqNum+1)  
+                          dispatch(getFilteredLoc(reqNum+1));
+                        }else{
+                          dispatch(getAllLoc(reqNum + 1));
+                        }
                         dispatch(rentLocActions.chngCurrPage(page));
                         dispatch(rentLocActions.decChkPts());
                       } else {
                         dispatch(rentLocActions.chngCurrPage(currPage + 1));
                       }
-                    }}
-                  >
-                    <button className="page-link" href="#">
+                    }}>
                       &raquo;
                     </button>
                   </li>
@@ -413,6 +470,10 @@ if (sortBy.ratings) fltrSrtBy.push('⭐ Ratings');
               )}
             </nav>
           </div>
+        </div>
+      </div>
+
+</div>
         </div>
       </div>
     </div>

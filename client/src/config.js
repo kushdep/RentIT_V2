@@ -128,15 +128,3 @@ export const regionalCode = [
     { code: "LD", state: "Lakshadweep" },
     { code: "PY", state: "Puducherry" },
 ];
-
-function handleSubmit(prevState,formdata) {
-    let guests = formdata.get("guests");
-    let priceRng = formdata.get("exampleRadios");
-    guests > 0 ? guests : (guests = null);
-    let body = { priceRng,guestCnt :guests};
-
-    console.log(body);
-    dispatch(getFilteredLoc(1,body))
-    dispatch(rentLocActions.filterLoc(true));
-    filterModalRef.current.close();
-  }
