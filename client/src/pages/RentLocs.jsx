@@ -349,8 +349,11 @@ console.log("check points"+chckPts)
 
                     if (i >= from && i <= to) {
                       const formattedPrice = curfmt.format(e.locDtl.price );
+                      console.log(e.locDtl?.title)
+                      const name = e.locDtl?.title
                       return (
                         <PropertyCard
+                          name={name}
                           coverImg={e.locDtl?.imgTtlData?.[0]?.images?.[0]?.url}
                           price={formattedPrice}
                           locId={e._id}

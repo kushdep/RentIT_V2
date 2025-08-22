@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-function PropertyCard({ locId, coverImg, price, ratings }) {
+function PropertyCard({ name,locId, coverImg, price, ratings }) {
   const navigate = useNavigate();
   async function handleClick() {
     try {
@@ -35,7 +35,7 @@ function PropertyCard({ locId, coverImg, price, ratings }) {
             <div className="d-flex col justify-content-between mt-3">
               <div className="d-flex row w-75">
                 <p className="mx-2 text-dark fw-semibold mb-0">
-                  Flats in Gurugram
+                  {name}
                 </p>
                 <p className="mx-3 text-muted form p-0">
                   {`${price}`} per night

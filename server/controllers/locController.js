@@ -25,6 +25,7 @@ export const getFilterLocs = async (req, res) => {
         let ratings = req?.query.ratings || false
         let guests = !isNaN(req?.query.guests) ? Number(req.query.guests) : null
         let range = !isNaN(req?.query.range) ? Number(req.query.range) : null
+        let sortBy = req.query.sortBy || false
         let distance = req.query.distance || false
         let lat = req.query.lat ? Number(req.query.lat) : null
         let long = req.query.long ? Number(req.query.long) : null
@@ -67,15 +68,18 @@ export const getFilterLocs = async (req, res) => {
         const locData = await Location.countDocuments(query)
         rentLocs = await Location.find(query)
 
-        if (distance && lat !== null && long !== null) {
-            rentLocs = sortPlacesByDistance(rentLocs, lat, long)
+        if(sortBy){
+            if (distance && lat !== null && long !== null) {
+                rentLocs = sortPlacesByDistance(rentLocs, lat, long)
+            }
+    
+            if (ratings) {
+                rentLocs.sort((a, b) => {
+                    return b.locDtl.ratings - a.locDtl.ratings
+                })
+            }
         }
 
-        if (ratings) {
-            rentLocs.sort((a, b) => {
-                return b.locDtl.ratings - a.locDtl.ratings
-            })
-        }
         console.log("skipLoc " + skipLoc)
         console.log("locData " + locData)
         // console.log(rentLocs)
