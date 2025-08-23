@@ -123,10 +123,10 @@ const locSchema = new mongoose.Schema({
                 ref: "Review",
             },
         ],
-        ratings:{
-            type:Number,
-            default:0
-        }
+    },
+    stars:{
+        type:Number,
+        default:0
     }
 }, { timestamps: true })
 

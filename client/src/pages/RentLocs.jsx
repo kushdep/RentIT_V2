@@ -357,6 +357,7 @@ console.log("check points"+chckPts)
                           coverImg={e.locDtl?.imgTtlData?.[0]?.images?.[0]?.url}
                           price={formattedPrice}
                           locId={e._id}
+                          ratings={e.stars}
                         />
                       );
                     } else {

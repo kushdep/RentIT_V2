@@ -64,8 +64,9 @@ export const getFilterLocs = async (req, res) => {
 
         if (sortBy) {
             console.log("Sorting")
+            console.log(query)
             rentLocs = await Location.find(query)
-            
+            console.log("Srting Locs "+rentLocs)
             if (!ratings && distance && lat !== null && long !== null) {
                 rentLocs = sortPlacesByDistance(rentLocs, lat, long)
             }
@@ -74,6 +75,8 @@ export const getFilterLocs = async (req, res) => {
                 console.log(ratings)
                 console.log(rentLocs[0].stars)
                 rentLocs.sort((a, b) => {
+                    console.log(a.stars)
+                    console.log(b.stars)
                     return b.stars - a.stars
                 })
                 console.log("After Ratings Sort ")

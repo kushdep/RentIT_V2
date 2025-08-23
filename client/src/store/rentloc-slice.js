@@ -190,14 +190,22 @@ export const getFilteredLoc = (reqNum) => {
             }
 
             console.log("URL " + url)
-            const response = await axios.get(url);
-            if (response.status === 200) {
-                const resData = response.data.data
-                const data = resData.slice(0, 32);
-                return { locs: data, totalLocs: response.data.totalLoc };
-            }
-            if (response.status === 204) {
-                return { locs: [], totalLocs: null };
+            try {
+                const response = await axios.get(url)
+                console.log(response)
+                if (response.status === 200) {
+                    const resData = response.data.data
+                    const data = resData.slice(0, 32);
+                    return { locs: data, totalLocs: response.data.totalLoc };
+                }
+                if (response.status === 204) {
+                    return { locs: [], totalLocs: null };
+                }
+            } catch (error) {
+                if (error.response.status === 400) {
+                     console.log(error.response.data);
+                }
+                console.log(error)
             }
         }
 
