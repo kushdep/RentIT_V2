@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import "../css/navbar.css";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { authActions } from "../store/auth-slice";
 import toast from "react-hot-toast";
 import { useRef } from "react";
@@ -161,14 +161,14 @@ function NavBar() {
                               </NavLink>
                             </li>
                             <li>
-                              <a className="dropdown-item" href="#">
-                                Another action
-                              </a>
+                              <Link to="/profile/whishlist" className="dropdown-item">
+                                Whishlist
+                              </Link>
                             </li>
                             <li>
-                              <a className="dropdown-item" href="#">
-                                Something else here
-                              </a>
+                              <Link to="" className="dropdown-item">
+                                Trips
+                              </Link>
                             </li>
                             <li>
                               <button

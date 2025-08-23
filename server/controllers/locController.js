@@ -56,35 +56,21 @@ export const getFilterLocs = async (req, res) => {
                 query["locDtl.price"] = { $gt: from }
             }
         }
-        console.log(query)
         let skipLoc = (dataReq - 1) * 32
         const locData = await Location.countDocuments(query)
-        console.log("skipLoc " + skipLoc)
-        console.log("locData " + locData)
 
         if (sortBy) {
-            console.log("Sorting")
-            console.log(query)
             rentLocs = await Location.find(query)
-            console.log("Srting Locs "+rentLocs)
             if (!ratings && distance && lat !== null && long !== null) {
                 rentLocs = sortPlacesByDistance(rentLocs, lat, long)
             }
             
             if (ratings) {
-                console.log(ratings)
-                console.log(rentLocs[0].stars)
                 rentLocs.sort((a, b) => {
-                    console.log(a.stars)
-                    console.log(b.stars)
                     return b.stars - a.stars
                 })
-                console.log("After Ratings Sort ")
-                console.log(rentLocs)
             }
             rentLocs = rentLocs.slice(skipLoc, skipLoc + 32)
-
-            console.log(rentLocs)
         } else {
             rentLocs = await Location.find(query).skip(skipLoc).limit(32)
         }

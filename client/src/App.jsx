@@ -9,6 +9,8 @@ import LocDetails from "./components/LocDetail";
 import { useDispatch } from "react-redux";
 import { authActions } from "./store/auth-slice";
 import LocPhotosPage from "./pages/LocPhotosPage"
+import Whishlist from "./pages/Whishlist";
+import LoginPage from "./pages/LoginPage";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +18,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: "", element: <Homepage /> },
+      { path: "login", element: <LoginPage /> },
       {
         path: `rent-locs`,
         id:"rentLocs",
@@ -34,7 +37,7 @@ const router = createBrowserRouter([
         element: <Profile />,
         children: [
           { path: "new-loc", element: <AddLocForm /> },
-          { path: "edit-loc", element: <Profile /> },
+          { path: "whishlist", element: <Whishlist /> },
         ],
       },
     ],

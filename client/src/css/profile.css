@@ -1,6 +1,7 @@
 .sidBar{
     background-color: #1e1e1e;
     border-top-right-radius: 40px;
+    min-height: 100vh;
 }
 
 .profilebutton .active{

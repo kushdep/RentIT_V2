@@ -1,14 +1,29 @@
+import { useState } from "react";
+import {useDispatch, useSelector} from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setSavedLoc } from "../../store/profile-slice";
 
-function PropertyCard({ name,locId, coverImg, price, ratings }) {
+function PropertyCard({ name,locId, coverImg, price, ratings,isSaved=false }) {
+  const [like,setLike] = useState(isSaved)
+  const dispatch = useDispatch()
+  const {isAuthenticated,token} = useSelector(state=>state.authData)
   const navigate = useNavigate();
-  async function handleClick() {
-    try {
+  function handleClick() {
       navigate(`${locId}`);
       console.log(locId);
-    } catch (error) {
-      console.error("Error in handleClick() " + error);
+
+  }
+
+  function handleSave(){
+    if(!isAuthenticated){
+      navigate('/login');
+      return 
     }
+
+    setLike((prev)=>{
+      dispatch(setSavedLoc({locId,saveStts:!prev,token}))
+      return !prev
+    })
   }
 
   return (
@@ -18,9 +33,10 @@ function PropertyCard({ name,locId, coverImg, price, ratings }) {
           <button
             className="btn d-flex text-decoration-underline align-items-center border-0 position-absolute"
             style={{ top: 8, right: 9 }}
+            onClick={handleSave}
           >
             <img
-              src="/public/icons/heart.png"
+              src={like?"/public/icons/heart-fill.png":"/public/icons/heart.png"}
               style={{ width: 20, height: 20, objectFit: "cover" }}
               alt=""
               className="me-1 shadow"

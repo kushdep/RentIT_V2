@@ -16,20 +16,24 @@ const userSchema = new mongoose.Schema({
     },
     locations: {
         categories: {
-            Appartment: {
+            Appartment: [{
                 type: mongoose.Types.ObjectId,
-                ref: 'Appartment'
-            },
-            Villa: {
+                ref:'Location'
+            }],
+            Villa: [{
                 type: mongoose.Types.ObjectId,
-                ref: 'Vila'
-            },
-            Penthouse: {
+                ref:'Location'
+            }],
+            Penthouse: [{
                 type: mongoose.Types.ObjectId,
-                ref: 'Penthouse'
-            }
+                ref:'Location'
+            }]
         }
-    }
+    },
+    savedLoc:[{
+        type: mongoose.Types.ObjectId,
+        ref:'Location'
+    }]
 }, { timestamps: { createdAt: 'createdAt' } })
 
 
