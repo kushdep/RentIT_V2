@@ -3,8 +3,8 @@ import { sortPlacesByDistance } from '../utils/distance.js'
 
 export const getRentLocs = async (req, res) => {
     try {
-        const { filter } = req?.query
-        if (filter !== undefined && filter) {
+        const { filter, sortBy } = req?.query
+        if ((filter !== undefined && filter) || (sortBy !== undefined && sortBy)) {
             getFilterLocs(req, res)
         } else {
             getAllLocs(req, res)
@@ -35,13 +35,6 @@ export const getFilterLocs = async (req, res) => {
             dataReq = 1
         }
 
-        if ((guests === null && range === null) || (locType === null && ratings && distance)) {
-            res.status(400).send({
-                success: false,
-                message: "Invalid filter request"
-            })
-        }
-
         let rentLocs = []
         let query = {}
 
@@ -66,24 +59,32 @@ export const getFilterLocs = async (req, res) => {
         console.log(query)
         let skipLoc = (dataReq - 1) * 32
         const locData = await Location.countDocuments(query)
-        rentLocs = await Location.find(query)
-
-        if(sortBy){
-            if (distance && lat !== null && long !== null) {
-                rentLocs = sortPlacesByDistance(rentLocs, lat, long)
-            }
-    
-            if (ratings) {
-                rentLocs.sort((a, b) => {
-                    return b.locDtl.ratings - a.locDtl.ratings
-                })
-            }
-        }
-
         console.log("skipLoc " + skipLoc)
         console.log("locData " + locData)
-        // console.log(rentLocs)
-        rentLocs = rentLocs.filter((e, i) => i >= skipLoc && i < skipLoc + 32)
+
+        if (sortBy) {
+            console.log("Sorting")
+            rentLocs = await Location.find(query)
+            
+            if (!ratings && distance && lat !== null && long !== null) {
+                rentLocs = sortPlacesByDistance(rentLocs, lat, long)
+            }
+            
+            if (ratings) {
+                console.log(ratings)
+                console.log(rentLocs[0].stars)
+                rentLocs.sort((a, b) => {
+                    return b.stars - a.stars
+                })
+                console.log("After Ratings Sort ")
+                console.log(rentLocs)
+            }
+            rentLocs = rentLocs.slice(skipLoc, skipLoc + 32)
+
+            console.log(rentLocs)
+        } else {
+            rentLocs = await Location.find(query).skip(skipLoc).limit(32)
+        }
 
         if (rentLocs.length === 0) {
             return res.status(204).send({
