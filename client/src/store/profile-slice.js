@@ -4,20 +4,31 @@ import axios from "axios";
 const profileSlice = createSlice({
     name: "profile",
     initialState: {
-
-    },
-    reducers: {
-        savedLocData: [],
+        savedLocData: {
+            count: 40,
+            locData: []
+        },
         myReviewData: [],
         editProfile: {},
         tripsData: [],
         approvalsData: []
     },
-    updateSavedLocData(state, action) {
-        try {
+    reducers: {
+        updateSavedLocData(state, action) {
+            try {
 
-        } catch (error) {
-            console.log("Error in updateSavedLocData() " + error)
+            } catch (error) {
+                console.error("Error in updateSavedLocData() " + error)
+            }
+        },
+        addSavedLocData(state, action) {
+            try {
+                const { locData = [], totalLocs = null } = action.payload
+                state.savedLocData.locData = locData
+                state.savedLocData.count = totalLocs
+            } catch (error) {
+                console.error("Error in addSavedLocData() " + error)
+            }
         }
     }
 })
@@ -39,39 +50,38 @@ export const setSavedLoc = (locSaveStt) => {
                         authorization: `Bearer ${token}`
                     }
                 })
-                if(response.status===200){
-                    const {id,status} = response.data.data
-                    return {locationId:id,resSaveStts:status}
+                if (response.status === 200) {
+                    const { id, status } = response.data.data
+                    return { locationId: id, resSaveStts: status }
                 }
 
             } catch (error) {
                 if (error.response.status === 400) {
-                     console.log(error.response.data);
+                    console.log(error.response.data);
                 }
                 console.log(error)
             }
         }
         try {
-            const{locationId,resSaveStts} = await setLikedLoc()
-            dispatch(profileActions.updateSavedLocData({locationId,resSaveStts}))
+            const { locationId, resSaveStts } = await setLikedLoc()
+            dispatch(profileActions.updateSavedLocData({ locationId, resSaveStts }))
         } catch (error) {
-            console.error("Error while Saving Loc"+error) 
+            console.error("Error while Saving Loc" + error)
         }
     }
 }
 
 export const getSavedLoc = (token) => {
-     return async (dispatch) => {
+    return async (dispatch) => {
         const getLoc = async () => {
-            const response = await axios.get(`http://localhost:3000/profile/liked-loc`,{
-                headers:{
-                    authorization:`Bearer ${token}`
+            const response = await axios.get(`http://localhost:3000/profile/liked-loc`, {
+                headers: {
+                    authorization: `Bearer ${token}`
                 }
             });
             if (response.status === 200) {
                 const resData = response.data.data
-                const data = resData.slice(0, 32);
-                return { locs: data, totalLocs: response.data.totalLoc };
+                return { locs: resData, totalLocs: response.data.totalLocs };
             }
             if (response.status === 204) {
                 return { locs: [], totalLocs: null };
@@ -80,7 +90,7 @@ export const getSavedLoc = (token) => {
 
         try {
             const { locs, totalLocs } = await getLoc()
-            dispatch(rentLocActions.addSavedLocData({ locData: locs, totalLocs: totalLocs }))
+            dispatch(rentLocActions.addSavedLocData({ locData: locs, totalLocs }))
         } catch (error) {
             console.error("Error while Getting Data")
         }

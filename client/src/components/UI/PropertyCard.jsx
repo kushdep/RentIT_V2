@@ -1,30 +1,42 @@
 import { useState } from "react";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setSavedLoc } from "../../store/profile-slice";
+import toast from 'react-hot-toast'
 
-function PropertyCard({ name,locId, coverImg, price, ratings,isSaved=false }) {
-  const [like,setLike] = useState(isSaved)
-  const dispatch = useDispatch()
-  const {isAuthenticated,token} = useSelector(state=>state.authData)
+function PropertyCard({
+  name,
+  locId,
+  coverImg,
+  price,
+  ratings,
+  isSaved = false,
+}) {
+  const [like, setLike] = useState(isSaved);
+  const dispatch = useDispatch();
+  const { isAuthenticated, token } = useSelector((state) => state.authData);
+  const { savedLocData } = useSelector((state) => state.profileData);
   const navigate = useNavigate();
   function handleClick() {
-      navigate(`${locId}`);
-      console.log(locId);
-
+    navigate(`${locId}`);
+    console.log(locId);
   }
-
-  function handleSave(){
-    if(!isAuthenticated){
-      navigate('/login');
-      return 
+  function handleSave() {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+    
+    if (savedLocData.count >= 40) {
+      toast.error(`You can't add more than 40 Loc to your whishlist`)
     }
 
-    setLike((prev)=>{
-      dispatch(setSavedLoc({locId,saveStts:!prev,token}))
-      return !prev
-    })
+    setLike((prev) => {
+      dispatch(setSavedLoc({ locId, saveStts: !prev, token }));
+      return !prev;
+    });
   }
+  console.log(savedLocData)
 
   return (
     <>
@@ -36,7 +48,11 @@ function PropertyCard({ name,locId, coverImg, price, ratings,isSaved=false }) {
             onClick={handleSave}
           >
             <img
-              src={like?"/public/icons/heart-fill.png":"/public/icons/heart.png"}
+              src={
+                like
+                  ? "/public/icons/heart-fill.png"
+                  : "/public/icons/heart.png"
+              }
               style={{ width: 20, height: 20, objectFit: "cover" }}
               alt=""
               className="me-1 shadow"
@@ -50,9 +66,7 @@ function PropertyCard({ name,locId, coverImg, price, ratings,isSaved=false }) {
             <img src={coverImg} className="card-img-top rounded-5 shadow" />
             <div className="d-flex col justify-content-between mt-3">
               <div className="d-flex row w-75">
-                <p className="mx-2 text-dark fw-semibold mb-0">
-                  {name}
-                </p>
+                <p className="mx-2 text-dark fw-semibold mb-0">{name}</p>
                 <p className="mx-3 text-muted form p-0">
                   {`${price}`} per night
                 </p>

@@ -31,7 +31,7 @@ const locSchema = new mongoose.Schema({
                         type: String,
                         required: true
                     }
-                }z
+                }
             ]
         }
         ],

@@ -1,6 +1,7 @@
 import Location from '../models/location.js'
 import User from '../models/user.js'
 import Review from '../models/review.js'
+import mongoose from "mongoose";
 
 export const addLocation = async (req, res) => {
     try {
@@ -63,42 +64,45 @@ export const addReview = async (req, res) => {
 export const getWhishlistLoc = async (req, res) => {
     try {
         const { _id } = req.user
-        // const user = await User.findById({ _id }).populate('savedLoc')
-        // const savedLocations = user.savedLoc.map((e) => {
-        //     let loc = {
-        //         name: e.locDtl.title,
-        //         locId: e._id,
-        //         coverImg: e.locDtl.imgTtlData[0].images[0].url,
-        //         price: e.locDtl.price,
-        //         ratings: e.stars,
-        //         isSaved: true
-        //     }
-        //     return loc
-        // })
-
-        const result = await User.aggregate([
-  { $match: { _id: mongoose.Types.ObjectId(userId) } },
-  {
-    $lookup: {
-      from: "locations",
-      localField: "savedLoc",
-      foreignField: "_id",
-      as: "savedLoc"
-    }
-  },
-  { $unwind: "$savedLoc" },
-  {
-    $project: {
-      _id: 0,
-      locId: "$savedLoc._id",
-      name: "$savedLoc.locDtl.title",
-      coverImg: { $arrayElemAt: ["$savedLoc.locDtl.imgTtlData.images.url", 0] }, 
-      price: "$savedLoc.locDtl.price",
-      ratings: "$savedLoc.stars",
-      isSaved: { $literal: true }
-    }
-  }
-]);
+        console.log(req.user)
+        let result = []
+        result = await User.aggregate([
+            { $match: { _id: new mongoose.Types.ObjectId(_id) } },
+            {
+                $lookup: {
+                    from: "locations",
+                    localField: "savedLoc",
+                    foreignField: "_id",
+                    as: "savedLoc"
+                }
+            },
+            { $unwind: "$savedLoc" },
+            {
+                $project: {
+                    _id: 0,
+                    locId: "$savedLoc._id",
+                    name: "$savedLoc.locDtl.title",
+                    coverImg: { $arrayElemAt: ["$savedLoc.locDtl.imgTtlData.images.url", 0] },
+                    price: "$savedLoc.locDtl.price",
+                    ratings: "$savedLoc.stars",
+                    isSaved: { $literal: true }
+                }
+            }
+        ]);
+        console.log(result)
+        if (result.length === 0) {
+            return res.status(204).send({
+                success: false,
+                totalLocs: 0,
+                message: "No Filtered Rent Locations Data"
+            })
+        }
+        return res.status(200).send({
+            success: true,
+            data: result,
+            totalLocs: result.length,
+            message: "User Whishlist Location"
+        })
     } catch (error) {
         console.log(error)
         return res.status(400).send({
