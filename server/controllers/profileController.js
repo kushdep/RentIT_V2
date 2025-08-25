@@ -64,7 +64,6 @@ export const addReview = async (req, res) => {
 export const getWhishlistLoc = async (req, res) => {
     try {
         const { _id } = req.user
-        console.log(req.user)
         let result = []
         result = await User.aggregate([
             { $match: { _id: new mongoose.Types.ObjectId(_id) } },
@@ -113,9 +112,22 @@ export const getWhishlistLoc = async (req, res) => {
 }
 
 
-export const addSavedLoc = async (req, res) => {
+export const updateSavedLoc = async (req, res) => {
     try {
+        const { _id } = req.user
+        const { locId = null, likeStts = false } = req.body
+        if (locId === null || likeStts) {
+            return res.status(400).send({
+                success: false,
+                message: "Please Send Location Data to Updata"
+            })
+        }
+        
+        if (likeStts) {
 
+        } else {
+
+        }
     } catch (error) {
         console.log(error)
         return res.status(400).send({

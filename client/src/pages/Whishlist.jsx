@@ -1,15 +1,15 @@
 import { useSelector } from "react-redux";
 
 export default function Whishlist() {
-  const { savedLocData: locData } = useSelector((state) => state.profileData);
+  const { savedLocData } = useSelector((state) => state.profileData);
   return (
     <div
       className="container-fluid min-vh-100"
       style={{ minHeight: "100vh" }}
     >
-      {locData?.length > 0 ? (
+      {savedLocData?.count > 0 ? (
         <div className="row row-cols-4">
-          {locData.map((e, i) => {
+          {savedLocData?.locData.map((e, i) => {
             const name = e.locDtl?.title;
             return (
               <PropertyCard
