@@ -3,21 +3,26 @@ import "../css/locdetails.css";
 import DateInputBox from "./UI/DateInputBox";
 import Reviews from "./Reviews";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import ShowAmmModal from "./Modals/showAmmModal";
 import { curfmt } from "../utils/formatter";
 import GoogleMap from "./GoogleMap";
 import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { setSavedLoc } from "../store/profile-slice";
 
-import AddReview from "./AddReview";
 
 function LocDetails() {
   const showAmmModal = useRef();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const { rentLocData: locDetails } = useSelector((state) => state.rentLocs);
+  const {isAuthenticated,token} = useSelector((state) => state.authData);
+  const {savedLocData} = useSelector((state) => state.profileData);
   const { locId } = useParams();
+  const isSaved = savedLocData.locData.find(e=>e.locId===locId)
+  console.log(isSaved)
+  const [like,setLike] = useState(isSaved)
 
   let loc = null;
   loc = locDetails.find((loc) => loc._id === locId);
@@ -33,7 +38,31 @@ function LocDetails() {
   } = loc.locDtl;
 
   const { options } = Ammentities.find((a) => a.id === facilities[0].id);
+ async function handleSave() {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
 
+    if (savedLocData.count >= 8) {
+      toast.error(`You can't add more than 40 Loc to your whishlist`);
+    }
+    setLike((prev) => {
+      return !prev;
+    });
+
+    try {
+      console.log(locId)
+      console.log(!like)
+      await dispatch(setSavedLoc({ locId:locId, saveStts: !like, token }))
+    } catch (error) {
+      console.log(error)
+      toast.error("cannot Save to Whishlist");
+      setLike((prev) => {
+        return !prev;
+      });
+    }
+  }
   return (
     <>
       <ShowAmmModal reference={showAmmModal} facilities={facilities} />
@@ -44,9 +73,15 @@ function LocDetails() {
               <h4 className="fw-semibold">
                 {title}- {desc.bedrooms} BHK
               </h4>
-              <button className="btn d-flex h-50 text-decoration-underline align-items-center">
+              <button className="btn d-flex h-50 text-decoration-underline align-items-center"
+              onClick={handleSave}
+              >
                 <img
-                  src="/public/icons/heart-fill.png"
+                  src={
+                    like
+                      ? "/public/icons/heart-fill.png"
+                      : "/public/icons/heart-black-border.png"
+                  }
                   style={{ width: 20, height: 20, objectFit: "cover" }}
                   alt=""
                   className="me-1"
