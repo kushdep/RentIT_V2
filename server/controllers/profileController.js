@@ -78,7 +78,6 @@ export const getWhishlistLoc = async (req, res) => {
             { $unwind: "$savedLoc" },
             {
                 $project: {
-                    _id: 0,
                     locId: "$savedLoc._id",
                     name: "$savedLoc.locDtl.title",
                     coverImg: { $arrayElemAt: ["$savedLoc.locDtl.imgTtlData.images.url", 0] },
@@ -126,17 +125,51 @@ export const updateSavedLoc = async (req, res) => {
         }
         let query = {}
         if (likeStts) {
-            query["$addToSet"]={savedLoc:locId}
+            query["$addToSet"] = { savedLoc: locId }
         } else {
-            query["$pull"]={savedLoc:locId}
+            query["$pull"] = { savedLoc: locId }
         }
-        const updatedDoc = await User.findOneAndUpdate({_id},query,{new:true})
-        console.log(updatedDoc)
+        const updatedDoc = await User.findOneAndUpdate({ _id }, query, {new: true})
+
+        const locData = await Location.findById(locId).select("_id locDtl.title locDtl.imgTtlData locDtl.price stars")
+        console.log("Location Data")
+        console.log(locData)
+        if (updatedDoc !== null) {
+            let data = {
+                locDetails:{
+                    locId: locData._id,
+                    name: locData.locDtl.title,
+                    coverImg:locData.locDtl.imgTtlData[0].images.url,
+                    price:locData.locDtl.price,
+                    ratings:locData.stars,
+                    isSaved:likeStts
+                },
+                status: likeStts
+            }
+            return res.status(200).send({
+                success: true,
+                data: data,
+                message: "Added to Whishlist"
+            })
+        } else {
+            return res.status(409).send({
+                success: false,
+                message: "Can't Update there is Some Error"
+            })
+        }
     } catch (error) {
         console.log(error)
         return res.status(400).send({
             success: false,
             message: error
         })
+    }
+}
+
+async function getLocDb(){
+    try {
+        
+    } catch (error) {
+        console.log(error)
     }
 }

@@ -21,7 +21,7 @@ function PropertyCard({
     navigate(`${locId}`);
     console.log(locId);
   }
-  function handleSave() {
+  async function handleSave() {
     if (!isAuthenticated) {
       navigate("/login");
       return;
@@ -30,11 +30,13 @@ function PropertyCard({
     if (savedLocData.count >= 40) {
       toast.error(`You can't add more than 40 Loc to your whishlist`)
     }
-
-    setLike((prev) => {
-      dispatch(setSavedLoc({ locId, saveStts: !prev, token }));
-      return !prev;
-    });
+    setLike(prev=>!prev) 
+    try {
+      await dispatch(setSavedLoc({ locId, saveStts: !like, token })).unwrap()
+    } catch (error) {
+      toast.error("cannot Save to Whishlist")
+      setLike(prev=>!prev) 
+    }
   }
   console.log(savedLocData)
 

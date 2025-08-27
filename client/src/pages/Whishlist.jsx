@@ -1,23 +1,35 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getSavedLoc, profileActions } from "../store/profile-slice";
+import PropertyCard from "../components/UI/PropertyCard";
+import { curfmt } from "../utils/formatter";
 
 export default function Whishlist() {
   const { savedLocData } = useSelector((state) => state.profileData);
+  const dispatch = useDispatch();
+  console.log(savedLocData);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    console.log(token)
+    dispatch(getSavedLoc(token));
+  }, []);
+
   return (
-    <div
-      className="container-fluid min-vh-100"
-      style={{ minHeight: "100vh" }}
-    >
+    <div className="container-fluid min-vh-100" style={{ minHeight: "100vh" }}>
       {savedLocData?.count > 0 ? (
         <div className="row row-cols-4">
           {savedLocData?.locData.map((e, i) => {
-            const name = e.locDtl?.title;
+            console.log(JSON.stringify(e))
+            const formattedPrice = curfmt.format(e.price);
             return (
               <PropertyCard
-                name={name}
-                coverImg={e.locDtl?.imgTtlData?.[0]?.images?.[0]?.url}
+                name={e.name}
+                coverImg={e?.coverImg?.[0]}
                 price={formattedPrice}
                 locId={e._id}
-                ratings={e.stars}
+                ratings={e.ratings}
+                isSaved={true}
               />
             );
           })}
@@ -25,7 +37,7 @@ export default function Whishlist() {
       ) : (
         <div className="row text-center">
           <div className="col-12">
-            <img className="p-0" src="/public/icons/empty-folder.png"/>
+            <img className="p-0" src="/public/icons/empty-folder.png" />
           </div>
         </div>
       )}

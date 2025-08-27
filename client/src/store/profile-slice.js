@@ -16,7 +16,14 @@ const profileSlice = createSlice({
     reducers: {
         updateSavedLocData(state, action) {
             try {
-
+                console.log(action)
+                const { locDetails, status } = action
+                if (status) {
+                    state.savedLocData.locData.push(locDetails)
+                    state.savedLocData.count = state.savedLocData.count + 1
+                } else {
+                    state.savedLocData.locData.filter((e) => e.locId !== locDetails.locId)
+                }
             } catch (error) {
                 console.error("Error in updateSavedLocData() " + error)
             }
@@ -24,7 +31,7 @@ const profileSlice = createSlice({
         addSavedLocData(state, action) {
             try {
                 const { locData = [], totalLocs = null } = action.payload
-                state.savedLocData.locData = locData
+                state.savedLocData.locData= locData
                 state.savedLocData.count = totalLocs
             } catch (error) {
                 console.error("Error in addSavedLocData() " + error)
@@ -36,12 +43,9 @@ const profileSlice = createSlice({
 export const setSavedLoc = (locSaveStt) => {
     return async (dispatch, getState) => {
         const { locId, saveStts, token } = locSaveStt
-        console.log(locSaveStt)
-
         if (locId === undefined || locId === null || saveStts === undefined || saveStts === null) {
             return
         }
-        
         async function setLikedLoc() {
             try {
                 let body = { locId, likeStts: saveStts }
@@ -52,8 +56,8 @@ export const setSavedLoc = (locSaveStt) => {
                     }
                 })
                 if (response.status === 200) {
-                    const { id, status } = response.data.data
-                    return { locationId: id, resSaveStts: status }
+                    const { locDetails, status } = response.data.data
+                    return { locDetails, status }
                 }
 
             } catch (error) {
@@ -64,8 +68,8 @@ export const setSavedLoc = (locSaveStt) => {
             }
         }
         try {
-            const { locationId, resSaveStts } = await setLikedLoc()
-            dispatch(profileActions.updateSavedLocData({ locationId, resSaveStts }))
+            const { locDetails, status } = await setLikedLoc()
+            dispatch(profileActions.updateSavedLocData({ locDetails, status }))
         } catch (error) {
             console.error("Error while Saving Loc" + error)
         }
@@ -80,8 +84,10 @@ export const getSavedLoc = (token) => {
                     authorization: `Bearer ${token}`
                 }
             });
+            console.log(response)
             if (response.status === 200) {
                 const resData = response.data.data
+                console.log(resData)
                 return { locs: resData, totalLocs: response.data.totalLocs };
             }
             if (response.status === 204) {
@@ -91,7 +97,9 @@ export const getSavedLoc = (token) => {
 
         try {
             const { locs, totalLocs } = await getLoc()
-            dispatch(rentLocActions.addSavedLocData({ locData: locs, totalLocs }))
+            console.log(locs)
+            console.log(totalLocs)
+            dispatch(profileActions.addSavedLocData({ locData: locs, totalLocs }))
         } catch (error) {
             console.error("Error while Getting Data")
         }

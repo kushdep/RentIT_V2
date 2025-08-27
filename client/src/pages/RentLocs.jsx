@@ -26,8 +26,18 @@ export default function RentLocs() {
   const dispatch = useDispatch();
   const [pages, setPagesVal] = useState(null);
 
+  const {savedLocData} =useSelector(state=>state.profileData)
   const sortModalRef = useRef();
   const filterModalRef = useRef();
+  const {isAuthenticated } = useSelector(state=>state.authData)
+
+  let savedLoc = []
+  if(isAuthenticated){
+    savedLoc = savedLocData.locData.map((e)=>{
+      return e.locId
+    })
+    console.log(savedLoc)
+  }
 
   useEffect(() => {
     if (chckPts < 1) {
@@ -351,6 +361,8 @@ console.log("check points"+chckPts)
                       const formattedPrice = curfmt.format(e.locDtl.price );
                       console.log(e.locDtl?.title)
                       const name = e.locDtl?.title
+                      const val = savedLoc.includes(e._id)
+                      console.log(val)
                       return (
                         <PropertyCard
                           name={name}
@@ -358,6 +370,7 @@ console.log("check points"+chckPts)
                           price={formattedPrice}
                           locId={e._id}
                           ratings={e.stars}
+                          isSaved={val}
                         />
                       );
                     } else {
