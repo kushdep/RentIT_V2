@@ -1,39 +1,35 @@
-import { Outlet } from "react-router-dom";
+import { useEffect } from "react";
+import EditProfileForm from "../components/EditProfileForm";
 import "../css/profile.css";
-import ProfileButton from "../components/UI/ProfileButton";
+import { useDispatch } from "react-redux";
+import { getProfileData, profileActions } from "../store/profile-slice";
 
-function Profile() {
-  return (
-    <>
-      <div className="container-fluid min-vh-100" >
-        <div className="row d-flex d-flex">
-          <div className="col-2 sidBar">
-            <div className="container-fluid p-0">
-              <div className="row row-cols-1 gy-4">
-                <div className="col" style={{ height: 50 }}></div>
-                <ProfileButton  To='/profile' title="Profile" />
-                <ProfileButton title="Whishlist" To='/profile/whishlist'/>
-                <ProfileButton title="Approvals" />
-                <ProfileButton title="Trips" />
-                <button className="btn-primary text-light fw-semibold">
-                  Rent your Location
+function Profile(){
+    const dispatch = useDispatch()
+
+    useEffect(()=>{
+        const token = localStorage.getItem("token")
+         dispatch(getProfileData(token))    
+    },[])
+
+    return <div className="container min-vh-100 min-vw-50">
+        <div className="row justify-content-center">
+            <div className="col-2 position-relative">
+                <img
+                src="/public/images/profile-picture.png"
+                className="w-100 h-100 dp shadow"
+                />
+                <button className="btn btn-primary position-absolute rounded-circle h-25 w-25 shadow" style={{bottom:0,right:8}}>
+                <img src="/public/icons/add.png" alt="" className="w-100 h-75"/>
                 </button>
-              </div>
             </div>
-          </div>
-          <div className="col-10">
-            <div className="container">
-              <div className="row">
-                <div className="col">
-                  <Outlet />
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-    </>
-  );
+        <div className="row mt-3 justify-content-center">
+            <div className="col-8">
+                <EditProfileForm/>
+            </div>
+        </div>
+    </div>
 }
 
-export default Profile;
+export default Profile

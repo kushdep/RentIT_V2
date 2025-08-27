@@ -118,7 +118,7 @@ export const updateSavedLoc = async (req, res) => {
         console.log(req.user)
         console.log(req.body)
         const { locId = null, likeStts } = req.body
-        if (locId === null || likeStts===undefined || likeStts===null) {
+        if (locId === null || likeStts === undefined || likeStts === null) {
             return res.status(400).send({
                 success: false,
                 message: "Please Send Location Data to Updata"
@@ -134,22 +134,21 @@ export const updateSavedLoc = async (req, res) => {
         console.log(updatedDoc)
         console.log(query)
 
-console.log(locId)
         const locData = await Location.findById(locId).select("_id locDtl.title locDtl.imgTtlData locDtl.price stars")
         console.log("Location Data")
         console.log(locData)
 
         if (updatedDoc !== null) {
             let data = {}
-            if(likeStts){
+            if (likeStts) {
                 data = {
-                    locDetails:{
+                    locDetails: {
                         locId: locData._id,
                         name: locData.locDtl.title,
-                        coverImg:locData.locDtl.imgTtlData[0].images.url,
-                        price:locData.locDtl.price,
-                        ratings:locData.stars,
-                        isSaved:likeStts
+                        coverImg: locData.locDtl.imgTtlData[0].images.url,
+                        price: locData.locDtl.price,
+                        ratings: locData.stars,
+                        isSaved: likeStts
                     },
                     status: likeStts
                 }
@@ -158,8 +157,8 @@ console.log(locId)
                     data: data,
                     message: "Added to Whishlist"
                 })
-            }else{
-                data ={locDetails:{locId:locData._id,status:likeStts}}
+            } else {
+                data = { locDetails: { locId: locData._id, status: likeStts } }
                 return res.status(200).send({
                     success: true,
                     data: data,
@@ -174,6 +173,30 @@ console.log(locId)
         }
     } catch (error) {
         console.log(error)
+        return res.status(400).send({
+            success: false,
+            message: error
+        })
+    }
+}
+
+
+export const getProfileData = async (req, res) => {
+    try {
+        const {_id} = req.user
+        const userData = await User.findById(_id)
+        if(userData){
+            return res.status(200).send({
+                success:true,
+                user:userData,
+            })
+        }else{
+            return res.status(403).send({
+                success: false,
+            })
+        }
+    } catch (error) {
+        console.log("Error in getProfileData" + error)
         return res.status(400).send({
             success: false,
             message: error

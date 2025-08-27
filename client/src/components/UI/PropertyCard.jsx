@@ -27,8 +27,9 @@ function PropertyCard({
       return;
     }
 
-    if (savedLocData.count >= 8) {
-      toast.error(`You can't add more than 40 Loc to your whishlist`);
+    if (!like && savedLocData.count >= 8) {
+      toast.error(`You can't add more than 8 Loc to your whishlist`);
+      return 
     }
     setLike((prev) => {
       return !prev;

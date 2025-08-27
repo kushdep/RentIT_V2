@@ -4,6 +4,7 @@ import RentLocs from "./pages/RentLocs";
 import Homepage from "./pages/Homepage";
 import ContactUs from "./pages/ContactUs";
 import Profile from "./pages/Profile";
+import ProfileLayout from "./pages/ProfileLayout";
 import AddLocForm from "./components/AddLocForm";
 import LocDetails from "./components/LocDetail";
 import { useDispatch } from "react-redux";
@@ -33,9 +34,10 @@ const router = createBrowserRouter([
       },
       { path: "contact-us", element: <ContactUs /> },
       {
-        path: "profile",
-        element: <Profile />,
+        path: "/profile",
+        element: <ProfileLayout />,
         children: [
+          {path:"edit",element:<Profile/>},
           { path: "new-loc", element: <AddLocForm /> },
           { path: "whishlist", element: <Whishlist /> },
         ],
@@ -47,7 +49,7 @@ const router = createBrowserRouter([
 function App() {
   const token = localStorage.getItem('token')
   const dispatch = useDispatch()
-
+  
   if(token){
     dispatch(authActions.loginSuccess({token:token}))  
   }
