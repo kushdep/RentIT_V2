@@ -115,19 +115,23 @@ export const getWhishlistLoc = async (req, res) => {
 export const updateSavedLoc = async (req, res) => {
     try {
         const { _id } = req.user
+        console.log(req.user)
+        console.log(req.body)
         const { locId = null, likeStts = false } = req.body
-        if (locId === null || likeStts) {
+        if (locId === null || !likeStts) {
             return res.status(400).send({
                 success: false,
                 message: "Please Send Location Data to Updata"
             })
         }
-        
+        let query = {}
         if (likeStts) {
-
+            query["$addToSet"]={savedLoc:locId}
         } else {
-
+            query["$pull"]={savedLoc:locId}
         }
+        const updatedDoc = await User.findOneAndUpdate({_id},query,{new:true})
+        console.log(updatedDoc)
     } catch (error) {
         console.log(error)
         return res.status(400).send({

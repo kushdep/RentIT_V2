@@ -36,15 +36,17 @@ const profileSlice = createSlice({
 export const setSavedLoc = (locSaveStt) => {
     return async (dispatch, getState) => {
         const { locId, saveStts, token } = locSaveStt
+        console.log(locSaveStt)
 
-        if (locId === undefined || locId === null || saveStts === undefined || saveStts === null || user === undefined || uder === null) {
+        if (locId === undefined || locId === null || saveStts === undefined || saveStts === null) {
             return
         }
         
         async function setLikedLoc() {
             try {
                 let body = { locId, likeStts: saveStts }
-                const response = await axios.put('http://localhost:3000/profile/update-liked-loc', body, {
+                console.log(body)
+                const response = await axios.patch('http://localhost:3000/profile/update-liked-loc', body, {
                     headers: {
                         authorization: `Bearer ${token}`
                     }

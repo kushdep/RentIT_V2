@@ -11,6 +11,6 @@ router.post('/add-review',newReviewValidation,addReview)
 
 router.get('/liked-loc',getWhishlistLoc)
 
-router.put('/update-liked-loc',updateSavedLoc)
+router.patch('/update-liked-loc',updateSavedLoc)
 
 export default router;
