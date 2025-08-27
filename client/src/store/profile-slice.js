@@ -17,11 +17,13 @@ const profileSlice = createSlice({
         updateSavedLocData(state, action) {
             try {
                 console.log(action)
-                const { locDetails, status } = action
+                const { locDetails, status } = action.payload
+                console.log(locDetails)
                 if (status) {
                     state.savedLocData.locData.push(locDetails)
                     state.savedLocData.count = state.savedLocData.count + 1
                 } else {
+                    console.log("In else WHY!!!!")
                     state.savedLocData.locData.filter((e) => e.locId !== locDetails.locId)
                 }
             } catch (error) {
@@ -43,6 +45,7 @@ const profileSlice = createSlice({
 export const setSavedLoc = (locSaveStt) => {
     return async (dispatch, getState) => {
         const { locId, saveStts, token } = locSaveStt
+        console.log(locId)
         if (locId === undefined || locId === null || saveStts === undefined || saveStts === null) {
             return
         }
@@ -57,6 +60,7 @@ export const setSavedLoc = (locSaveStt) => {
                 })
                 if (response.status === 200) {
                     const { locDetails, status } = response.data.data
+                    console.log(locDetails)
                     return { locDetails, status }
                 }
 
@@ -69,9 +73,19 @@ export const setSavedLoc = (locSaveStt) => {
         }
         try {
             const { locDetails, status } = await setLikedLoc()
+            console.log(locDetails)
             dispatch(profileActions.updateSavedLocData({ locDetails, status }))
+            return {
+                success:true,
+                message:'Location Save Status Update'
+            }
         } catch (error) {
             console.error("Error while Saving Loc" + error)
+            throw  {
+                success:false,
+                message:'Location Save Status failed',
+                error:error
+            }
         }
     }
 }

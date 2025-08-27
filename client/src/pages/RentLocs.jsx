@@ -12,6 +12,7 @@ import {
   rentLocActions,
 } from "../store/rentloc-slice";
 import { locType } from "../config";
+import { getSavedLoc } from "../store/profile-slice";
 
 export default function RentLocs() {
   const {
@@ -51,6 +52,9 @@ export default function RentLocs() {
   useEffect(() => {
     dispatch(getAllLoc(1));
     dispatch(rentLocActions.chngCurrPage(1));
+    const token = localStorage.getItem('token')
+    dispatch(getSavedLoc(token));
+    
   }, [dispatch]);
 
   function handleSubmit(event) {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setSavedLoc } from "../../store/profile-slice";
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
 function PropertyCard({
   name,
@@ -26,19 +26,27 @@ function PropertyCard({
       navigate("/login");
       return;
     }
-    
-    if (savedLocData.count >= 40) {
-      toast.error(`You can't add more than 40 Loc to your whishlist`)
+
+    if (savedLocData.count >= 8) {
+      toast.error(`You can't add more than 40 Loc to your whishlist`);
     }
-    setLike(prev=>!prev) 
+    setLike((prev) => {
+      return !prev;
+    });
+
     try {
-      await dispatch(setSavedLoc({ locId, saveStts: !like, token })).unwrap()
+      console.log(locId)
+      console.log(!like)
+      const res = await dispatch(setSavedLoc({ locId:locId, saveStts: !like, token }))
     } catch (error) {
-      toast.error("cannot Save to Whishlist")
-      setLike(prev=>!prev) 
+      console.log(error)
+      toast.error("cannot Save to Whishlist");
+      setLike((prev) => {
+        return !prev;
+      });
     }
   }
-  console.log(savedLocData)
+  console.log(savedLocData);
 
   return (
     <>
