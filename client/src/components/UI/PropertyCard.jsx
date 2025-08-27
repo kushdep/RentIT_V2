@@ -18,7 +18,7 @@ function PropertyCard({
   const { savedLocData } = useSelector((state) => state.profileData);
   const navigate = useNavigate();
   function handleClick() {
-    navigate(`${locId}`);
+    navigate(`/rent-locs/${locId}`);
     console.log(locId);
   }
   async function handleSave() {
@@ -37,7 +37,7 @@ function PropertyCard({
     try {
       console.log(locId)
       console.log(!like)
-      const res = await dispatch(setSavedLoc({ locId:locId, saveStts: !like, token }))
+      await dispatch(setSavedLoc({ locId:locId, saveStts: !like, token }))
     } catch (error) {
       console.log(error)
       toast.error("cannot Save to Whishlist");

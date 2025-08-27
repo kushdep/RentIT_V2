@@ -27,7 +27,7 @@ export default function Whishlist() {
                 name={e.name}
                 coverImg={e?.coverImg?.[0]}
                 price={formattedPrice}
-                locId={e._id}
+                locId={e.locId}
                 ratings={e.ratings}
                 isSaved={true}
               />

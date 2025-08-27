@@ -78,6 +78,7 @@ export const getWhishlistLoc = async (req, res) => {
             { $unwind: "$savedLoc" },
             {
                 $project: {
+                    _id: 0,
                     locId: "$savedLoc._id",
                     name: "$savedLoc.locDtl.title",
                     coverImg: { $arrayElemAt: ["$savedLoc.locDtl.imgTtlData.images.url", 0] },
@@ -116,8 +117,8 @@ export const updateSavedLoc = async (req, res) => {
         const { _id } = req.user
         console.log(req.user)
         console.log(req.body)
-        const { locId = null, likeStts = false } = req.body
-        if (locId === null || !likeStts) {
+        const { locId = null, likeStts } = req.body
+        if (locId === null || likeStts===undefined || likeStts===null) {
             return res.status(400).send({
                 success: false,
                 message: "Please Send Location Data to Updata"
@@ -129,28 +130,42 @@ export const updateSavedLoc = async (req, res) => {
         } else {
             query["$pull"] = { savedLoc: locId }
         }
-        const updatedDoc = await User.findOneAndUpdate({ _id }, query, {new: true})
+        const updatedDoc = await User.findOneAndUpdate({ _id }, query)
+        console.log(updatedDoc)
+        console.log(query)
 
+console.log(locId)
         const locData = await Location.findById(locId).select("_id locDtl.title locDtl.imgTtlData locDtl.price stars")
         console.log("Location Data")
         console.log(locData)
+
         if (updatedDoc !== null) {
-            let data = {
-                locDetails:{
-                    locId: locData._id,
-                    name: locData.locDtl.title,
-                    coverImg:locData.locDtl.imgTtlData[0].images.url,
-                    price:locData.locDtl.price,
-                    ratings:locData.stars,
-                    isSaved:likeStts
-                },
-                status: likeStts
+            let data = {}
+            if(likeStts){
+                data = {
+                    locDetails:{
+                        locId: locData._id,
+                        name: locData.locDtl.title,
+                        coverImg:locData.locDtl.imgTtlData[0].images.url,
+                        price:locData.locDtl.price,
+                        ratings:locData.stars,
+                        isSaved:likeStts
+                    },
+                    status: likeStts
+                }
+                return res.status(200).send({
+                    success: true,
+                    data: data,
+                    message: "Added to Whishlist"
+                })
+            }else{
+                data ={locDetails:{locId:locData._id,status:likeStts}}
+                return res.status(200).send({
+                    success: true,
+                    data: data,
+                    message: "Removed from Whishlist"
+                })
             }
-            return res.status(200).send({
-                success: true,
-                data: data,
-                message: "Added to Whishlist"
-            })
         } else {
             return res.status(409).send({
                 success: false,
@@ -163,13 +178,5 @@ export const updateSavedLoc = async (req, res) => {
             success: false,
             message: error
         })
-    }
-}
-
-async function getLocDb(){
-    try {
-        
-    } catch (error) {
-        console.log(error)
     }
 }
