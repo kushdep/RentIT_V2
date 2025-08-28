@@ -14,6 +14,18 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
     },
+    idProof:{
+        type: String,
+    },
+    address:{
+        type: String,
+    },
+    primaryPhNo:{
+        type: String,
+    },
+    sndryPhNo:{
+        type: String,
+    },
     locations: {
         categories: {
             Appartment: [{

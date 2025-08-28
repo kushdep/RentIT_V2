@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { response } from "express";
 
 const profileSlice = createSlice({
     name: "profile",
@@ -10,12 +9,13 @@ const profileSlice = createSlice({
             locData: []
         },
         myReviewData: [],
-        profileData: {
-            email:null,
-            username:null,
-            idProof:null,
-            contactNo:null,
-            othContactNo:null
+        profile: {
+            email: null,
+            username: null,
+            idProof: null,
+            address: null,
+            contactNo: null,
+            othContactNo: null
         },
         tripsData: [],
         approvalsData: []
@@ -45,32 +45,36 @@ const profileSlice = createSlice({
                 console.error("Error in addSavedLocData() " + error)
             }
         },
-        updateProfileData(state,action){
+        updateProfileData(state, action) {
             try {
-                const {userData} = action.payload
-                if(userData.email){
-                    state.email = userData.email
-                }
-                
-                if(userData.username){
-                    state.username = userData.username
-                    
-                }
-                
-                if(userData.idProof){
-                    state.idProof = userData.idProof
+                const { userData } = action.payload
+                if (userData.email) {
+                    state.profile.email = userData.email
                 }
 
-                if(userData.primaryPhNo){
-                    state.contactNo = userData.primaryPhNo
+                if (userData.username) {
+                    state.profile.username = userData.username
+
                 }
 
-                if(userData.sndryPhNo){
-                    state.othContactNo = user.sndryPhNo
+                if (userData.idProof) {
+                    state.profile.idProof = userData.idProof
+                }
+
+                if (userData.address) {
+                    state.profile.address = userData.address
+                }
+
+                if (userData.primaryPhNo) {
+                    state.profile.contactNo = userData.primaryPhNo
+                }
+
+                if (userData.sndryPhNo) {
+                    state.profile.othContactNo = user.sndryPhNo
                 }
 
             } catch (error) {
-                console.log("Error in updateProfileData "+error)
+                console.log("Error in updateProfileData " + error)
             }
         }
     }
@@ -155,36 +159,83 @@ export const getSavedLoc = (token) => {
 }
 
 export const getProfileData = (token) => {
-    return async(dispatch) => {
-        async function getProfile(){
+    return async (dispatch) => {
+        async function getProfile() {
             try {
-                const response = await axios.get('https://localhost:3000/profile',{
-                    headers:{
-                        authorization:`Bearer ${token}`
+                const response = await axios.get('http://localhost:3000/profile', {
+                    headers: {
+                        authorization: `Bearer ${token}`
                     }
                 })
-                if(response.status===200){
-                    const {userData} = response.data.user
-                    return {userData}
+                console.log(response)
+                if (response.status === 200) {
+                    const { user } = response.data
+                    return { userData: user }
                 }
             } catch (error) {
-                if(error.response.status === 400){
+                if (error.response.status === 400) {
                     console.log(error.response.message)
                 }
-                if(error.response.status === 403){
+                if (error.response.status === 403) {
                     console.log(error.response.message)
                 }
             }
         }
-        
+
         try {
-            const {userData} = await getProfile() 
-            dispatch(profileActions.updateProfileData(userData)) 
+            const { userData } = await getProfile()
+            console.log(userData)
+            dispatch(profileActions.updateProfileData({ userData }))
         } catch (error) {
-            console.log("Error in getProfileData "+error)
+            console.error("Error in getProfileData " + error)
         }
     }
 }
+
+export const setProfileData =  (token, body) => {
+    return async (dispatch) => {
+        async function setProfile() {
+            try {
+                const response = await axios.patch("http://localhost:3000/profile", body, {
+                    headers: {
+                        authorization: `Bearer ${token}`
+                    },
+                })
+
+                console.log(response)
+                if (response.status === 200) {
+                    const { user } = response.data
+                    return { userData: user }
+                }
+
+            } catch (error) {
+                if (error.response.status === 400) {
+                    console.log(error.response.message)
+                }
+                if (error.response.status === 403) {
+                    console.log(error.response.message)
+                }
+            }
+        }
+
+        try {
+            const { userData } = await setProfile()
+            dispatch(profileActions.updateProfileData({ userData }))
+            return {
+                success: true,
+                message: 'Location Save Status Update'
+            }
+        } catch (error) {
+            console.log("Error in setrProfileData() " + error)
+            throw {
+                success:false,
+                message:"Profile Updation failed",
+                error:error
+            }
+        }
+    }
+}
+
 
 export const profileActions = profileSlice.actions
 export default profileSlice
