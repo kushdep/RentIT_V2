@@ -64,7 +64,7 @@ export const getFilterLocs = async (req, res) => {
             if (!ratings && distance && lat !== null && long !== null) {
                 rentLocs = sortPlacesByDistance(rentLocs, lat, long)
             }
-            
+
             if (ratings) {
                 rentLocs.sort((a, b) => {
                     return b.stars - a.stars
@@ -125,6 +125,35 @@ export const getAllLocs = async (req, res) => {
         })
     } catch (error) {
         console.log(error)
+        return res.status(400).send({
+            success: false,
+            message: error
+        })
+    }
+}
+
+export const getLoc = async (req, res) => {
+    try {
+        const { locId } = req.params
+        console.log(locId)
+        const loc = await Location.findById(locId)
+        console.log(loc)
+        if (loc) {
+            return res.status(200).send({
+                success: true,
+                locationDetail: loc,
+                message: 'Location Fetched'
+            })
+        } else {
+            return res.status(404).send({
+                success: false,
+                message: 'Location Fetched'
+            })
+
+        }
+
+    } catch (error) {
+        console.log("Error in getLoc()" + error)
         return res.status(400).send({
             success: false,
             message: error

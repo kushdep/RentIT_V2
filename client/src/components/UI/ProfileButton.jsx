@@ -2,7 +2,6 @@ import { NavLink } from "react-router-dom";
 import "/src/css/profile.css";
 
 function ProfileButton({ title, active, To }) {
-  console.log("URL" + active);
   return (
     <div
       className={

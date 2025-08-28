@@ -3,29 +3,54 @@ import "../css/locdetails.css";
 import DateInputBox from "./UI/DateInputBox";
 import Reviews from "./Reviews";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ShowAmmModal from "./Modals/showAmmModal";
 import { curfmt } from "../utils/formatter";
 import GoogleMap from "./GoogleMap";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { setSavedLoc } from "../store/profile-slice";
-
+import axios from "axios";
 
 function LocDetails() {
   const showAmmModal = useRef();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { rentLocData: locDetails } = useSelector((state) => state.rentLocs);
-  const {isAuthenticated,token} = useSelector((state) => state.authData);
-  const {savedLocData} = useSelector((state) => state.profileData);
+  const { isAuthenticated, token } = useSelector((state) => state.authData);
+  const { savedLocData } = useSelector((state) => state.profileData);
   const { locId } = useParams();
-  const isSaved = savedLocData.locData.find(e=>e.locId===locId)
-  console.log(isSaved)
-  const [like,setLike] = useState(isSaved)
+  const isSaved = savedLocData.locData.find((e) => e.locId === locId);
+  console.log(isSaved);
+  const [like, setLike] = useState(isSaved);
 
   let loc = null;
   loc = locDetails.find((loc) => loc._id === locId);
+  console.log(loc);
+    if (loc === undefined || loc === null) {
+      console.log("inside");
+      async function getLocDetail() {
+        try {
+          console.log("1")
+          const response = await axios.get(
+            `http://localhost:3000/rent-locs/${locId}`
+          );
+          console.log("2")
+          console.log(response)
+          if (response.status === 200) {
+            const { locationDetail } = response.data;
+            loc = locationDetail;
+            console.log("3 "+loc)
+          }
+        } catch (error) {
+          if (error.response.status === 404) {
+          }
+          if (error.response.status === 400) {
+          }
+        }
+      }
+      getLocDetail();
+    }
   const {
     title,
     imgTtlData,
@@ -38,7 +63,7 @@ function LocDetails() {
   } = loc.locDtl;
 
   const { options } = Ammentities.find((a) => a.id === facilities[0].id);
- async function handleSave() {
+  async function handleSave() {
     if (!isAuthenticated) {
       navigate("/login");
       return;
@@ -52,11 +77,11 @@ function LocDetails() {
     });
 
     try {
-      console.log(locId)
-      console.log(!like)
-      await dispatch(setSavedLoc({ locId:locId, saveStts: !like, token }))
+      console.log(locId);
+      console.log(!like);
+      await dispatch(setSavedLoc({ locId: locId, saveStts: !like, token }));
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error("cannot Save to Whishlist");
       setLike((prev) => {
         return !prev;
@@ -73,8 +98,9 @@ function LocDetails() {
               <h4 className="fw-semibold">
                 {title}- {desc.bedrooms} BHK
               </h4>
-              <button className="btn d-flex h-50 text-decoration-underline align-items-center"
-              onClick={handleSave}
+              <button
+                className="btn d-flex h-50 text-decoration-underline align-items-center"
+                onClick={handleSave}
               >
                 <img
                   src={

@@ -242,5 +242,11 @@ export const getAllLoc = (reqNum) => {
     }
 }
 
+export const getSearchLoc = (searchQuery) =>{
+    return async(dispatch)=>{
+        
+    }
+}
+
 export const rentLocActions = rentLocSlice.actions
 export default rentLocSlice

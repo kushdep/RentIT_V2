@@ -5,19 +5,20 @@ import { useGoogleAutoComp } from "../../hooks/useGoogleAutoComp";
 function SearchBar({ props }) {
   const { isLoaded, sugg, inpVal, handleInpVal } = useGoogleAutoComp();
   const locType = useRef();
+  const inpTxt = useRef();
 
   const handleSelect = async (address, locId) => {
-    try {
       const result = await getGeocode({ address });
       const { lat, lng } = getLatLng(result[0]);
 
       console.log(lat);
       console.log(lng);
       console.log(locId);
-      handleInpVal({ val: "", index: null })
-    } catch (error) {
-      console.log("Error in Search Bar handleSelect " + error);
-    }
+      handleInpVal({ val: "", index: null });
+  };
+
+  const handleLocName = async (locName,locId) => {
+    
   };
 
   return (
@@ -35,6 +36,7 @@ function SearchBar({ props }) {
                     type="text"
                     disabled={!isLoaded}
                     value={inpVal.val}
+                    ref={inpTxt}
                     className="form-control rounded-start-pill ps-4 dropdown-toggle"
                     data-bs-toggle="dropdown"
                     id="floatingInput"
@@ -71,7 +73,7 @@ function SearchBar({ props }) {
                     aria-label="Floating label select example"
                     ref={locType}
                   >
-                    <option selected>Select Lopcation Type</option>
+                    <option value="none">Select Lopcation Type</option>
                     <option value="A01">Appartment</option>
                     <option value="V01">Villa</option>
                     <option value="P01">Pent-House</option>
@@ -86,8 +88,14 @@ function SearchBar({ props }) {
                 <button
                   className="btn btn-primary rounded-end-pill h-100"
                   onClick={() => {
+                    const loTypeVal =
+                      locType.current.value !== "none"
+                        ? locType.current.value
+                        : null;
                     if (inpVal.index !== null) {
-                      handleSelect(inpVal.val, locType.current.value);
+                      handleSelect(inpVal.val, loTypeVal);
+                    } else {
+                      handleLocName(inpTxt.current.value, loTypeVal);
                     }
                   }}
                 >
