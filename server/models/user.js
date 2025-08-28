@@ -14,37 +14,45 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
     },
-    idProof:{
+    idProof: {
         type: String,
     },
-    address:{
+    address: {
         type: String,
     },
-    primaryPhNo:{
+    primaryPhNo: {
         type: String,
     },
-    sndryPhNo:{
+    sndryPhNo: {
         type: String,
+    },
+    userImg: {
+        url: {
+            type: String,
+        },
+        filename: {
+            type: String,
+        }
     },
     locations: {
         categories: {
             Appartment: [{
                 type: mongoose.Types.ObjectId,
-                ref:'Location'
+                ref: 'Location'
             }],
             Villa: [{
                 type: mongoose.Types.ObjectId,
-                ref:'Location'
+                ref: 'Location'
             }],
             Penthouse: [{
                 type: mongoose.Types.ObjectId,
-                ref:'Location'
+                ref: 'Location'
             }]
         }
     },
-    savedLoc:[{
+    savedLoc: [{
         type: mongoose.Types.ObjectId,
-        ref:'Location'
+        ref: 'Location'
     }]
 }, { timestamps: { createdAt: 'createdAt' } })
 

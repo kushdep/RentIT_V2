@@ -154,7 +154,7 @@ function EditProfileForm({ userProfile }) {
       </div>
       {!isEditing ? (
         <button
-          className="btn btn-primary me-2"
+          className="btn btn-primary me-2 shadow"
           type="button"
           onClick={handleEditStt}
         >
@@ -162,11 +162,11 @@ function EditProfileForm({ userProfile }) {
         </button>
       ) : (
         <div>
-          <button className="btn btn-primary me-2" type="submit">
+          <button className="btn btn-primary me-2 shadow" type="submit">
             {isPending ? "Submitting..." : "Submit"}
           </button>
           <button
-            className="btn btn-dark"
+            className="btn btn-dark shadow"
             type="button"
             onClick={handleEditStt}
           >

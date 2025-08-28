@@ -209,29 +209,30 @@ export const setProfileData = async (req, res) => {
         const { _id } = req.user
         const { username = null, idProof = null, address = null, contactNo = null, othContactNo = null } = req.body
         console.log(req.body)
-        let query = {}
+        let val = {}
         if (username !== null && username !== '') {
-            query['$set'] = { username: username }
+            val['username'] = username
         }
 
         if (idProof !== null) {
-            query['$set'] = { idProof: idProof }
+            val['idProof'] = idProof
         }
 
         if (address !== null) {
-            query['$set'] = { address: address }
+            val['address'] = address
         }
 
         if (othContactNo !== null) {
-            query['$set'] = { primaryPhNo: contactNo }
+            val['primaryPhNo'] = contactNo
         }
 
         if (othContactNo !== null) {
-            query['$set'] = { sndryPhNo: othContactNo }
+            val['sndryPhNo'] = othContactNo
         }
 
-        console.log(query)
-        const updatedUser = await User.findByIdAndUpdate({ _id }, query, { new: true })
+        console.log(val)
+
+        const updatedUser = await User.findByIdAndUpdate({ _id }, { '$set': val }, { new: true })
         console.log(updatedUser)
 
         if (updatedUser) {
@@ -242,8 +243,37 @@ export const setProfileData = async (req, res) => {
         } else {
             return res.status(403).send({
                 success: false,
-                message: 'Useer cannot be updated'
+                message: 'User cannot be updated'
             })
+        }
+
+    } catch (error) {
+        console.error("Error in setPtofileData " + error)
+        return res.status(400).send({
+            success: false,
+            message: error
+        })
+    }
+}
+
+
+export const updateProfileImg = async (req, res) => {
+    try {
+        const { profileImage = null } = req.body
+        const { _id } = req.user
+        if (profileImage !== null) {
+            const updatedUser = await User.findByIdAndUpdate(_id, { '$set': { userImg: profileImage } }, { new: true })
+            if(updatedUser){
+                return res.status(200).send({
+                success: true,
+                url: updatedUser.userImg.url
+            })
+            }else{
+                return res.status(403).send({
+                success: false,
+                message: 'Profile Image cannot be updated'
+            })
+            }
         }
 
     } catch (error) {

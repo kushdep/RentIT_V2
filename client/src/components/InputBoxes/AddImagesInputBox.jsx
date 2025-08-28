@@ -59,7 +59,7 @@ export function AddImagesInputBox({ ind, err }) {
             <label className="form-label fw-semibold" htmlFor="title">
               Add Images & title
             </label>
-            
+
             {ind > 0 && (
               <button
                 type="button"
@@ -72,7 +72,11 @@ export function AddImagesInputBox({ ind, err }) {
               </button>
             )}
           </div>
-                      {err && <div className="text-danger" style={{fontSize:12}}>{err}</div>}
+          {err && (
+            <div className="text-danger" style={{ fontSize: 12 }}>
+              {err}
+            </div>
+          )}
           <input
             className="form-control"
             type="text"
@@ -128,7 +132,6 @@ export function AddImagesInputBox({ ind, err }) {
                 </div>
               )}
             </div>
-
           </div>
         </div>
       </div>

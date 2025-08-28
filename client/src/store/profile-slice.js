@@ -15,7 +15,8 @@ const profileSlice = createSlice({
             idProof: null,
             address: null,
             contactNo: null,
-            othContactNo: null
+            othContactNo: null,
+            imgUrl:null
         },
         tripsData: [],
         approvalsData: []
@@ -54,7 +55,6 @@ const profileSlice = createSlice({
 
                 if (userData.username) {
                     state.profile.username = userData.username
-
                 }
 
                 if (userData.idProof) {
@@ -73,6 +73,14 @@ const profileSlice = createSlice({
                     state.profile.othContactNo = user.sndryPhNo
                 }
 
+            } catch (error) {
+                console.log("Error in updateProfileData " + error)
+            }
+        },
+        updateProfileImage(state,action){
+            try {
+                const url = action.payload
+                state.profile.imgUrl = url
             } catch (error) {
                 console.log("Error in updateProfileData " + error)
             }
@@ -186,6 +194,7 @@ export const getProfileData = (token) => {
             const { userData } = await getProfile()
             console.log(userData)
             dispatch(profileActions.updateProfileData({ userData }))
+            dispatch(profileActions.updateProfileImage(userData.userImg.url ))
         } catch (error) {
             console.error("Error in getProfileData " + error)
         }

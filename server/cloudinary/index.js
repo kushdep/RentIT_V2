@@ -38,5 +38,26 @@ export async  function imageUpload(req, res, next) {
     }
 }
 
+export async  function profileImgUpload(req, res, next) {
+    try {
+        const { profileImage:uploadImg } = req.body 
+        console.log(req.body)
+        const result = await cloudinary.uploader.upload(uploadImg,{
+            folder:"User-profile"
+        });
+        const path = result.url.split('User-profile/')
+        const imgUploadData= {
+            url:result.url,
+            filename:'User-profile/'+path[1],
+        };
+        console.log(imgUploadData)
+        req.body.profileImage = imgUploadData  
+        console.log(req.body.profileImage)
+        next()
+    } catch (error) {
+        console.log("ERROR IN profileImgUpload()- " + error)
+    }
+}
+
 
 
