@@ -18,31 +18,72 @@ function LocDetails() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { rentLocData: locDetails } = useSelector((state) => state.rentLocs);
+  const [loc, setLoc] = useState({
+    title: null,
+    imgTtlData: [],
+    desc: null,
+    guestsCap: null,
+    facilities: [],
+    price: null,
+    author: null,
+    location: null,
+    options: [],
+  });
   const { isAuthenticated, token } = useSelector((state) => state.authData);
   const { savedLocData } = useSelector((state) => state.profileData);
   const { locId } = useParams();
   const isSaved = savedLocData.locData.find((e) => e.locId === locId);
-  console.log(isSaved);
   const [like, setLike] = useState(isSaved);
 
-  let loc = null;
-  loc = locDetails.find((loc) => loc._id === locId);
-  console.log(loc);
+  if (locDetails.length > 0 && loc.title === null) {
+    setLoc((prev) => {
+      let location = locDetails.find((loc) => loc._id === locId);
+      const { locDtl } = location;
+      const { options } = Ammentities.find(
+        (a) => a.id === location.locDtl.facilities[0].id
+      );
+      return {
+        ...prev,
+        title: locDtl.title,
+        imgTtlData: locDtl.imgTtlData,
+        desc: locDtl.desc,
+        guestsCap: locDtl.guestsCap,
+        facilities: locDtl.facilities,
+        price: locDtl.price,
+        author: locDtl.author,
+        location: locDtl.location,
+        options,
+      };
+    });
+  }
+
   useEffect(() => {
-    if (loc === undefined || loc === null) {
-      console.log("inside");
+    if (locDetails.length === 0) {
       async function getLocDetail() {
         try {
-          console.log("1");
           const response = await axios.get(
             `http://localhost:3000/rent-locs/${locId}`
           );
-          console.log("2");
-          console.log(response);
           if (response.status === 200) {
             const { locationDetail } = response.data;
-            loc = locationDetail;
-            console.log("3 " + loc);
+            const { locDtl } = locationDetail;
+            setLoc((prev) => {
+              let { options } = Ammentities.find(
+                (a) => a.id === locationDetail.locDtl.facilities[0].id
+              );
+              return {
+                ...prev,
+                title: locDtl.title,
+                imgTtlData: locDtl.imgTtlData,
+                desc: locDtl.desc,
+                guestsCap: locDtl.guestsCap,
+                facilities: locDtl.facilities,
+                price: locDtl.price,
+                author: locDtl.author,
+                location: locDtl.location,
+                options,
+              };
+            });
           }
         } catch (error) {
           if (error.response.status === 404) {
@@ -54,23 +95,6 @@ function LocDetails() {
       getLocDetail();
     }
   }, []);
-
-  // const {
-  //   title = null,
-  //   imgTtlData = [],
-  //   desc = null,
-  //   guestsCap = null,
-  //   facilities = [],
-  //   price = null,
-  //   author = null,
-  //   location = null,
-  // } = loc.locDtl;
-
-  const locDtl = loc?.locDtl || null;
-  console.log(locDtl);
-  console.log("checking title loc " + loc);
-  const { options } =
-    Ammentities.find((a) => a.id === locDtl?.facilities[0].id) || [];
 
   async function handleSave() {
     if (!isAuthenticated) {
@@ -99,16 +123,13 @@ function LocDetails() {
   }
   return (
     <>
-      {locDtl !== undefined && locDtl !== null ? (
+      {loc.title !== null ? (
         <div className="container">
-          <ShowAmmModal
-            reference={showAmmModal}
-            facilities={locDtl.facilities}
-          />
+          <ShowAmmModal reference={showAmmModal} facilities={loc.facilities} />
           <div className="row">
             <div className="col d-flex justify-content-between align-items-center">
               <h4 className="fw-semibold">
-                {locDtl.title}- {locDtl.desc.bedrooms} BHK
+                {loc.title}- {loc.desc.bedrooms} BHK
               </h4>
               <button
                 className="btn d-flex h-50 text-decoration-underline align-items-center"
@@ -131,7 +152,7 @@ function LocDetails() {
           <div className="row">
             <div className="col-8 h-100 p-0 pe-3">
               <img
-                src={`${locDtl.imgTtlData[0].images[0].url}`}
+                src={`${loc.imgTtlData[0].images[0].url}`}
                 alt="hall"
                 className="w-100 h-100 mainImg position-relative shadow"
                 style={{ objectFit: "cover" }}
@@ -149,7 +170,7 @@ function LocDetails() {
               <div className="imgWrapper">
                 <div className="imgTop">
                   <img
-                    src={`${locDtl.imgTtlData[1].images[0].url}`}
+                    src={`${loc.imgTtlData[1].images[0].url}`}
                     alt="bedroom"
                     className="imgT shadow"
                     style={{ objectFit: "cover" }}
@@ -158,7 +179,7 @@ function LocDetails() {
 
                 <div className="imgBottom">
                   <img
-                    src={`${locDtl.imgTtlData[2].images[0].url}`}
+                    src={`${loc.imgTtlData[2].images[0].url}`}
                     alt="bedroom"
                     className="imgB shadow"
                     style={{ objectFit: "cover" }}
@@ -173,10 +194,9 @@ function LocDetails() {
                 Entire rental unit in Gurugram, India
               </h5>
               <p className="p-0 text-muted form ">
-                {locDtl.guestsCap} Guests &#10022; {locDtl.desc?.bedrooms}{" "}
-                bedroom &#10022;
-                {locDtl.desc?.beds} bed &#10022; {locDtl.desc?.bathrooms}{" "}
-                bathroom
+                {loc.guestsCap} Guests &#10022; {loc.desc.bedrooms} bedroom
+                &#10022;
+                {loc.desc.beds} bed &#10022; {loc.desc.bathrooms} bathroom
               </p>
             </div>
           </div>
@@ -193,7 +213,7 @@ function LocDetails() {
                     />
                     <div className="ms-3">
                       <h6 className="fw-medium mb-0">
-                        Hosted by {locDtl.author.username}
+                        Hosted by {loc.author.username}
                       </h6>
                       <p
                         className="p-0 text-muted form "
@@ -212,8 +232,8 @@ function LocDetails() {
                     </h5>
                     <div className="container">
                       <div class="row row-cols-2">
-                        {locDtl.facilities[0].ammenities.map((a) => {
-                          const { img, name } = options.find(
+                        {loc.facilities[0].ammenities.map((a) => {
+                          const { img, name } = loc.options.find(
                             (o) => o.id === a.id
                           );
                           return (
@@ -251,7 +271,7 @@ function LocDetails() {
                     </div>
                     <div className="row">
                       <div className="col">
-                        <p>{desc?.others}</p>
+                        <p>{loc.desc.others}</p>
                       </div>
                     </div>
                     <div className="row">
@@ -275,7 +295,7 @@ function LocDetails() {
                     <div className=" w-100">
                       <div className="d-flex mx-0 align-items-end justify-content-center">
                         <p className="fs-4 fw-semibold text-decoration-underline">
-                          {curfmt.format(locDtl.price)}
+                          {curfmt.format(loc.price)}
                         </p>
                         <p className="fs-6 fw-medium text-muted ms-1">
                           / night
@@ -299,7 +319,7 @@ function LocDetails() {
                             Guests
                           </button>
                           <ul class="dropdown-menu w-75">
-                            {Array.from({ length: locDtl.guestsCap }).map(
+                            {Array.from({ length: loc.guestsCap }).map(
                               (_, i) => (
                                 <li>
                                   <a class="dropdown-item" href="#">
@@ -323,7 +343,7 @@ function LocDetails() {
             </div>
           </div>
           <div className="row mt-4">
-            <GoogleMap placeId={locDtl.location?.placeId} />
+            <GoogleMap placeId={loc.location.placeId} />
           </div>
           <hr />
           <div className="row mt-4">
@@ -355,18 +375,25 @@ function LocDetails() {
         <div className="container">
           <div className="row">
             <div className="col-7">
-              <Skeleton.Node active style={{width:"100vh", height:"50vh"}}/>
+              <Skeleton.Node
+                active
+                style={{ width: "100vh", height: "50vh" }}
+              />
             </div>
             <div className="col-2 ">
-              <Skeleton.Node active style={{width:"60vh", height:"24vh"}}/>
-              <Skeleton.Node active style={{width:"60vh", height:"24vh"}} className="
-              mt-2"/>
+              <Skeleton.Node active style={{ width: "60vh", height: "24vh" }} />
+              <Skeleton.Node
+                active
+                style={{ width: "60vh", height: "24vh" }}
+                className="
+              mt-2"
+              />
             </div>
             <div className="row mt-4">
-              <div className="col">
+              <div className="col-11">
                 <Skeleton.Avatar active />
-                <Skeleton.Input active className="ms-2" size=""/>
-                <Skeleton active className="mt-3"/>
+                <Skeleton.Input active className="ms-2" />
+                <Skeleton active className="mt-3" />
               </div>
             </div>
           </div>
