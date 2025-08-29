@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { setSavedLoc } from "../store/profile-slice";
 import axios from "axios";
+import { Skeleton } from "antd";
 
 function LocDetails() {
   const showAmmModal = useRef();
@@ -27,20 +28,21 @@ function LocDetails() {
   let loc = null;
   loc = locDetails.find((loc) => loc._id === locId);
   console.log(loc);
+  useEffect(() => {
     if (loc === undefined || loc === null) {
       console.log("inside");
       async function getLocDetail() {
         try {
-          console.log("1")
+          console.log("1");
           const response = await axios.get(
             `http://localhost:3000/rent-locs/${locId}`
           );
-          console.log("2")
-          console.log(response)
+          console.log("2");
+          console.log(response);
           if (response.status === 200) {
             const { locationDetail } = response.data;
             loc = locationDetail;
-            console.log("3 "+loc)
+            console.log("3 " + loc);
           }
         } catch (error) {
           if (error.response.status === 404) {
@@ -51,18 +53,25 @@ function LocDetails() {
       }
       getLocDetail();
     }
-  const {
-    title,
-    imgTtlData,
-    desc,
-    guestsCap,
-    facilities,
-    price,
-    author,
-    location,
-  } = loc.locDtl;
+  }, []);
 
-  const { options } = Ammentities.find((a) => a.id === facilities[0].id);
+  // const {
+  //   title = null,
+  //   imgTtlData = [],
+  //   desc = null,
+  //   guestsCap = null,
+  //   facilities = [],
+  //   price = null,
+  //   author = null,
+  //   location = null,
+  // } = loc.locDtl;
+
+  const locDtl = loc?.locDtl || null;
+  console.log(locDtl);
+  console.log("checking title loc " + loc);
+  const { options } =
+    Ammentities.find((a) => a.id === locDtl?.facilities[0].id) || [];
+
   async function handleSave() {
     if (!isAuthenticated) {
       navigate("/login");
@@ -90,13 +99,16 @@ function LocDetails() {
   }
   return (
     <>
-      <ShowAmmModal reference={showAmmModal} facilities={facilities} />
-      {loc && (
+      {locDtl !== undefined && locDtl !== null ? (
         <div className="container">
+          <ShowAmmModal
+            reference={showAmmModal}
+            facilities={locDtl.facilities}
+          />
           <div className="row">
             <div className="col d-flex justify-content-between align-items-center">
               <h4 className="fw-semibold">
-                {title}- {desc.bedrooms} BHK
+                {locDtl.title}- {locDtl.desc.bedrooms} BHK
               </h4>
               <button
                 className="btn d-flex h-50 text-decoration-underline align-items-center"
@@ -119,7 +131,7 @@ function LocDetails() {
           <div className="row">
             <div className="col-8 h-100 p-0 pe-3">
               <img
-                src={`${imgTtlData[0].images[0].url}`}
+                src={`${locDtl.imgTtlData[0].images[0].url}`}
                 alt="hall"
                 className="w-100 h-100 mainImg position-relative shadow"
                 style={{ objectFit: "cover" }}
@@ -137,7 +149,7 @@ function LocDetails() {
               <div className="imgWrapper">
                 <div className="imgTop">
                   <img
-                    src={`${imgTtlData[1].images[0].url}`}
+                    src={`${locDtl.imgTtlData[1].images[0].url}`}
                     alt="bedroom"
                     className="imgT shadow"
                     style={{ objectFit: "cover" }}
@@ -146,7 +158,7 @@ function LocDetails() {
 
                 <div className="imgBottom">
                   <img
-                    src={`${imgTtlData[2].images[0].url}`}
+                    src={`${locDtl.imgTtlData[2].images[0].url}`}
                     alt="bedroom"
                     className="imgB shadow"
                     style={{ objectFit: "cover" }}
@@ -161,8 +173,10 @@ function LocDetails() {
                 Entire rental unit in Gurugram, India
               </h5>
               <p className="p-0 text-muted form ">
-                {guestsCap} Guests &#10022; {desc.bedrooms} bedroom &#10022;
-                {desc.beds} bed &#10022; {desc.bathrooms} bathroom
+                {locDtl.guestsCap} Guests &#10022; {locDtl.desc?.bedrooms}{" "}
+                bedroom &#10022;
+                {locDtl.desc?.beds} bed &#10022; {locDtl.desc?.bathrooms}{" "}
+                bathroom
               </p>
             </div>
           </div>
@@ -179,7 +193,7 @@ function LocDetails() {
                     />
                     <div className="ms-3">
                       <h6 className="fw-medium mb-0">
-                        Hosted by {author.username}
+                        Hosted by {locDtl.author.username}
                       </h6>
                       <p
                         className="p-0 text-muted form "
@@ -198,7 +212,7 @@ function LocDetails() {
                     </h5>
                     <div className="container">
                       <div class="row row-cols-2">
-                        {facilities[0].ammenities.map((a) => {
+                        {locDtl.facilities[0].ammenities.map((a) => {
                           const { img, name } = options.find(
                             (o) => o.id === a.id
                           );
@@ -237,7 +251,7 @@ function LocDetails() {
                     </div>
                     <div className="row">
                       <div className="col">
-                        <p>{desc.others}</p>
+                        <p>{desc?.others}</p>
                       </div>
                     </div>
                     <div className="row">
@@ -261,7 +275,7 @@ function LocDetails() {
                     <div className=" w-100">
                       <div className="d-flex mx-0 align-items-end justify-content-center">
                         <p className="fs-4 fw-semibold text-decoration-underline">
-                          {curfmt.format(price)}
+                          {curfmt.format(locDtl.price)}
                         </p>
                         <p className="fs-6 fw-medium text-muted ms-1">
                           / night
@@ -285,13 +299,15 @@ function LocDetails() {
                             Guests
                           </button>
                           <ul class="dropdown-menu w-75">
-                            {Array.from({ length: guestsCap }).map((_, i) => (
-                              <li>
-                                <a class="dropdown-item" href="#">
-                                  {i + 1}
-                                </a>
-                              </li>
-                            ))}
+                            {Array.from({ length: locDtl.guestsCap }).map(
+                              (_, i) => (
+                                <li>
+                                  <a class="dropdown-item" href="#">
+                                    {i + 1}
+                                  </a>
+                                </li>
+                              )
+                            )}
                           </ul>
                         </div>
                         <div>
@@ -307,7 +323,7 @@ function LocDetails() {
             </div>
           </div>
           <div className="row mt-4">
-            <GoogleMap placeId={location.placeId} />
+            <GoogleMap placeId={locDtl.location?.placeId} />
           </div>
           <hr />
           <div className="row mt-4">
@@ -333,6 +349,26 @@ function LocDetails() {
               </div>
             </div>
             <button className="btn btn-dark mb-5">See More Reviews</button>
+          </div>
+        </div>
+      ) : (
+        <div className="container">
+          <div className="row">
+            <div className="col-7">
+              <Skeleton.Node active style={{width:"100vh", height:"50vh"}}/>
+            </div>
+            <div className="col-2 ">
+              <Skeleton.Node active style={{width:"60vh", height:"24vh"}}/>
+              <Skeleton.Node active style={{width:"60vh", height:"24vh"}} className="
+              mt-2"/>
+            </div>
+            <div className="row mt-4">
+              <div className="col">
+                <Skeleton.Avatar active />
+                <Skeleton.Input active className="ms-2" size=""/>
+                <Skeleton active className="mt-3"/>
+              </div>
+            </div>
           </div>
         </div>
       )}
