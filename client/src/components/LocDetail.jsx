@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { setSavedLoc } from "../store/profile-slice";
 import axios from "axios";
 import { Skeleton } from "antd";
+import AddReview from "./AddReview";
 
 function LocDetails() {
   const showAmmModal = useRef();
@@ -30,7 +31,7 @@ function LocDetails() {
     options: [],
   });
   const { isAuthenticated, token } = useSelector((state) => state.authData);
-  const { savedLocData } = useSelector((state) => state.profileData);
+  const { savedLocData, profile } = useSelector((state) => state.profileData);
   const { locId } = useParams();
   const isSaved = savedLocData.locData.find((e) => e.locId === locId);
   const [like, setLike] = useState(isSaved);
@@ -121,6 +122,11 @@ function LocDetails() {
       });
     }
   }
+
+  console.log(loc);
+  console.log(loc?.author?.email);
+  console.log(profile)
+  console.log(profile?.email);
   return (
     <>
       {loc.title !== null ? (
@@ -365,10 +371,16 @@ function LocDetails() {
                     <Reviews />
                     <Reviews />
                   </div>
+                  <div className="row">
+                    <div className="col">
+                      <button className="btn btn-outline-primary mt-3  mb-3 w-100">
+                        See More Reviews
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <button className="btn btn-dark mb-5">See More Reviews</button>
           </div>
         </div>
       ) : (

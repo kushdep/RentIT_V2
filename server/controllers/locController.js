@@ -1,3 +1,4 @@
+import { StrictMode } from 'react'
 import Location from '../models/location.js'
 import { sortPlacesByDistance } from '../utils/distance.js'
 
@@ -107,7 +108,7 @@ export const getAllLocs = async (req, res) => {
         let totalLoc = dataReq * 32
         let from = totalLoc - 31
         let to = totalLoc
-        const rentLocs = await Location.find({ Sno: { $gte: from, $lte: to } })
+        const rentLocs = await Location.find({ Sno: { $gte: from, $lte: to } }).populate('locDtl.reviews')
         const locData = await Location.countDocuments()
         console.log(rentLocs)
         if (rentLocs.length === 0) {

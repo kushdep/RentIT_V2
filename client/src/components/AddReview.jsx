@@ -40,6 +40,7 @@ function AddReview() {
       stars,
       review,
     };
+    console.log(body)
     try {
       const response = await axios.post(
         "http://localhost:3000/profile/add-review",
@@ -92,7 +93,7 @@ function AddReview() {
             }}
             icon={
               <StarRoundedIcon
-                sx={{ height: 40, width: 40, color: "black" }}
+                sx={{ height: 40, width: 40, color: "gold" }}
                 fontSize="inherit"
               />
             }
@@ -117,7 +118,7 @@ function AddReview() {
         </div>
         <button
           type="submit"
-          className="btn btn-dark mt-2"
+          className="btn btn-light mt-2"
           defaultValue={0}
           disabled={isPending}
         >

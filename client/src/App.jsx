@@ -12,6 +12,8 @@ import { authActions } from "./store/auth-slice";
 import LocPhotosPage from "./pages/LocPhotosPage"
 import Whishlist from "./pages/Whishlist";
 import LoginPage from "./pages/LoginPage";
+import { useEffect } from "react";
+import { getProfileData } from "./store/profile-slice";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +51,12 @@ const router = createBrowserRouter([
 function App() {
   const token = localStorage.getItem('token')
   const dispatch = useDispatch()
+
+  useEffect(()=>{
+    if(token){
+      dispatch(getProfileData(token))
+    }
+  },[])
   
   if(token){
     dispatch(authActions.loginSuccess({token:token}))  
