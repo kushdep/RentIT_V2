@@ -16,6 +16,13 @@ const rentLocSlice = createSlice({
                 range: ''
             }
         },
+        serach: {
+            name: null,
+            locCor: {
+                long: null,
+                lat: null
+            }
+        },
         sortBy: {
             distance: {
                 inc: false,
@@ -131,34 +138,41 @@ const rentLocSlice = createSlice({
                 console.error("Error in updateSortingStt() " + error)
             }
         },
-        resetFltrStt(state,action){
+        resetFltrStt(state, action) {
             try {
                 const resetFld = action.payload
                 console.log(action.payload)
-                if(resetFld==='guests'){
-                    state.filter.guestCap=null
-                }else if(resetFld==='priceRng'){
-                    state.filter.priceRange.ind=null
-                    state.filter.priceRange.range=''
+                if (resetFld === 'guests') {
+                    state.filter.guestCap = null
+                } else if (resetFld === 'priceRng') {
+                    state.filter.priceRange.ind = null
+                    state.filter.priceRange.range = ''
                 }
             } catch (error) {
-                console.error("Error in resetFltrSrtStt() " + error)                
+                console.error("Error in resetFltrSrtStt() " + error)
             }
         },
-        resetSrtStt(state,action){
+        resetSrtStt(state, action) {
             try {
-               const resetFld = action.payload
-               console.log(action.payload)
-                if(resetFld==='dst'){
-                    state.sortBy.distance.inc=false
-                    state.sortBy.distance.currLoc.long=null
-                    state.sortBy.distance.currLoc.lat=null
-                }else if(resetFld==='rtng'){
-                    state.sortBy.ratings=false
+                const resetFld = action.payload
+                console.log(action.payload)
+                if (resetFld === 'dst') {
+                    state.sortBy.distance.inc = false
+                    state.sortBy.distance.currLoc.long = null
+                    state.sortBy.distance.currLoc.lat = null
+                } else if (resetFld === 'rtng') {
+                    state.sortBy.ratings = false
                 }
-                
+
             } catch (error) {
-                console.error("Error in resetFltrSrtStt() " + error)                
+                console.error("Error in resetFltrSrtStt() " + error)
+            }
+        },
+        searLocStt(state, action) {
+            try {
+                const { locName = null, locCor = {} } = action.payload
+            } catch (error) {
+                console.error("Error in searLocStt() " + error)
             }
         }
     }
@@ -203,7 +217,7 @@ export const getFilteredLoc = (reqNum) => {
                 }
             } catch (error) {
                 if (error.response.status === 400) {
-                     console.log(error.response.data);
+                    console.log(error.response.data);
                 }
                 console.log(error)
             }
@@ -215,7 +229,7 @@ export const getFilteredLoc = (reqNum) => {
             console.log("Total Locations " + totalLocs)
             dispatch(rentLocActions.addRentLoc({ locData: locs, totalLocs: totalLocs }))
         } catch (error) {
-            console.error("Error while Getting Data"+error)
+            console.error("Error while Getting Data" + error)
         }
     }
 }
@@ -242,9 +256,9 @@ export const getAllLoc = (reqNum) => {
     }
 }
 
-export const getSearchLoc = (searchQuery) =>{
-    return async(dispatch)=>{
-        
+export const getSearchLoc = (searchQuery) => {
+    return async (dispatch) => {
+
     }
 }
 

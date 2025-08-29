@@ -4,8 +4,11 @@ import { sortPlacesByDistance } from '../utils/distance.js'
 
 export const getRentLocs = async (req, res) => {
     try {
-        const { filter, sortBy } = req?.query
-        if ((filter !== undefined && filter) || (sortBy !== undefined && sortBy)) {
+        const { filter, sortBy, search } = req?.query
+        if (search !== undefined && search) {
+            getSearchLoc()
+        }
+        else if ((filter !== undefined && filter) || (sortBy !== undefined && sortBy)) {
             getFilterLocs(req, res)
         } else {
             getAllLocs(req, res)
@@ -19,7 +22,7 @@ export const getRentLocs = async (req, res) => {
     }
 }
 
-export const getFilterLocs = async (req, res) => {
+const getFilterLocs = async (req, res) => {
     try {
         let dataReq = !isNaN(req?.query.dataReq) ? Number(req.query.dataReq) : null
         let locType = req?.query.locFltr || null
@@ -99,7 +102,67 @@ export const getFilterLocs = async (req, res) => {
     }
 }
 
-export const getAllLocs = async (req, res) => {
+const getSearchLoc = async (req, res) => {
+    try {
+        const { coordinates = null, locName = null } = req.query
+        if (coordinates !== null && locName === null) {
+            const { lat, long, locType = null } = req.query
+            let query = {}
+            query["locDtl.location.coordinates"] = [long, lat]
+            if (locType !== null) {
+                query["locType"] = locType
+            }
+            const loc = await Location.find(query)
+            if (loc) {
+                res.status(200).send({
+                    found: true,
+                    locId: loc._id,
+                    message: "Search location Found"
+                })
+            } else {
+                let rentLocs = await Location.find()
+                rentLocs = sortPlacesByDistance(rentLocs, lat, long).limit(8)
+                res.status(200).send({
+                    found: false,
+                    similarLocs: rentLocs,
+                    message: "Search location Not Found"
+                })
+            }
+        } else if (coordinates === null && locName !== null) {
+            const { locName, locType = null } = req.query
+            query["locDtl.title"] = locName
+            if (locType !== null) {
+                query["locType"] = locType
+            }
+            const loc = await Location.find(query)
+            if (loc) {
+                res.status(200).send({
+                    found: true,
+                    locId: loc._id,
+                    message: "Search location Found"
+                })
+            } else {
+                res.status(404).send({
+                    found: false,
+                    message: "Search location Not Found"
+                })
+            }
+        } else {
+            return res.status(400).send({
+                success: false,
+                message: "Search Feilds are wrong"
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send({
+            success: false,
+            message: error
+        })
+    }
+}
+
+const getAllLocs = async (req, res) => {
     try {
         let dataReq = isNaN(req.query.dataReq) ? 1 : Number(req.query.dataReq)
         if (dataReq <= 0) {

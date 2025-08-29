@@ -1,25 +1,126 @@
 import { useRef } from "react";
+import toast from "react-hot-toast";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { useGoogleAutoComp } from "../../hooks/useGoogleAutoComp";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-function SearchBar({ props }) {
+function SearchBar({ props, updateSearchStt }) {
   const { isLoaded, sugg, inpVal, handleInpVal } = useGoogleAutoComp();
   const locType = useRef();
   const inpTxt = useRef();
+  const navigate = useNavigate()
 
-  const handleSelect = async (address, locId) => {
-      const result = await getGeocode({ address });
+  async function getSearchLoc(searchFeilds) {
+    const {
+      lat = null,
+      lng = null,
+      locName = null,
+      locType = null,
+    } = searchFeilds;
+    let url = `http://localhost:3000/rent-locs?search=true`;
+    if (locName === null && (lat !== null && lng !== null)) {
+      url += `coordinates=true&lat=${lat}&long=${lng}`;
+      if (locType !== null) {
+        url += `&locType=${locType}`;
+        try {
+          const response = await axios.get(url);
+          if (response.status === 200) {
+            if (response.data.found) {
+              const { locId } = response.data;
+              updateSearchStt((prev) => {
+                const updatedval = {
+                  val: true,
+                  locId,
+                  locs: [],
+                };
+                return {
+                  ...prev,
+                  coordinates: updatedval,
+                };
+              });
+              navigate(`/rent-locs/${locId}`);
+            } else {
+              const { similarLocs } = response.data;
+              updateSearchStt((prev) => {
+                const updatedval = {
+                  val: true,
+                  locId: null,
+                  locs: similarLocs,
+                };
+                return {
+                  ...prev,
+                  coordinates: updatedval,
+                };
+              });
+            }
+          }
+        } catch (error) {
+          if (error.response.status === 400) {
+            console.log(error.response.data);
+          }
+        }
+      }
+    }
+
+    if (locName !== null) {
+      url += `&locName=true&name=${locName}`;
+      if (locType !== null) {
+        url += `&locType=${locType}`;
+      }
+      try {
+        const response = await axios.get(url);
+        if(response.status===200){
+          const {locId} = response.data
+          updateSearchStt((prev) => {
+            const updatedval = {
+              val: true,
+              locId,
+            };
+            return {
+              ...prev,
+              coordinates: updatedval,
+            };
+          });
+          navigate(`/rent-locs/${locId}`);
+        }
+      } catch (error) {
+        if (error.response.status === 404) {
+          console.log(error.response.data);
+          updateSearchStt((prev)=>{
+            const updatedval = {val:true,locId:null}
+            return {
+              ...prev,
+              name:updatedval
+            }
+          })
+        }
+        if (error.response.status === 400) {
+          console.log(error.response.data);
+        }
+      }
+    }
+  }
+
+  async function handleSearchLoc() {
+    const loTypeVal =
+      locType.current.value !== "none" ? locType.current.value : null;
+    if (
+      (loTypeVal === null && inpVal.index === null) ||
+      (loTypeVal !== null && inpVal.index === null)
+    ) {
+      toast.error("Please Enter Valid Search Location");
+      return;
+    }
+    if (inpVal.index !== null) {
+      const result = await getGeocode({ address: inpVal.val });
       const { lat, lng } = getLatLng(result[0]);
-
-      console.log(lat);
-      console.log(lng);
-      console.log(locId);
-      handleInpVal({ val: "", index: null });
-  };
-
-  const handleLocName = async (locName,locId) => {
-    
-  };
+      getSearchLoc({ lat, lng });
+      handleInpVal({ val: "", index: null, locType: loTypeVal });
+    } else {
+      getSearchLoc({ locName: inpTxt.current.value, locType: loTypeVal });
+    }
+  }
 
   return (
     <div
@@ -87,17 +188,7 @@ function SearchBar({ props }) {
               >
                 <button
                   className="btn btn-primary rounded-end-pill h-100"
-                  onClick={() => {
-                    const loTypeVal =
-                      locType.current.value !== "none"
-                        ? locType.current.value
-                        : null;
-                    if (inpVal.index !== null) {
-                      handleSelect(inpVal.val, loTypeVal);
-                    } else {
-                      handleLocName(inpTxt.current.value, loTypeVal);
-                    }
-                  }}
+                  onClick={handleSearchLoc}
                 >
                   <img src="/icons/search.png" />
                 </button>

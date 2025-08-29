@@ -25,7 +25,6 @@ function ProfileLayout() {
                   title="Whishlist"
                   active={currentUrl.includes("/profile/whishlist")}
                 />
-                <ProfileButton title="My Reviews" />
                 <ProfileButton title="Approvals" />
                 <ProfileButton title="Trips" />
                 <button className="btn-primary text-light fw-semibold">

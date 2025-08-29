@@ -13,6 +13,7 @@ import {
 } from "../store/rentloc-slice";
 import { locType } from "../config";
 import { getSavedLoc } from "../store/profile-slice";
+import SimilarLocs from "../components/SimilarLocs";
 
 export default function RentLocs() {
   const {
@@ -26,6 +27,7 @@ export default function RentLocs() {
 
   const dispatch = useDispatch();
   const [pages, setPagesVal] = useState(null);
+  const [searchLoc,setSearchLoc] = useState({name:{val:false,locId:null},coordinates:{val:false,locId:null,locs:[]}})
 
   const {savedLocData} =useSelector(state=>state.profileData)
   const sortModalRef = useRef();
@@ -37,7 +39,6 @@ export default function RentLocs() {
     savedLoc = savedLocData.locData.map((e)=>{
       return e.locId
     })
-    console.log(savedLoc)
   }
 
   useEffect(() => {
@@ -137,10 +138,13 @@ console.log("check points"+chckPts)
             className="shadow-sm"
             alt=""
           />
-          <SearchBar props={{ height: 100, top: 150, right: 390 }} />
+          <SearchBar props={{ height: 100, top: 150, right: 390 }} updateSearchStt={setSearchLoc} />
         </div>
       </header>
       <div className="container-fluid">
+        {
+          searchLoc.name.val && !searchLoc.name.locId?<h1 className="text-muted">404 Not Found</h1>:((searchLoc.coordinates.val && !searchLoc.coordinates.locId && searchLoc.coordinates.locs.length>0)?<SimilarLocs/>:null)
+        }
         <div className="row">
 <div className="col ">
       <div className="container-fluid mt-3">
@@ -496,7 +500,7 @@ console.log("check points"+chckPts)
 
 </div>
         </div>
-      </div>
+      </div>)
     </div>
   );
 }
