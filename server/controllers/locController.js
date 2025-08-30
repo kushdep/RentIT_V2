@@ -1,12 +1,12 @@
-import { StrictMode } from 'react'
 import Location from '../models/location.js'
 import { sortPlacesByDistance } from '../utils/distance.js'
 
 export const getRentLocs = async (req, res) => {
     try {
+        console.log(req.query)
         const { filter, sortBy, search } = req?.query
         if (search !== undefined && search) {
-            getSearchLoc()
+            getSearchLoc(req, res)
         }
         else if ((filter !== undefined && filter) || (sortBy !== undefined && sortBy)) {
             getFilterLocs(req, res)
@@ -104,37 +104,55 @@ const getFilterLocs = async (req, res) => {
 
 const getSearchLoc = async (req, res) => {
     try {
+        console.log(req.query)
         const { coordinates = null, locName = null } = req.query
-        if (coordinates !== null && locName === null) {
-            const { lat, long, locType = null } = req.query
-            let query = {}
-            query["locDtl.location.coordinates"] = [long, lat]
-            if (locType !== null) {
-                query["locType"] = locType
-            }
-            const loc = await Location.find(query)
-            if (loc) {
-                res.status(200).send({
-                    found: true,
-                    locId: loc._id,
-                    message: "Search location Found"
-                })
+        let query = {}
+        if (coordinates && locName === null) {
+            const { lat = null, long = null, locType = null } = req.query
+            if (lat !== null && long !== null) {
+                query["locDtl.location.coordinates.longitude"] = Number(long)
+                query["locDtl.location.coordinates.latitude"] = Number(lat)
+                if (locType !== null) {
+                    query["locType"] = locType
+                }
+                console.log(query)
+                const loc = await Location.findOne(query)
+                console.log(loc)
+                if (loc!==null) {
+                    res.status(200).send({
+                        found: true,
+                        locId: loc._id,
+                        message: "Search location Found"
+                    })
+                } else {
+                    let rentLocs = await Location.find()
+                    rentLocs = sortPlacesByDistance(rentLocs, lat, long)
+                    rentLocs = rentLocs.slice(0,8)
+                    res.status(200).send({
+                        found: false,
+                        similarLocs: rentLocs,
+                        message: "Search location Not Found"
+                    })
+                }
+
             } else {
-                let rentLocs = await Location.find()
-                rentLocs = sortPlacesByDistance(rentLocs, lat, long).limit(8)
-                res.status(200).send({
-                    found: false,
-                    similarLocs: rentLocs,
-                    message: "Search location Not Found"
+                return res.status(400).send({
+                    success: false,
+                    message: "Loc Coordinates are wrong"
                 })
             }
         } else if (coordinates === null && locName !== null) {
-            const { locName, locType = null } = req.query
-            query["locDtl.title"] = locName
+            const { name=null, locType = null } = req.query
+            console.log(req.query)
+            const title= name.trim()
+            const regex = new RegExp(`^${title}\\s*$`, "i");
+            query["locDtl.title"] = regex
             if (locType !== null) {
                 query["locType"] = locType
             }
-            const loc = await Location.find(query)
+            console.log(query)
+            const loc = await Location.findOne(query)
+             console.log(loc)
             if (loc) {
                 res.status(200).send({
                     found: true,

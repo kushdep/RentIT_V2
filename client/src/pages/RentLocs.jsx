@@ -27,7 +27,7 @@ export default function RentLocs() {
 
   const dispatch = useDispatch();
   const [pages, setPagesVal] = useState(null);
-  const [searchLoc,setSearchLoc] = useState({name:{val:false,locId:null},coordinates:{val:false,locId:null,locs:[]}})
+  const [searchLoc,setSearchLoc] = useState({name:{val:false,locId:null},coordinates:{val:false,locId:null,locs:[],long:null,lat:null}})
 
   const {savedLocData} =useSelector(state=>state.profileData)
   const sortModalRef = useRef();
@@ -143,8 +143,12 @@ console.log("check points"+chckPts)
       </header>
       <div className="container-fluid">
         {
-          searchLoc.name.val && !searchLoc.name.locId?<h1 className="text-muted">404 Not Found</h1>:((searchLoc.coordinates.val && !searchLoc.coordinates.locId && searchLoc.coordinates.locs.length>0)?<SimilarLocs/>:null)
-        }
+          searchLoc.name.val && !searchLoc.name.locId?
+          <div className="d-flex justify-content-center">
+            <img className="w-50 h-50" src="/public/images/Loc404.png"/>
+          </div>
+          :((searchLoc.coordinates.val && !searchLoc.coordinates.locId && searchLoc.coordinates.locs.length>0)?<SimilarLocs locations={searchLoc.coordinates.locs} locCoord={searchLoc.coordinates} upSrchStt={setSearchLoc}/>:       
+        <div className="container-fluid">
         <div className="row">
 <div className="col ">
       <div className="container-fluid mt-3">
@@ -500,7 +504,8 @@ console.log("check points"+chckPts)
 
 </div>
         </div>
-      </div>)
+        </div>)}
+      </div>
     </div>
   );
 }

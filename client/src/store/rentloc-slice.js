@@ -168,13 +168,6 @@ const rentLocSlice = createSlice({
                 console.error("Error in resetFltrSrtStt() " + error)
             }
         },
-        searLocStt(state, action) {
-            try {
-                const { locName = null, locCor = {} } = action.payload
-            } catch (error) {
-                console.error("Error in searLocStt() " + error)
-            }
-        }
     }
 })
 
@@ -184,6 +177,8 @@ export const getFilteredLoc = (reqNum) => {
             const { filter, sortBy, rentLocType } = getState().rentLocs
             const { guestCap, priceRange } = filter
             const { distance, ratings } = sortBy
+
+            console.log(distance)
 
             let url = `http://localhost:3000/rent-locs?dataReq=${reqNum}`
 
