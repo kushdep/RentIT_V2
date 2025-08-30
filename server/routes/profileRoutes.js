@@ -1,6 +1,6 @@
 import express from 'express'
 import { imageUpload, profileImgUpload } from "../cloudinary/index.js"
-import { addLocation, addReview, getProfileData, getWhishlistLoc, setProfileData, updateProfileImg, updateSavedLoc } from '../controllers/profileController.js';
+import { addLocation, addReview, getProfileData, getWhishlistLoc, setProfileData, setPropertierData, updateProfileImg, updateSavedLoc } from '../controllers/profileController.js';
 import { newLocValidation } from '../middlewares/JoiValidations/locValidation.js';
 import { newReviewValidation } from '../middlewares/JoiValidations/reviewValidation.js';
 const router = express.Router()
@@ -14,6 +14,9 @@ router.get('/liked-loc', getWhishlistLoc)
 router.patch('/update-liked-loc', updateSavedLoc)
 
 router.patch('/update-profile-img',profileImgUpload,updateProfileImg)
+
+router.patch('/propertier-verification',setPropertierData)
+
 
 router.route("")
     .get(getProfileData)

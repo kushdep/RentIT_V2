@@ -14,6 +14,7 @@ import Whishlist from "./pages/Whishlist";
 import LoginPage from "./pages/LoginPage";
 import { useEffect } from "react";
 import { getProfileData } from "./store/profile-slice";
+import VerifyProp from "./pages/VerifyProp";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
           {path:"edit",element:<Profile/>},
           { path: "new-loc", element: <AddLocForm /> },
           { path: "whishlist", element: <Whishlist /> },
+          { path: "propertier-verification", element: <VerifyProp /> },
         ],
       },
     ],

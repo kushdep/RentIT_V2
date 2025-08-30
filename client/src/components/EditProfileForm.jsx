@@ -7,7 +7,6 @@ function EditProfileForm({ userProfile }) {
   const [isEditing, setIsEditing] = useState(false);
   const [formStt, formAcn, isPending] = useActionState(handleEditing, {
     username: null,
-    idProof: null,
     address: null,
     contactNo: null,
     othContactNo: null,
@@ -23,7 +22,6 @@ function EditProfileForm({ userProfile }) {
     }
 
     const name = formData.get("username");
-    const idProof = formData.get("idProof");
     const address = formData.get("address");
     const pmryPhNo = formData.get("pmryPhNo");
     const scdnryPhNo = formData.get("scdnryPhNo");
@@ -60,9 +58,6 @@ function EditProfileForm({ userProfile }) {
       body["username"] = name;
     }
 
-    if (idProof !== userProfile.idProof) {
-      body["idProof"] = idProof;
-    }
 
     if (address !== userProfile.address) {
       body["address"] = address;
@@ -99,19 +94,6 @@ function EditProfileForm({ userProfile }) {
           placeholder="name@example.com"
         />
         <label htmlFor="floatingInput">Username*</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input
-          type="text"
-          defaultValue={userProfile?.idProof}
-          value={formStt?.idProof}
-          className="form-control"
-          disabled={!isEditing}
-          name="idProof"
-          id="floatingInput"
-          placeholder="name@example.com"
-        />
-        <label htmlFor="floatingInput">ID-Proof</label>
       </div>
       <div class="form-floating mb-3">
         <input

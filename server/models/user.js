@@ -1,3 +1,4 @@
+import { string } from "joi";
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
@@ -12,9 +13,6 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     password: {
-        type: String,
-    },
-    idProof: {
         type: String,
     },
     address: {
@@ -53,7 +51,21 @@ const userSchema = new mongoose.Schema({
     savedLoc: [{
         type: mongoose.Types.ObjectId,
         ref: 'Location'
-    }]
+    }],
+    userType: {
+        propertier: {
+            type: Boolean,
+            default: false
+        },
+        idProof: {
+            id:{
+                type:string
+            },
+            refId:{
+                type:Number
+            },
+        },
+    }
 }, { timestamps: { createdAt: 'createdAt' } })
 
 

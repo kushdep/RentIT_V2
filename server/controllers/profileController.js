@@ -2,6 +2,9 @@ import Location from '../models/location.js'
 import User from '../models/user.js'
 import Review from '../models/review.js'
 import mongoose from "mongoose";
+import dotenv from 'dotenv'
+import bcrypt from 'bcrypt'
+dotenv.config()
 
 export const addLocation = async (req, res) => {
     try {
@@ -207,15 +210,11 @@ export const getProfileData = async (req, res) => {
 export const setProfileData = async (req, res) => {
     try {
         const { _id } = req.user
-        const { username = null, idProof = null, address = null, contactNo = null, othContactNo = null } = req.body
+        const { username = null, address = null, contactNo = null, othContactNo = null } = req.body
         console.log(req.body)
         let val = {}
         if (username !== null && username !== '') {
             val['username'] = username
-        }
-
-        if (idProof !== null) {
-            val['idProof'] = idProof
         }
 
         if (address !== null) {
@@ -263,16 +262,16 @@ export const updateProfileImg = async (req, res) => {
         const { _id } = req.user
         if (profileImage !== null) {
             const updatedUser = await User.findByIdAndUpdate(_id, { '$set': { userImg: profileImage } }, { new: true })
-            if(updatedUser){
+            if (updatedUser) {
                 return res.status(200).send({
-                success: true,
-                url: updatedUser.userImg.url
-            })
-            }else{
+                    success: true,
+                    url: updatedUser.userImg.url
+                })
+            } else {
                 return res.status(403).send({
-                success: false,
-                message: 'Profile Image cannot be updated'
-            })
+                    success: false,
+                    message: 'Profile Image cannot be updated'
+                })
             }
         }
 
@@ -284,3 +283,95 @@ export const updateProfileImg = async (req, res) => {
         })
     }
 }
+
+export const setPropertierData = async (req, res) => {
+    try {
+        const { id = '', name = null } = req.body
+        const { _id } = req.user
+
+        if (id.length === 10 || name === null) {
+            const regex = /^[A-Z]{4}[0-9]{4}[A-Z]$/
+            const result = regex.test("ABCD1234X")
+            if (!result) {
+                throw Error('Invalid PAN Number')
+            }
+        } else {
+            throw Error('Invalid Credentials')
+        }
+
+        const response = verifyPAN({ 'pan': id, 'name': name })
+        if (response.status) {
+            const { pan, valid, message, reference_id } = response.data
+            if (valid) {
+                let hashIdNum
+                try {
+                    hashIdNum = await bcrypt.hash(password, 10)
+                    const newDoc = await User.findOneAndUpdate({ _id }, {
+                        '$set': {
+                            'userType.propertier': true,
+                            'userType.id': hashIdNum,
+                            'userType.refId': reference_id
+                        }
+                    }, { new: true })
+                    console.log(newDoc)
+                    return res.status(200).send({
+                        success:true,
+                        message:"Verified"
+                    })
+                } catch (error) {
+                    console.log(error)
+                }
+
+            } else {
+                throw Error(message)
+            }
+        } else {
+            const { err_type, err_status, err_code, message } = response
+            if (err_status === 400) {
+                throw Error(message)
+            } else {
+                console.log('Error in API err_type: '+err_type+' err_status '+err_status+' err_code '+err_code)
+            }
+        }
+    } catch (error) {
+        console.error("Error in setPropertierData() " + error)
+        return res.status(400).send({
+            success: false,
+            message: error
+        })
+    }
+}
+
+const verifyPAN = async (data) => {
+    try {
+        const response = await axios.post('https://sandbox.cashfree.com/verification/pan', {
+            data,
+            headers: {
+                'x-client-id': process.env.CLIENT_ID,
+                'x-client-secret': process.env.CLIENT_SECRET
+            }
+        })
+        if (response.status === 200) {
+            return {
+                success: true,
+                data: response.data,
+                message: 'PAN verified successfully'
+            }
+        }
+        const errs = [400, 401, 422, 429, 500, 502]
+        if (errs.includes(response.status)) {
+            const { type, code, message } = response.error
+            return {
+                success: false,
+                err_status: response.status,
+                err_type: type,
+                err_code: code,
+                message: message
+            }
+        }
+
+    } catch (error) {
+        console.log("Error in verifyPAN() " + error)
+    }
+}
+

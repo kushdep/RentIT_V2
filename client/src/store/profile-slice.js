@@ -12,11 +12,13 @@ const profileSlice = createSlice({
         profile: {
             email: null,
             username: null,
-            idProof: null,
             address: null,
             contactNo: null,
             othContactNo: null,
-            imgUrl:null
+            imgUrl:null,
+        },
+        userType:{
+            pptr:false,
         },
         tripsData: [],
         approvalsData: []
@@ -57,10 +59,6 @@ const profileSlice = createSlice({
                     state.profile.username = userData.username
                 }
 
-                if (userData.idProof) {
-                    state.profile.idProof = userData.idProof
-                }
-
                 if (userData.address) {
                     state.profile.address = userData.address
                 }
@@ -71,6 +69,10 @@ const profileSlice = createSlice({
 
                 if (userData.sndryPhNo) {
                     state.profile.othContactNo = user.sndryPhNo
+                }
+
+                if(userData.userType.propertier){
+                    state.userType.pptr=true
                 }
 
             } catch (error) {
