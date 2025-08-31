@@ -1,4 +1,3 @@
-import { string } from "joi";
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
@@ -59,7 +58,7 @@ const userSchema = new mongoose.Schema({
         },
         idProof: {
             id:{
-                type:string
+                type:String
             },
             refId:{
                 type:Number

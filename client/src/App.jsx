@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider, useParams } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useParams,
+} from "react-router-dom";
 import Layout from "./pages/Layout";
 import RentLocs from "./pages/RentLocs";
 import Homepage from "./pages/Homepage";
@@ -9,12 +13,23 @@ import AddLocForm from "./components/AddLocForm";
 import LocDetails from "./components/LocDetail";
 import { useDispatch } from "react-redux";
 import { authActions } from "./store/auth-slice";
-import LocPhotosPage from "./pages/LocPhotosPage"
+import LocPhotosPage from "./pages/LocPhotosPage";
 import Whishlist from "./pages/Whishlist";
 import LoginPage from "./pages/LoginPage";
 import { useEffect } from "react";
 import { getProfileData } from "./store/profile-slice";
 import VerifyProp from "./pages/VerifyProp";
+import { useSelector } from "react-redux";
+
+const PropertierRoute = ({ children }) => {
+  const { userType: isPropertier } = useSelector((state) => state.profileData);
+  return !isPropertier.pptr ? children : <h1>UNAUTHORIZED</h1>;
+};
+
+const ProfileRoute = ({ children }) => {
+  const { isAuthenticated } = useSelector((state) => state.authData);
+  return isAuthenticated ? children : <h1>UNAUTHORIZED</h1>;
+};
 
 const router = createBrowserRouter([
   {
@@ -25,7 +40,7 @@ const router = createBrowserRouter([
       { path: "login", element: <LoginPage /> },
       {
         path: `rent-locs`,
-        id:"rentLocs",
+        id: "rentLocs",
         children: [
           {
             path: "",
@@ -38,12 +53,23 @@ const router = createBrowserRouter([
       { path: "contact-us", element: <ContactUs /> },
       {
         path: "/profile",
-        element: <ProfileLayout />,
+        element: (
+          <ProfileRoute>
+            <ProfileLayout />
+          </ProfileRoute>
+        ),
         children: [
-          {path:"edit",element:<Profile/>},
+          { path: "edit", element: <Profile /> },
           { path: "new-loc", element: <AddLocForm /> },
           { path: "whishlist", element: <Whishlist /> },
-          { path: "propertier-verification", element: <VerifyProp /> },
+          {
+            path: "propertier-verification",
+            element: (
+              <PropertierRoute>
+                <VerifyProp />
+              </PropertierRoute>
+            ),
+          },
         ],
       },
     ],
@@ -51,17 +77,17 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const token = localStorage.getItem('token')
-  const dispatch = useDispatch()
+  const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
 
-  useEffect(()=>{
-    if(token){
-      dispatch(getProfileData(token))
+  useEffect(() => {
+    if (token) {
+      dispatch(getProfileData(token));
     }
-  },[])
-  
-  if(token){
-    dispatch(authActions.loginSuccess({token:token}))  
+  }, []);
+
+  if (token) {
+    dispatch(authActions.loginSuccess({ token: token }));
   }
   return <RouterProvider router={router} />;
 }

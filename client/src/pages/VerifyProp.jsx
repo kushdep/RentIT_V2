@@ -2,14 +2,13 @@ import axios from "axios";
 import { useActionState, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 function VerifyProp() {
   const { profile } = useSelector((state) => state.profileData);
   const [formStt, formFn, isPending] = useActionState(submitId, {
     id: null,
     name: profile.username || null,
-    errs: [],
+    errs: {},
   });
   const { token } = useSelector((state) => state.authData);
   const [isVerified, setIsVerified] = useState(false);
@@ -17,11 +16,6 @@ function VerifyProp() {
   async function submitId(prevStt, formData) {
     const id = formData.get("id");
     const name = formData.get("name");
-    const navigate = useNavigate();
-
-    console.log(id);
-    console.log(name);
-    let err = [];
     if (id === "" || name === "") {
       toast.error("Please Enter Valid Credentials");
       return {
@@ -32,48 +26,50 @@ function VerifyProp() {
     }
 
     if (id !== "" && id.length === 10) {
-      const regex = /^[A-Z]{5}[0-4]{4}[A-Z]$/;
+      console.log(id)
+      console.log(typeof(id))
+      const regex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
       const result = regex.test(id);
+      console.log(result);
       if (!result) {
-        err.push({ message: "Invalid PAN Number" });
+        toast.error("Invalid PAN Number")
+        return { id: id, errs: { message: "Invalid PAN Number" } };
       }
     } else {
-      err.push({ message: "Invalid PAN Number" });
-    }
-
-    if (err.length > 0) {
-      return {
-        errs: err,
-      };
+      toast.error("Invalid PAN Number")
+      return { id: id, errs: { message: "Invalid PAN Number" } };
     }
 
     let body = { id, name };
-    const response = await axios.post(
-      "http://localhost:3000/profile/propertier-verification",
-      body,
-      {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    if (response.status === 200 && response.data.success) {
-      toast.success("PAN Verified");
-      setIsVerified(true);
-    }
-
-    if(response.status === 400){
-        const {message} = response.data
-        toast.error(message)
-        return {
-            ...prevStt,
-            id,
-            name,
-            errs:[]
+    try {
+      const response = await axios.patch(
+        "http://localhost:3000/profile/propertier-verification",
+        body,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
         }
-    }
+      );
 
+      console.log(response)
+      if (response.status === 200 && response.data.success) {
+        toast.success("PAN Verified");
+        setIsVerified(true);
+      }
+    } catch (error) {
+      console.log(error)
+      if (error.response.status === 400) {
+        const { message } = error.response.data;
+        toast.error(message);
+        return {
+          ...prevStt,
+          id,
+          name,
+          errs: {},
+        };
+      }
+    }
   }
   console.log(formStt);
 
@@ -120,7 +116,7 @@ function VerifyProp() {
                   className="btn btn-dark w-50 fs-5 shadow"
                   disabled={isPending}
                 >
-                  {formStt.errs.length === 0 && isPending
+                  {Object.keys(formStt?.errs).length === 0 && isPending
                     ? "Verifying..."
                     : "Verify"}
                 </button>
@@ -132,13 +128,19 @@ function VerifyProp() {
             <div className="col  d-flex justify-content-center">
               <div className="fs-2 fw-bold">
                 <div className="p-0 text-center h-25">
-                  <img
-                    src="/public/images/verified.png"
-                    className="h-75"
-                  />
+                  <img src="/public/images/verified.png" className="h-75" />
                   <div className="">
-                  <p className="fs-3">VERIFIED!!<br/><span className="fs-5 fw-light">Now You are a Verified Propertier On</span><span> RENT-IT</span>
-                  <p className="fw-lighter">Check Your Email for further Instructions.</p></p>
+                    <p className="fs-3">
+                      VERIFIED!!
+                      <br />
+                      <span className="fs-5 fw-light">
+                        Now You are a Verified Propertier On
+                      </span>
+                      <span> RENT-IT</span>
+                      <p className="fw-lighter">
+                        Check Your Email for further Instructions.
+                      </p>
+                    </p>
                   </div>
                 </div>
               </div>

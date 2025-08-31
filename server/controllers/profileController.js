@@ -4,6 +4,7 @@ import Review from '../models/review.js'
 import mongoose from "mongoose";
 import dotenv from 'dotenv'
 import bcrypt from 'bcrypt'
+import axios from 'axios'
 dotenv.config()
 
 export const addLocation = async (req, res) => {
@@ -299,13 +300,14 @@ export const setPropertierData = async (req, res) => {
             throw Error('Invalid Credentials')
         }
 
-        const response = verifyPAN({ 'pan': id, 'name': name })
-        if (response.status) {
-            const { pan, valid, message, reference_id } = response.data
+        const response = await verifyPAN({ 'pan': id, 'name': name })
+        console.log(response)
+        if (response.success) {
+            const { pan, valid, reference_id } = response.data
             if (valid) {
                 let hashIdNum
                 try {
-                    hashIdNum = await bcrypt.hash(password, 10)
+                    hashIdNum = await bcrypt.hash(pan, 10)
                     const newDoc = await User.findOneAndUpdate({ _id }, {
                         '$set': {
                             'userType.propertier': true,
@@ -315,63 +317,71 @@ export const setPropertierData = async (req, res) => {
                     }, { new: true })
                     console.log(newDoc)
                     return res.status(200).send({
-                        success:true,
-                        message:"Verified"
+                        success: true,
+                        message: "Verified"
                     })
                 } catch (error) {
                     console.log(error)
                 }
 
             } else {
-                throw Error(message)
+                throw Error('Cannot Validate PAN, Check your PAN number')
             }
         } else {
             const { err_type, err_status, err_code, message } = response
             if (err_status === 400) {
                 throw Error(message)
             } else {
-                console.log('Error in API err_type: '+err_type+' err_status '+err_status+' err_code '+err_code)
+                console.log('Error in API err_type: ' + err_type + ' err_status ' + err_status + ' err_code ' + err_code)
             }
         }
     } catch (error) {
         console.error("Error in setPropertierData() " + error)
         return res.status(400).send({
             success: false,
-            message: error
+            status: 400,
+            message: error.message
         })
     }
 }
 
 const verifyPAN = async (data) => {
     try {
-        const response = await axios.post('https://sandbox.cashfree.com/verification/pan', {
+        console.log(data)
+        const response = await axios.post('https://sandbox.cashfree.com/verification/pan',
             data,
-            headers: {
-                'x-client-id': process.env.CLIENT_ID,
-                'x-client-secret': process.env.CLIENT_SECRET
+            {
+                headers: {
+                    'x-client-id': process.env.X_CLIENT_ID,
+                    'x-client-secret': process.env.X_CLIENT_SECRET
+                }
             }
-        })
+        )
+        console.log(response)
         if (response.status === 200) {
             return {
                 success: true,
                 data: response.data,
-                message: 'PAN verified successfully'
+                message: 'PAN verification complete'
             }
         }
-        const errs = [400, 401, 422, 429, 500, 502]
-        if (errs.includes(response.status)) {
-            const { type, code, message } = response.error
+
+    } catch (error) {
+        console.log("Error in verifyPAN() " + error)
+        const errs = [400, 401, 422, 429, 500, 502, 403]
+        console.log(error)
+        if (errs.includes(error.response.status)) {
+            console.log(error.response.data)
+            const { type, code, message } = error.response.data
             return {
                 success: false,
-                err_status: response.status,
+                err_status: error.response.status,
                 err_type: type,
                 err_code: code,
                 message: message
             }
         }
 
-    } catch (error) {
-        console.log("Error in verifyPAN() " + error)
     }
 }
 
