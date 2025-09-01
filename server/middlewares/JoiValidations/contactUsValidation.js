@@ -6,8 +6,9 @@ export function contactUsValidation(req, res, next) {
             firstName: Joi.string().required(),
             lastName: Joi.string().required(),
             email: Joi.email().required(),
-            contactNo: Joi.number().integer().required(),
-            query: Joi.string().required()
+            phoneNo: Joi.number().integer().required(),
+            message: Joi.string().required(),
+            locAuthEmail:Joi.string()
         })
         const result = contactUsSchema.validate(req.body)
         if (result.error) {
