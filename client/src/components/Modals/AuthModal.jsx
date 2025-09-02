@@ -7,14 +7,12 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useDispatch } from "react-redux";
 import { authActions } from "/src/store/auth-slice";
 import SignUp from "/src/pages/SignUp.jsx";
+import GoogleSignIn from "../../pages/GoogleSignIn";
 
 function AuthModal({ reference, authStt, authSttFn }) {
   const dispatch = useDispatch();
-  console.log("3");
-  console.log(reference);
-
-  const [formState, formFn] = useActionState(action, {
-    email: "",
+  const [formState, formFn,isPending] = useActionState(action, {
+    email: null,
     errors: [],
   });
   const navigate = useNavigate();
@@ -23,7 +21,6 @@ function AuthModal({ reference, authStt, authSttFn }) {
     try {
       const email = formData.get("email");
       const password = formData.get("password");
-
       const body = {
         email,
         password,
@@ -36,6 +33,8 @@ function AuthModal({ reference, authStt, authSttFn }) {
         if (response.status === 200) {
           dispatch(authActions.loginSuccess({ token: response.data }));
           toast.success("Logged In");
+          console.dir(reference)
+          reference.current.close()
           navigate("/rent-locs");
         }
       } catch (error) {
@@ -102,6 +101,7 @@ function AuthModal({ reference, authStt, authSttFn }) {
                   <div className="form-floating">
                     <input
                       type="email"
+                      name="email"
                       className="form-control rounded-3 shadow-sm"
                       id="floatingInput"
                       placeholder="name@example.com"
@@ -115,6 +115,7 @@ function AuthModal({ reference, authStt, authSttFn }) {
                   <div className="form-floating">
                     <input
                       type="password"
+                      name="password"
                       className="form-control rounded-3 shadow-sm"
                       id="floatingPassword"
                       placeholder="Password"
@@ -142,30 +143,7 @@ function AuthModal({ reference, authStt, authSttFn }) {
                   <GoogleOAuthProvider
                     clientId={import.meta.env.VITE_CLIENT_ID}
                   >
-                    <button
-                      type="button"
-                      className="btn w-100 py-2 rounded-3 shadow-sm d-flex align-items-center justify-content-center gap-2"
-                      style={{
-                        background: "#fff",
-                        border: "1px solid #ddd",
-                        color: "#444",
-                        fontWeight: "500",
-                        transition: "0.2s",
-                      }}
-                      onMouseOver={(e) =>
-                        (e.currentTarget.style.background = "#f7f7f7")
-                      }
-                      onMouseOut={(e) =>
-                        (e.currentTarget.style.background = "#fff")
-                      }
-                    >
-                      <img
-                        src="https://www.gstatic.com/images/branding/product/1x/gsa_64dp.png"
-                        alt="Google"
-                        style={{ width: 20, height: 20 }}
-                      />
-                      Sign in with Google
-                    </button>
+                      <GoogleSignIn ref={reference}/>
                   </GoogleOAuthProvider>
                 </div>
 
@@ -173,6 +151,7 @@ function AuthModal({ reference, authStt, authSttFn }) {
                   <button
                     type="button"
                     className="btn btn-link text-decoration-none text-primary"
+                    disabled={isPending}
                     onClick={() => authSttFn(false)}
                   >
                     New user? Create an account

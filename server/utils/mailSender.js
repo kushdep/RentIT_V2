@@ -12,15 +12,10 @@ const oAuth2Client = new google.auth.OAuth2(
 
 const mailSender = async (email, title, body) => {
   try {
-    console.log('In Mail Sender')
-    console.log(oAuth2Client)
     oAuth2Client.setCredentials({
       refresh_token: process.env.REFRESH_TOKEN
     });
-    console.log('here')
     const accessToken = await oAuth2Client.getAccessToken()
-    console.log('token '+accessToken)
-    console.log(accessToken)
     const transportBody = {
       service: 'gmail',
       auth: {
@@ -32,7 +27,6 @@ const mailSender = async (email, title, body) => {
         accessToken: accessToken?.token,
       }
     }
-    console.log(transportBody)
     let transporter = nodemailer.createTransport(transportBody)
     const emailBody = {
       from: 'www.RentIt.in - Deependra Kumar',

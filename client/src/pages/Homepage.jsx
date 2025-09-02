@@ -1,32 +1,35 @@
+import "../css/homepage.css";
+
 function Homepage() {
   return (
     <>
-      <header>
-        <div className="container-fluid mx-0">
-          <div className="row">
-            <div className="col p-0">
+        <header>
+          <div className="container-fluid mx-0 border">
+            <div className="row">
+              <div className="col p-0"></div>
             </div>
           </div>
-        </div>
-        <div className="container">
-          <div className="row">
-            <div className="col"></div>
+          <div className="container">
+            <div className="row">
+              <div className="col"></div>
+            </div>
           </div>
-        </div>
-        <div className="container">
-          <div className="row">
-            <div className="col"></div>
+          <div className="container">
+            <div className="row">
+              <div className="col"></div>
+            </div>
           </div>
-        </div>
-        <div className="container">
-          <div className="row"><div className="col"></div></div>
-        </div>
-        <div className="container">
-          <div className="row">
-            <div className="col"></div>
+          <div className="container">
+            <div className="row">
+              <div className="col"></div>
+            </div>
           </div>
-        </div>
-      </header>
+          <div className="container">
+            <div className="row">
+              <div className="col"></div>
+            </div>
+          </div>
+        </header>
     </>
   );
 }

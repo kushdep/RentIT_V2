@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 export default function SignUp() {
   const [formState, formFn, isPending] = useActionState(action, {
-    email: "",
+    email: null,
     otpSent: false,
     errors: null,
   });
@@ -15,10 +15,11 @@ export default function SignUp() {
   async function action(currentState, formData) {
     let url = "http://localhost:3000";
     let body = {};
-    if(currentState.errors!==null){
-      currentState.errors=null
+    const email = formData.get("email");
+
+    if (currentState.errors !== null) {
+      currentState.errors = null;
     }
-    console.log(currentState?.errors)
     let error = new Map();
 
     console.log(url);
@@ -26,9 +27,8 @@ export default function SignUp() {
       url += "/send-otp";
       console.log(url);
       body = {
-        email: formData.get("email"),
+        email,
       };
-      console.log(body);
       try {
         const response = await axios.post(url, body);
         console.log(response);
@@ -36,7 +36,7 @@ export default function SignUp() {
           const newData = {
             ...currentState,
             otpSent: true,
-            email: formData.get("email"),
+            email,
           };
           return newData;
         }
@@ -45,18 +45,18 @@ export default function SignUp() {
           error.set("email", err?.response?.data?.message);
           const newData = {
             ...currentState,
-            email: formData.get("email"),
+            email,
             errors: error,
           };
           return newData;
         }
         if (err?.response?.status === 500) {
-          toast.error('Something went wrong')
+          toast.error("Something went wrong");
           const newData = {
             ...currentState,
             username: formData.get("username"),
             otp: formData.get("otp"),
-            email: formData.get("email"),
+            email,
           };
           return newData;
         }
@@ -65,7 +65,7 @@ export default function SignUp() {
       url += "/signup";
       body = {
         username: formData.get("username"),
-        email: formData.get("email"),
+        email: formState.email,
         otp: formData.get("otp"),
         password: formData.get("password"),
       };
@@ -87,12 +87,11 @@ export default function SignUp() {
         }
       } catch (err) {
         if (err?.response?.status === 400) {
-          console.log(err);
-          error.set("other", err?.response?.data?.message);
+          toast.error("Something Went Wrong");
           const newData = {
             ...currentState,
             username: formData.get("username"),
-            email: formData.get("email"),
+            email: formState.email,
             errors: error,
           };
           return newData;
@@ -103,18 +102,18 @@ export default function SignUp() {
             ...currentState,
             username: formData.get("username"),
             otp: formData.get("otp"),
-            email: formData.get("email"),
+            email: formState.email,
             errors: error,
           };
           return newData;
         }
         if (err?.response?.status === 500) {
-          toast.error('Something went wrong')
+          toast.error("Something went wrong");
           const newData = {
             ...currentState,
             username: formData.get("username"),
             otp: formData.get("otp"),
-            email: formData.get("email"),
+            email: formState.email,
             errors: error,
           };
           return newData;
@@ -139,17 +138,19 @@ export default function SignUp() {
                 className="form-control rounded-3 shadow-sm"
                 name="email"
                 id="floatingInput"
-                defaultValue={formState?.email}
                 disabled={formState?.otpSent}
+                value={formState?.email}
                 placeholder="email"
                 style={{
                   background: "#f9fafb",
-                  border: "1px solid #e5e7eb",
+                  border: "1px solid #5f6061ff",
                   transition: "all 0.25s ease",
                 }}
               />
               <label htmlFor="floatingInput">Email address</label>
-                <p className="text-danger px-2 text-start">{formState?.errors?.get("email")}</p>
+              <p className="text-danger px-2 text-start">
+                {formState?.errors?.get("email")}
+              </p>
             </div>
 
             {formState?.otpSent && (
@@ -177,7 +178,9 @@ export default function SignUp() {
                   />
                   <label htmlFor="username">Username</label>
                 </div>
-                <p className="text-danger px-2">{formState?.errors?.get("password")}</p>
+                <p className="text-danger px-2">
+                  {formState?.errors?.get("password")}
+                </p>
                 <div className="form-floating mb-3">
                   <input
                     type="password"
@@ -201,7 +204,9 @@ export default function SignUp() {
                 </div>
               </>
             )}
-              <p className="text-danger px-2">{formState?.errors?.get("other")}</p>
+            <p className="text-danger px-2">
+              {formState?.errors?.get("other")}
+            </p>
 
             <div className="col text-center">
               <button
