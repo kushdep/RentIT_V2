@@ -78,17 +78,19 @@ const router = createBrowserRouter([
 
 function App() {
   const token = localStorage.getItem("token");
+  console.log(token)
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (token) {
+    if (token!==null) {
+      console.log('Login')
+      dispatch(authActions.loginSuccess({ token: token }));
+    }
+    if (token!==null) {
       dispatch(getProfileData(token));
     }
-  }, []);
+  }, [token,dispatch]);
 
-  if (token) {
-    dispatch(authActions.loginSuccess({ token: token }));
-  }
   return <RouterProvider router={router} />;
 }
 

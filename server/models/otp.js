@@ -27,7 +27,11 @@ async function sendVerificationEmail(email, otp) {
       `<h1>Please confirm your OTP</h1>
        <p>Here is your OTP code: ${otp}</p>`
     );
-    console.log("Email sent successfully: ", mailResponse);
+    if (mailResponse === undefined || mailResponse === null) {
+      return { sent: false, errorMessage: 'Unable to send Email' }
+    }
+    console.log("Email sent status: ", mailResponse);
+    return { sent: true, message: 'Email sent successfully' }
   } catch (error) {
     console.log("Error occurred while sending email: ", error);
     throw error;
@@ -37,7 +41,10 @@ async function sendVerificationEmail(email, otp) {
 otpSchema.pre("save", async function (next) {
   console.log("New document saved to the database");
   if (this.isNew) {
-    await sendVerificationEmail(this.email, this.otp);
+    const {sent} = await sendVerificationEmail(this.email, this.otp);
+    if(!sent){
+      throw Error('Something Went Wrong')
+    }
   }
   next();
 });

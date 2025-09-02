@@ -3,10 +3,11 @@ import "../css/navbar.css";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { authActions } from "../store/auth-slice";
 import toast from "react-hot-toast";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import AuthModal from "./Modals/AuthModal";
 
 function NavBar() {
+  const [loginStt, setLoginStt] = useState(false);
   const { isAuthenticated } = useSelector((state) => state.authData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ function NavBar() {
 
   return (
     <>
-      <AuthModal reference={authModal} />
+      <AuthModal reference={authModal} authSttFn={setLoginStt} authStt={loginStt} />
       <header className="sub-header">
         <nav className="navbar sticky-top border-bottom border-1 p-0">
           <div className="container">
@@ -117,14 +118,18 @@ function NavBar() {
                 <div className="col-3 d-flex justify-content-center btn-group">
                   <button
                     className="btn btn-primary me-1 shadow"
-                    onClick={() => authModal.current.showModal()}
+                    onClick={() => {
+                      setLoginStt(true)
+                      authModal.current.showModal()
+                    }}
                     id="login"
                   >
                     Login
                   </button>
                   <button
                     className="btn btn-outline-primary shadow"
-                    onClick={() => authModal.current.showModal()}
+                    onClick={() => {                                            setLoginStt(false)
+                      authModal.current.showModal()}}
                     id="signup"
                   >
                     Sign Up

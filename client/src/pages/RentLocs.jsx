@@ -135,7 +135,7 @@ console.log("check points"+chckPts)
         <div className="page-heading image-fluid">
           <img
             src="/images/rent-locs-homepage.png"
-            className="shadow-sm"
+            className="rounded-5 p-3"
             alt=""
           />
           <SearchBar props={{ height: 100, top: 150, right: 390 }} updateSearchStt={setSearchLoc} />
