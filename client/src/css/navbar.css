@@ -14,24 +14,30 @@
 }
 
 .navigation {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 500;
 }
 
 .nav-link:hover {
-  color: #f35525 !important;
+  /* color: #f35525 !important; */
+   color: white;
+  text-shadow: 2px 2px 4px black, 0 0 50px white, 0 0 50px white;
 }
-
+/* 
 .nav-link.active {
   font-weight: 900;
   color: #f35525 !important;
   font-size: x-large;
   text-decoration: underline;
+} */
+
+.navTtl{
+  background-color: #f35525;
 }
 
 #logo {
-  max-width: 20%;
-  height: auto;
+  max-width: 8%;
+  height: 8%;
 }
 
 #login{

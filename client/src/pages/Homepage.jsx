@@ -2,35 +2,16 @@ import "../css/homepage.css";
 
 function Homepage() {
   return (
-    <>
-        <header>
-          <div className="container-fluid mx-0 border">
-            <div className="row">
-              <div className="col p-0"></div>
+      <div className="container-fluid">
+        <div className="row p-0 " >
+          <div className="col w-100 p-0 justify-content-end">
+              <img
+                src="/public/images/homepage-first-section.png"
+                className="w-100"
+              />
             </div>
-          </div>
-          <div className="container">
-            <div className="row">
-              <div className="col"></div>
-            </div>
-          </div>
-          <div className="container">
-            <div className="row">
-              <div className="col"></div>
-            </div>
-          </div>
-          <div className="container">
-            <div className="row">
-              <div className="col"></div>
-            </div>
-          </div>
-          <div className="container">
-            <div className="row">
-              <div className="col"></div>
-            </div>
-          </div>
-        </header>
-    </>
+        </div>
+      </div>
   );
 }
 

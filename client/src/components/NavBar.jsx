@@ -25,45 +25,59 @@ function NavBar() {
 
   return (
     <>
-      <AuthModal reference={authModal} authSttFn={setLoginStt} authStt={loginStt} />
-      <header className="sub-header">
-        <nav className="navbar sticky-top border-bottom border-1 p-0">
-          <div className="container">
-            <div className="row w-100 m-0">
-              <div className="col-lg-8 col-md-8 d-flex align-items-center info p-0">
-                <img src="/icons/mail-us.png" alt="mail" className="me-2" />
-                <span className="me-4">info@Rent-IT.com</span>
-                <img src="/icons/map.png" alt="map" className="me-2" />
-                <span>Locate your vacation Spot</span>
-              </div>
-
-              <div className="col-lg-4 col-md-4 d-flex align-items-center justify-content-start  p-0">
-                <div className="social-icons p-1">
-                  <a href="#" className="me-2">
-                    <img src="/icons/facebook.png" alt="facebook" />
-                  </a>
-                  <a href="#" className="me-2">
-                    <img src="/icons/instagram.png" alt="instagram" />
-                  </a>
-                  <a href="#">
-                    <img src="/icons/twitter.png" alt="twitter" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
-
-        <nav className="navbar navbar-expand-lg info">
+      <AuthModal
+        reference={authModal}
+        authSttFn={setLoginStt}
+        authStt={loginStt}
+      />
+      <header className="sub-header p-0">
+        <nav className="navbar navbar-expand info">
           <div className="container-fluid">
-            <div className="row align-items-center w-100 m-0">
-              <div className="col-3 d-flex align-items-center">
+            <div className="row align-items-center w-100 m-0 d-flex justify-content-between">
+              <div className="col-8 d-flex align-items-center justify-content-between">
                 <img
                   src="/images/logo-2.png"
                   alt="Logo"
                   id="logo"
                   className="img-fluid"
                 />
+                <div className="w-50">
+                <div
+                  className="collapse navbar-collapse navTtl p-2 rounded-pill d-flex justify-content-around shadow"
+                  id="navbarText"
+                >
+                  <NavLink
+                    to="/"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "nav-link active navigation p-2 rounded-pill bg-light shadow"
+                        : "nav-link navigation text-light"
+                    }
+                  >
+                    Home
+                  </NavLink>
+                  <NavLink
+                    to="/rent-locs"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "nav-link active navigation p-2 rounded-pill bg-light shadow"
+                        : "nav-link navigation text-light"
+                    }
+                  >
+                    Properties
+                  </NavLink>
+                  <NavLink
+                    to="/contact-us"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "nav-link active navigation  p-2 rounded-pill bg-light shadow"
+                        : "nav-link navigation  text-light"
+                    }
+                  >
+                    Contact Us
+                  </NavLink>
+                </div>
+                </div>
                 <button
                   className="navbar-toggler ms-2"
                   type="button"
@@ -77,50 +91,14 @@ function NavBar() {
                 </button>
               </div>
 
-              <div className="col-6">
-                <div
-                  className="collapse navbar-collapse justify-content-center"
-                  id="navbarText"
-                >
-                  <NavLink
-                    to="/"
-                    className={({ isActive }) =>
-                      isActive
-                        ? "nav-link active navigation mx-3"
-                        : "nav-link navigation mx-3"
-                    }
-                  >
-                    Home
-                  </NavLink>
-                  <NavLink
-                    to="/rent-locs"
-                    className={({ isActive }) =>
-                      isActive
-                        ? "nav-link active navigation mx-3"
-                        : "nav-link navigation mx-3"
-                    }
-                  >
-                    Properties
-                  </NavLink>
-                  <NavLink
-                    to="/contact-us"
-                    className={({ isActive }) =>
-                      isActive
-                        ? "nav-link active navigation mx-3"
-                        : "nav-link navigation mx-3"
-                    }
-                  >
-                    Contact Us
-                  </NavLink>
-                </div>
-              </div>
+
               {!isAuthenticated ? (
                 <div className="col-3 d-flex justify-content-center btn-group">
                   <button
                     className="btn btn-primary me-1 shadow"
                     onClick={() => {
-                      setLoginStt(true)
-                      authModal.current.showModal()
+                      setLoginStt(true);
+                      authModal.current.showModal();
                     }}
                     id="login"
                   >
@@ -128,8 +106,10 @@ function NavBar() {
                   </button>
                   <button
                     className="btn btn-outline-primary shadow"
-                    onClick={() => {                                            setLoginStt(false)
-                      authModal.current.showModal()}}
+                    onClick={() => {
+                      setLoginStt(false);
+                      authModal.current.showModal();
+                    }}
                     id="signup"
                   >
                     Sign Up
@@ -166,7 +146,10 @@ function NavBar() {
                               </NavLink>
                             </li>
                             <li>
-                              <Link to="/profile/whishlist" className="dropdown-item">
+                              <Link
+                                to="/profile/whishlist"
+                                className="dropdown-item"
+                              >
                                 Whishlist
                               </Link>
                             </li>
