@@ -1,9 +1,8 @@
 import { useActionState } from "react";
-import { useParams } from "react-router-dom";
 import axios from 'axios'
 import toast from "react-hot-toast";
 
-function ContactUsForm({locSpecific,emailId}) {
+function ContactUsForm({locSpecific,emailId,name,locName,locId,locAddress}) {
   const [formStt, formAcn, isPending] = useActionState(submitContactForm, {
     firstName: null,
     lastName: null,
@@ -61,15 +60,25 @@ function ContactUsForm({locSpecific,emailId}) {
 
     if(locSpecific){
         body["locAuthEmail"] = emailId
-    }
+        body["locAuthName"] = name
+        body["prptrSpecific"] = true 
+        body["locName"] = locName 
+        body['locId'] = locId
+        body['locAddress']=locAddress
+      }else{
+        body["prptrSpecific"] = false 
+      }
 
-    const response = await axios.post('http://localhost:3000/contact-us',body)
-
-    if(response.status===200){
-        toast.success('Contact Form Submitted')
- 
-    }
-
+      try {
+        const response = await axios.post('http://localhost:3000/contact-us',body)
+        if(response.status===200){
+            toast.success('Contact Form Submitted')
+          }
+        } catch (error) {
+          if(error.response.status===400){
+            toast.error('Something went wrong')
+          }
+      }
   }
 
 

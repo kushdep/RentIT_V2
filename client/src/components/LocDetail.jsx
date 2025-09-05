@@ -12,7 +12,6 @@ import toast from "react-hot-toast";
 import { setSavedLoc } from "../store/profile-slice";
 import axios from "axios";
 import { Skeleton } from "antd";
-import AddReview from "./AddReview";
 import ContactUsForm from "./ContactUsForm";
 
 function LocDetails() {
@@ -391,7 +390,7 @@ function LocDetails() {
           <div className="container-fluid d-flex justify-content-center">
             <div className="row w-75">
               <div className="col">
-                <ContactUsForm locSpecific emailId={loc?.author?.email}/>
+                <ContactUsForm locSpecific emailId={loc?.author?.email} name={loc?.author.username} locName={loc.title} locId={locId} locAddress={loc.location.address}/>
               </div>
             </div>
           </div>

@@ -29,7 +29,7 @@ const mailSender = async (email, title, body) => {
     }
     let transporter = nodemailer.createTransport(transportBody)
     const emailBody = {
-      from: 'www.RentIt.in - Deependra Kumar',
+      from: 'www.RentIt.co.in',
       to: email,
       subject: title,
       html: body,
