@@ -30,7 +30,7 @@ function NavBar() {
         authSttFn={setLoginStt}
         authStt={loginStt}
       />
-      <header className="sub-header p-0">
+      <header className="sub-header p-0 ">
         <nav className="navbar navbar-expand info">
           <div className="container-fluid">
             <div className="row align-items-center w-100 m-0 d-flex justify-content-between">
