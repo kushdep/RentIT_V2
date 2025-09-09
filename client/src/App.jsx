@@ -47,7 +47,6 @@ const router = createBrowserRouter([
             element: <RentLocs />,
           },
           { path: ":locId", element: <LocDetails /> },
-          { path: ":locId/photos", element: <LocPhotosPage /> },
         ],
       },
       { path: "contact-us", element: <ContactUs /> },

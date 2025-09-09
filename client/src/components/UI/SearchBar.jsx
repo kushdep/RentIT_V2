@@ -133,10 +133,10 @@ function SearchBar({ props, updateSearchStt }) {
 
   return (
     <div
-      className="container d-flex justify-content-center w-50 position-absolute"
+      className="container d-flex justify-content-center w-50 position-absolute "
       style={props}
     >
-      <div className="row rounded-pill  w-100 bg-body-tertiary d-flex align-content-center shadow-lg">
+      <div className="row rounded-pill w-100 bg-body-tertiary d-flex align-content-center shadow-lg ">
         <div className="col">
           <div className="container">
             <div className="row d-flex align-items-center">

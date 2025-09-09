@@ -15,7 +15,7 @@ export const getRentLocs = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
-        res.status(400).send({
+        return  res.status(400).send({
             success: false,
             message: error
         })
@@ -119,7 +119,7 @@ const getSearchLoc = async (req, res) => {
                 const loc = await Location.findOne(query)
                 console.log(loc)
                 if (loc!==null) {
-                    res.status(200).send({
+                    return  res.status(200).send({
                         found: true,
                         locId: loc._id,
                         message: "Search location Found"
@@ -128,7 +128,7 @@ const getSearchLoc = async (req, res) => {
                     let rentLocs = await Location.find()
                     rentLocs = sortPlacesByDistance(rentLocs, lat, long)
                     rentLocs = rentLocs.slice(0,8)
-                    res.status(200).send({
+                    return  res.status(200).send({
                         found: false,
                         similarLocs: rentLocs,
                         message: "Search location Not Found"
@@ -154,13 +154,13 @@ const getSearchLoc = async (req, res) => {
             const loc = await Location.findOne(query)
              console.log(loc)
             if (loc) {
-                res.status(200).send({
+                return res.status(200).send({
                     found: true,
                     locId: loc._id,
                     message: "Search location Found"
                 })
             } else {
-                res.status(404).send({
+                return res.status(404).send({
                     found: false,
                     message: "Search location Not Found"
                 })

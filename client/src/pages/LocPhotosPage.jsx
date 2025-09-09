@@ -1,7 +1,5 @@
 function LocPhotosPage(){
-    return <>
-        PHOTOS OF LOCDETAIL
-    </>
+    return 
 }
 
 export default LocPhotosPage

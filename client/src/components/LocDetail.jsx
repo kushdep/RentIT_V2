@@ -13,9 +13,11 @@ import { setSavedLoc } from "../store/profile-slice";
 import axios from "axios";
 import { Skeleton } from "antd";
 import ContactUsForm from "./ContactUsForm";
+import ShowAllPhotos from "./Modals/ShowAllPhotos";
 
 function LocDetails() {
   const showAmmModal = useRef();
+  const showPhotosModal = useRef();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { rentLocData: locDetails } = useSelector((state) => state.rentLocs);
@@ -123,10 +125,7 @@ function LocDetails() {
     }
   }
 
-  console.log(loc);
-  console.log(loc?.author?.email);
-  console.log(profile);
-  console.log(profile?.email);
+
   return (
     <>
       {loc.title !== null ? (
@@ -136,6 +135,7 @@ function LocDetails() {
               reference={showAmmModal}
               facilities={loc.facilities}
             />
+            <ShowAllPhotos reference={showPhotosModal} allPhotos={loc?.imgTtlData}/>
             <div className="row">
               <div className="col d-flex justify-content-between align-items-center">
                 <h4 className="fw-semibold">
@@ -170,7 +170,7 @@ function LocDetails() {
                 <button
                   className="btn btn-light position-absolute rounded-pill"
                   style={{ bottom: 50, left: 150 }}
-                  onClick={() => navigate(`photos`)}
+                  onClick={() => showPhotosModal.current.showModal()}
                 >
                   Show all Photos
                 </button>
@@ -390,7 +390,14 @@ function LocDetails() {
           <div className="container-fluid d-flex justify-content-center">
             <div className="row w-75">
               <div className="col">
-                <ContactUsForm locSpecific emailId={loc?.author?.email} name={loc?.author.username} locName={loc.title} locId={locId} locAddress={loc.location.address}/>
+                <ContactUsForm
+                  locSpecific
+                  emailId={loc?.author?.email}
+                  name={loc?.author.username}
+                  locName={loc.title}
+                  locId={locId}
+                  locAddress={loc.location.address}
+                />
               </div>
             </div>
           </div>

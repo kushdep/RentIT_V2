@@ -1,4 +1,5 @@
 import "../css/homepage.css";
+import SearchBar from "../components/UI/SearchBar";
 
 function Homepage() {
   return (
@@ -9,7 +10,11 @@ function Homepage() {
                 src="/public/images/homepage-first-section.png"
                 className="w-100"
               />
+              <SearchBar/>
             </div>
+        </div>
+        <div className="row">
+
         </div>
       </div>
   );

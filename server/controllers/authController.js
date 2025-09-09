@@ -64,20 +64,20 @@ export const login = async (req, res) => {
     }
     console.log(user)
     if (!user) {
-        res.status(401).send({
+        return res.status(401).send({
             success: false,
             message: 'User do not exist'
         })
     }
     const validPassword = await bcrypt.compare(password, user.password)
     if (!validPassword) {
-        res.status(402).send({
+        return  res.status(402).send({
             success: false,
             message: 'Email or password incorrect'
         })
     }
     const token = jwt.sign({ _id: user._id, email }, process.env.JWT_SECRET, { expiresIn: '7d' })
-    res.header('auth-token', token).send(token)
+    return  res.header('auth-token', token).send(token)
 }
 
 export const sendOtp = async (req, res) => {
@@ -97,7 +97,7 @@ export const sendOtp = async (req, res) => {
         });
         const otpPayload = { email, otp }
         await OTP.create(otpPayload)
-        res.status(200).send({
+        return  res.status(200).send({
             success: true,
             message: "OTP sent successfully"
         });
@@ -128,7 +128,7 @@ export const googleLogin = async (req, res) => {
             }
             const token = jwt.sign({ _id: user._id, email }, process.env.JWT_SECRET, { expiresIn: '7d' })
             console.log("token ",token)
-            res.header('auth-token', token).send(token)
+            return  res.header('auth-token', token).send(token)
         }
         catch (error) {
             console.log(error)
