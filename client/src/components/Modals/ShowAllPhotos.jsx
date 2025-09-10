@@ -67,8 +67,10 @@ function ShowAllPhotos({ reference, allPhotos }) {
                                 className="w-75"
                                 src={`${i.url}`}
                                 onClick={() => {
-                                  singlePhotoModal.current.showModal();
-                                  setImg(i.url);
+                                  if(i.url!==null && i.url!=='' ){
+                                    singlePhotoModal.current.showModal();
+                                    setImg(i.url);
+                                  }
                                 }}
                               />
                             </div>
