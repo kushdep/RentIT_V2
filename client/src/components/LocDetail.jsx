@@ -136,6 +136,7 @@ function LocDetails() {
               facilities={loc.facilities}
             />
             <ShowAllPhotos reference={showPhotosModal} allPhotos={loc?.imgTtlData}/>
+
             <div className="row">
               <div className="col d-flex justify-content-between align-items-center">
                 <h4 className="fw-semibold">

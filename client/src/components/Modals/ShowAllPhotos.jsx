@@ -1,8 +1,30 @@
+import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 function ShowAllPhotos({ reference, allPhotos }) {
+  const [img, setImg] = useState(null);
+  const singlePhotoModal = useRef();
+
   return createPortal(
     <>
+      <dialog
+        ref={singlePhotoModal}
+        className="rounded-4 shadow-lg border-0"
+        style={{
+          minWidth: "50%",
+          minHeight: "50%",
+          animation: "fadeIn 0.3s ease-out",
+        }}
+      >
+        <form method="dialog" className="p-0 m-0">
+          <button
+            type="submit"
+            className="btn-close position-absolute"
+            aria-label="Close"
+          ></button>
+        </form>
+        <img src={`${img}`}  />
+      </dialog>
       <dialog
         ref={reference}
         className="rounded-4 shadow-lg border-0"
@@ -41,7 +63,14 @@ function ShowAllPhotos({ reference, allPhotos }) {
                         {e.images.map((i) => {
                           return (
                             <div className="col">
-                              <img className="w-75" src={`${i.url}`} />
+                              <img
+                                className="w-75"
+                                src={`${i.url}`}
+                                onClick={() => {
+                                  singlePhotoModal.current.showModal();
+                                  setImg(i.url);
+                                }}
+                              />
                             </div>
                           );
                         })}
