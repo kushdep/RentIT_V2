@@ -113,11 +113,9 @@ export const googleLogin = async (req, res) => {
         console.log(code)
         const googleRes = await oAuth2Client.getToken(code)
         oAuth2Client.setCredentials(googleRes?.tokens)
-        console.log("google Res " + JSON.stringify(googleRes))
         try {
             const userRes = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes?.tokens?.access_token}`)
 
-            console.log("userData " + JSON.stringify(userRes.data))
             const { email, name } = userRes.data
             const user = await User.findOne({ email })
             if (!user) {
@@ -127,7 +125,6 @@ export const googleLogin = async (req, res) => {
                 })
             }
             const token = jwt.sign({ _id: user._id, email }, process.env.JWT_SECRET, { expiresIn: '7d' })
-            console.log("token ",token)
             return  res.header('auth-token', token).send(token)
         }
         catch (error) {
