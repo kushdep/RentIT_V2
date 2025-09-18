@@ -6,7 +6,8 @@ export default async function googleValidateAdderss(address) {
         console.log(res)
         const {result} = res.data
         const {verdict} = result
-        console.log(JSON.stringify(verdict))
+        console.log("verdict")
+        console.log(verdict)
         if (verdict.possibleNextAction === 'FIX') {
             let addressComp = {}
             if(verdict.inputGranularity ==='PREMISE'&& verdict.validationGranularity==='PREMISE' && verdict.geocodeGranularity==='PREMISE' ||verdict.inputGranularity === 'OTHER' || verdict.inputGranularity === 'ROUTE'

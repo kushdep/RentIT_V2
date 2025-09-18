@@ -12,7 +12,6 @@ export async function getSuggestions(sessionToken, searchTxt) {
                 },
             }
         );
-        // console.log("suggestions "+JSON.stringify(suggestions))
         if (!suggestions) {
             console.error("Got empty Suggestion List")
         }

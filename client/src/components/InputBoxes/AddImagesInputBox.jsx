@@ -67,7 +67,7 @@ export function AddImagesInputBox({ ind, err }) {
                 onClick={() => {
                   dispatch(addLocActions.delImgInput({ ind }));
                 }}
-              >
+              > 
                 <img src="/icons/trash.svg" />
               </button>
             )}

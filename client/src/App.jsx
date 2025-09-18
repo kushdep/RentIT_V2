@@ -13,7 +13,6 @@ import AddLocForm from "./components/AddLocForm";
 import LocDetails from "./components/LocDetail";
 import { useDispatch } from "react-redux";
 import { authActions } from "./store/auth-slice";
-import LocPhotosPage from "./pages/LocPhotosPage";
 import Whishlist from "./pages/Whishlist";
 import LoginPage from "./pages/LoginPage";
 import { useEffect } from "react";
