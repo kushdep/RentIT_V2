@@ -32,20 +32,18 @@ const userSchema = new mongoose.Schema({
         }
     },
     locations: {
-        categories: {
-            Appartment: [{
-                type: mongoose.Types.ObjectId,
-                ref: 'Location'
-            }],
-            Villa: [{
-                type: mongoose.Types.ObjectId,
-                ref: 'Location'
-            }],
-            Penthouse: [{
-                type: mongoose.Types.ObjectId,
-                ref: 'Location'
-            }]
-        }
+        Appartment: [{
+            type: mongoose.Types.ObjectId,
+            ref: 'Location'
+        }],
+        Villa: [{
+            type: mongoose.Types.ObjectId,
+            ref: 'Location'
+        }],
+        Penthouse: [{
+            type: mongoose.Types.ObjectId,
+            ref: 'Location'
+        }]
     },
     savedLoc: [{
         type: mongoose.Types.ObjectId,
@@ -57,11 +55,11 @@ const userSchema = new mongoose.Schema({
             default: false
         },
         idProof: {
-            id:{
-                type:String
+            id: {
+                type: String
             },
-            refId:{
-                type:Number
+            refId: {
+                type: Number
             },
         },
     }

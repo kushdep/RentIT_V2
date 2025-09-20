@@ -119,8 +119,6 @@ export const getWhishlistLoc = async (req, res) => {
 export const updateSavedLoc = async (req, res) => {
     try {
         const { _id } = req.user
-        console.log(req.user)
-        console.log(req.body)
         const { locId = null, likeStts } = req.body
         if (locId === null || likeStts === undefined || likeStts === null) {
             return res.status(400).send({
@@ -135,13 +133,8 @@ export const updateSavedLoc = async (req, res) => {
             query["$pull"] = { savedLoc: locId }
         }
         const updatedDoc = await User.findOneAndUpdate({ _id }, query)
-        console.log(updatedDoc)
-        console.log(query)
 
         const locData = await Location.findById(locId).select("_id locDtl.title locDtl.imgTtlData locDtl.price stars")
-        console.log("Location Data")
-        console.log(locData)
-
         if (updatedDoc !== null) {
             let data = {}
             if (likeStts) {
