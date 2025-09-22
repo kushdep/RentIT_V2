@@ -62,7 +62,38 @@ const userSchema = new mongoose.Schema({
                 type: Number
             },
         },
-    }
+    },
+    trips: [
+        {
+            location: {
+                type: mongoose.Types.ObjectId,
+                ref: "Location",
+            },
+            start: {
+                type: Number,
+                required: true
+            },
+            end: {
+                type: Number,
+                required: true
+            },
+            payment: {
+                refId: {
+                    type: String,
+                    required: true
+                },
+                amount: {
+                    type: Number,
+                    required: true
+                }
+            },
+            checkIn: {
+                type: Boolean,
+                required: true,
+                default: false
+            },
+        }
+    ]
 }, { timestamps: { createdAt: 'createdAt' } })
 
 

@@ -1,10 +1,10 @@
 import mongoose from "mongoose"
 
 const locSchema = new mongoose.Schema({
-    Sno:{
-        type:Number,
-        required:true,
-        unique:true
+    Sno: {
+        type: Number,
+        required: true,
+        unique: true
     },
     locType: {
         type: String,
@@ -56,9 +56,9 @@ const locSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
-            others:{
-                type:String,
-                required:true
+            others: {
+                type: String,
+                required: true
             }
 
         },
@@ -89,10 +89,10 @@ const locSchema = new mongoose.Schema({
                 required: true
             },
             plusCode: {
-                compound_code:{
+                compound_code: {
                     type: String,
                 },
-                global_code:{
+                global_code: {
                     type: String,
                 }
             },
@@ -108,13 +108,13 @@ const locSchema = new mongoose.Schema({
             }
         },
         author: {
-            email:{
-                type:String,
-                required:true
+            email: {
+                type: String,
+                required: true
             },
-            username:{
-                type:String,
-                required:true
+            username: {
+                type: String,
+                required: true
             }
         },
         reviews: [
@@ -124,10 +124,61 @@ const locSchema = new mongoose.Schema({
             },
         ],
     },
-    stars:{
-        type:Number,
-        default:0
-    }
+    stars: {
+        type: Number,
+        default: 0
+    },
+    bookings: [
+        {
+            email: {
+                type: String,
+                required: true
+            },
+            username: {
+                type: String,
+                required: true
+            },
+            start: {
+                type: Number,
+                required: true
+            },
+            end: {
+                type: Number,
+                required: true
+            },
+            payment: {
+                refId: {
+                    type: String,
+                    required: true
+                },
+                amount: {
+                    type: Number,
+                    required: true
+                }
+            },
+            checkIn: {
+                type: Boolean,
+                required: true,
+                default: false
+            }
+        }
+    ],
+    stats: [
+        {
+            month: {
+                type: String,
+                required: true
+            },
+            totalRevenue: {
+                type: Number,
+                required: true
+            },
+            totalBooking: {
+                type: Number,
+                required: true
+            }
+        }
+    ]
 }, { timestamps: true })
 
 const Location = mongoose.model('Location', locSchema)
