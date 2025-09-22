@@ -1,7 +1,6 @@
 import {
   createBrowserRouter,
   RouterProvider,
-  useParams,
 } from "react-router-dom";
 import Layout from "./pages/Layout";
 import RentLocs from "./pages/RentLocs";
@@ -9,7 +8,6 @@ import Homepage from "./pages/Homepage";
 import ContactUs from "./pages/ContactUs";
 import Profile from "./pages/Profile";
 import ProfileLayout from "./pages/ProfileLayout";
-import AddLocForm from "./components/AddLocForm";
 import LocDetails from "./components/LocDetail";
 import { useDispatch } from "react-redux";
 import { authActions } from "./store/auth-slice";

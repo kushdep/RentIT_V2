@@ -47,8 +47,6 @@ function PropertyCard({
       });
     }
   }
-  console.log(savedLocData);
-  console.log(ratings)
 
   return (
     <>
