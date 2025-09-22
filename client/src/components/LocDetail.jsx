@@ -1,6 +1,5 @@
 import { Ammentities } from "../config";
 import "../css/locdetails.css";
-import DateInputBox from "./UI/DateInputBox";
 import Reviews from "./Reviews";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
@@ -126,7 +125,6 @@ function LocDetails() {
     }
   }
 
-
   return (
     <>
       {loc.title !== null ? (
@@ -136,7 +134,10 @@ function LocDetails() {
               reference={showAmmModal}
               facilities={loc.facilities}
             />
-            <ShowAllPhotos reference={showPhotosModal} allPhotos={loc?.imgTtlData}/>
+            <ShowAllPhotos
+              reference={showPhotosModal}
+              allPhotos={loc?.imgTtlData}
+            />
 
             <div className="row">
               <div className="col d-flex justify-content-between align-items-center">
@@ -302,25 +303,7 @@ function LocDetails() {
                   className="container position-sticky  rentCol shadow"
                   style={{ top: 10 }}
                 >
-                  <div className="row p-0">
-                    <div className="col p-0 ">
-                      <div className=" w-100">
-                        <div className="d-flex mx-0 align-items-end justify-content-center">
-                          <p className="fs-4 fw-semibold text-decoration-underline">
-                            {curfmt.format(loc.price)}
-                          </p>
-                          <p className="fs-6 fw-medium text-muted ms-1">
-                            / night
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row ">
-                    <div className="col p-0">
-                      <RentItForm guestsCap={loc.guestsCap}/>
-                    </div>
-                  </div>
+                  <RentItForm guestsCap={loc.guestsCap} price={loc.price} />
                 </div>
               </div>
             </div>
