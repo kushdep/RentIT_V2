@@ -58,7 +58,6 @@ const router = createBrowserRouter([
         ),
         children: [
           { path: "edit", element: <Profile /> },
-          { path: "new-loc", element: <AddLocForm /> },
           { path: "whishlist", element: <Whishlist /> },
           {
             path: "propertier-verification",

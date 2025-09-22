@@ -48,6 +48,7 @@ function PropertyCard({
     }
   }
   console.log(savedLocData);
+  console.log(ratings)
 
   return (
     <>
@@ -82,7 +83,7 @@ function PropertyCard({
                   {`${price}`} per night
                 </p>
               </div>
-              {ratings && (
+              {ratings>0 && (
                 <div className="d-flex row justify-content-center align-items-center me-0 w-25">
                   <img
                     src="/public/icons/star-fill.svg"
@@ -94,7 +95,7 @@ function PropertyCard({
                     className="mx-3 text-muted text-center form p-0"
                     style={{ fontSize: 12 }}
                   >
-                    {ratings && `${ratings} rating`}
+                    {ratings>0 && `${ratings} rating`}
                   </p>
                 </div>
               )}
