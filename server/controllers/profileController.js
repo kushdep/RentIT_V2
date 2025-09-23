@@ -1,10 +1,12 @@
 import Location from '../models/location.js'
 import User from '../models/user.js'
 import Review from '../models/review.js'
+import Payment from '../models/payment.js'
 import mongoose from "mongoose";
 import dotenv from 'dotenv'
 import bcrypt from 'bcrypt'
 import axios from 'axios'
+import { getRazorpayOrderId } from '../razor-pay/razor-payment.js';
 dotenv.config()
 
 export const addLocation = async (req, res) => {
@@ -378,3 +380,62 @@ const verifyPAN = async (data) => {
     }
 }
 
+export const getPaymentDetails = async (req, res) => {
+    try {
+        const { amount, locId, startDate, endDate } = req.body
+        const { _id } = req.user
+        const receiptNo = await Payment.countDocuments()
+        let status = 'PENDING'
+        const res = await getRazorpayOrderId(amount * 100, receiptNo)
+        if (!res.success) {
+            status = 'FAILED'
+            return res.status(502).send({
+                success: false,
+                status: 502,
+                message: 'Bad Gateway'
+            })
+        }
+        const newPayment = {
+            userId: _id,
+            razorpay_order_id:res.id,
+            amount: amount * 100,
+            receiptNo,
+            status,
+        }
+        const payDoc = await Payment.create(newPayment)
+        if(payDoc===null){
+            return res.status(500).send({
+                success: false,
+                status: 500,
+                message: 'Something went wrong'
+            })
+        }
+        const newTrip = {
+            location: locId,
+            start: startDate,
+            end: endDate,
+            payment: payDoc._id,
+        }
+        const userDoc = await User.findByIdAndUpdate(_id, { $push: { trips:newTrip} }, { new: true })
+        if(userDoc===null){
+            return res.status(500).send({
+                success: false,
+                status: 500,
+                message: 'Something went wrong'
+            })
+        }
+        return res.status(200).send({
+            success:true,
+            status:200,
+            message:'documents saved'
+        })
+
+    } catch (error) {
+        console.error("Error in getPaymentDetails() " + error)
+        return res.status(500).send({
+            success: false,
+            status: 500,
+            message: 'Something went wrong'
+        })
+    }
+}

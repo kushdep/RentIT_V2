@@ -2,13 +2,19 @@ import { useDispatch, useSelector } from "react-redux";
 import DateInputBox from "./UI/DateInputBox";
 import { rentItActions } from "../store/rentIt-slice";
 import { curfmt } from "../utils/formatter";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function RentItForm({ guestsCap, bookedDates, price }) {
-  const { totalGuests, startDate, endDate, stayDuration, totalRent, errs } =
-    useSelector((state) => state.rentItData);
+  const { totalGuests, startDate, endDate, totalRent, errs } = useSelector(
+    (state) => state.rentItData
+  );
+  const { token, isAuthenticated } = useSelector((state) => state.authData);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
 
-  function submitRentDetails() {
+  async function submitRentDetails() {
     let err = {};
     if (totalGuests === null) {
       err["guest"] = "Select No of Guests";
@@ -21,7 +27,23 @@ function RentItForm({ guestsCap, bookedDates, price }) {
       return;
     }
     dispatch(rentItActions.updErrStt({ err }));
-}
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+    const body = {
+      amount: totalRent,
+      startDate,
+      endDate,
+      locId
+    };
+
+    const res = await axios.post("http://localhost:3000/payment", body, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+  }
 
   return (
     <>
