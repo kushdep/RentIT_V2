@@ -139,22 +139,16 @@ const locSchema = new mongoose.Schema({
                 required: true
             },
             start: {
-                type: Number,
+                type: String,
                 required: true
             },
             end: {
-                type: Number,
+                type: String,
                 required: true
             },
             payment: {
-                refId: {
-                    type: String,
-                    required: true
-                },
-                amount: {
-                    type: Number,
-                    required: true
-                }
+                type: mongoose.Types.ObjectId,
+                ref: "Payment",
             },
             checkIn: {
                 type: Boolean,
@@ -173,7 +167,7 @@ const locSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
-            totalBooking: {
+            totalBookings: {
                 type: Number,
                 required: true
             }

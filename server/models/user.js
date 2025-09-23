@@ -78,14 +78,8 @@ const userSchema = new mongoose.Schema({
                 required: true
             },
             payment: {
-                refId: {
-                    type: String,
-                    required: true
-                },
-                amount: {
-                    type: Number,
-                    required: true
-                }
+                type: mongoose.Types.ObjectId,
+                ref: "Payment",
             },
             checkIn: {
                 type: Boolean,
