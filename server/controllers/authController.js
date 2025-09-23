@@ -76,7 +76,7 @@ export const login = async (req, res) => {
             message: 'Email or password incorrect'
         })
     }
-    const token = jwt.sign({ _id: user._id, email }, process.env.JWT_SECRET, { expiresIn: '7d' })
+    const token = jwt.sign({ _id: user._id, email,username:user.username }, process.env.JWT_SECRET, { expiresIn: '7d' })
     return  res.header('auth-token', token).send(token)
 }
 
@@ -124,7 +124,7 @@ export const googleLogin = async (req, res) => {
                     email
                 })
             }
-            const token = jwt.sign({ _id: user._id, email }, process.env.JWT_SECRET, { expiresIn: '7d' })
+            const token = jwt.sign({ _id: user._id, email,username:user.username }, process.env.JWT_SECRET, { expiresIn: '7d' })
             return  res.header('auth-token', token).send(token)
         }
         catch (error) {

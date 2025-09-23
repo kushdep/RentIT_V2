@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose, { Types } from "mongoose"
 
 const locSchema = new mongoose.Schema({
     Sno: {
@@ -130,14 +130,6 @@ const locSchema = new mongoose.Schema({
     },
     bookings: [
         {
-            email: {
-                type: String,
-                required: true
-            },
-            username: {
-                type: String,
-                required: true
-            },
             start: {
                 type: String,
                 required: true
@@ -146,14 +138,9 @@ const locSchema = new mongoose.Schema({
                 type: String,
                 required: true
             },
-            payment: {
-                type: mongoose.Types.ObjectId,
-                ref: "Payment",
-            },
-            checkIn: {
-                type: Boolean,
-                required: true,
-                default: false
+            bookingDetails:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:'Bookings'
             }
         }
     ],

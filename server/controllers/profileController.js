@@ -6,7 +6,9 @@ import mongoose from "mongoose";
 import dotenv from 'dotenv'
 import bcrypt from 'bcrypt'
 import axios from 'axios'
+import crypto from 'crypto'
 import { getRazorpayOrderId } from '../razor-pay/razor-payment.js';
+import Bookings from '../models/booking.js';
 dotenv.config()
 
 export const addLocation = async (req, res) => {
@@ -383,11 +385,14 @@ const verifyPAN = async (data) => {
 export const getPaymentDetails = async (req, res) => {
     try {
         const { amount, locId, startDate, endDate } = req.body
-        const { _id } = req.user
-        const receiptNo = await Payment.countDocuments()
+        if (locId) {
+            //check booking dates
+        }
+        const { _id, email, username } = req.user
+        const receiptNo = await Payment.countDocuments() + 1
         let status = 'PENDING'
-        const res = await getRazorpayOrderId(amount * 100, receiptNo)
-        if (!res.success) {
+        const razorRes = await getRazorpayOrderId(amount * 100, receiptNo)
+        if (!razorRes.success) {
             status = 'FAILED'
             return res.status(502).send({
                 success: false,
@@ -397,37 +402,55 @@ export const getPaymentDetails = async (req, res) => {
         }
         const newPayment = {
             userId: _id,
-            razorpay_order_id:res.id,
+            razorpay_order_id: razorRes.id,
             amount: amount * 100,
             receiptNo,
             status,
         }
         const payDoc = await Payment.create(newPayment)
-        if(payDoc===null){
+        if (payDoc === null) {
             return res.status(500).send({
                 success: false,
                 status: 500,
                 message: 'Something went wrong'
             })
         }
-        const newTrip = {
+        const newBooking = {
             location: locId,
             start: startDate,
             end: endDate,
             payment: payDoc._id,
+            user: {
+                email,
+                username
+            }
         }
-        const userDoc = await User.findByIdAndUpdate(_id, { $push: { trips:newTrip} }, { new: true })
-        if(userDoc===null){
+        const bookDoc = await Bookings.create(newBooking)
+        if (bookDoc === null) {
             return res.status(500).send({
                 success: false,
                 status: 500,
-                message: 'Something went wrong'
+                message: 'Unable to insert Booking Data'
             })
         }
+        const userDoc = await User.findByIdAndUpdate(_id, { $push: { trips: bookDoc._id } })
+        if (userDoc === null) {
+            return res.status(500).send({
+                success: false,
+                status: 500,
+                message: 'Unable to insert Booking Details in user'
+            })
+        }
+
         return res.status(200).send({
-            success:true,
-            status:200,
-            message:'documents saved'
+            success: true,
+            status: 200,
+            message: 'documents saved',
+            data: {
+                razorKey: process.env.RAZORPAY_ID,
+                orderId: razorRes.id,
+                paymentId: payDoc._id
+            }
         })
 
     } catch (error) {
@@ -437,5 +460,43 @@ export const getPaymentDetails = async (req, res) => {
             status: 500,
             message: 'Something went wrong'
         })
+    }
+}
+
+export const verifyPayment = async (req, res) => {
+    try {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, locId, paymentId } = req.body;
+        if (razorpay_order_id === null || razorpay_payment_id === null || razorpay_signature === null) {
+            return res.json({ success: false })
+        }
+        const key_secret = process.env.RAZORPAY_KEY;
+
+        const hmac = crypto.createHmac("sha256", key_secret);
+        hmac.update(razorpay_order_id + "|" + razorpay_payment_id); c("sha256", key_secret)
+        const generated_signature = hmac.digest("hex")
+
+        if (generated_signature === razorpay_signature) {
+
+            const locDoc = await Location.findByIdAndUpdate({_id:locId}, { $push: { bookings: { start: startDate, end: endDate, bookingDetails: bookDoc._id } } })
+            if (locDoc === null) {
+                return res.json({ success: false });
+            }
+            
+            const updPaymentDoc = await Payment.findByIdAndUpdate({_id:paymentId},{$set:{status:'SUCCESS'}})
+            if (updPaymentDoc === null) {
+                return res.json({ success: false });
+            }
+            
+            return res.json({ success: true });
+        } else {
+            const updPaymentDoc = await Payment.findByIdAndUpdate({_id:paymentId},{$set:{status:'FAILED'}})
+            if (updPaymentDoc === null) {
+                return res.json({ success: false });
+            }
+            return res.json({ success: false });
+        }
+    } catch (error) {
+        console.error("Error in verifyPayment() " + error)
+        return res.json({ success: false });
     }
 }

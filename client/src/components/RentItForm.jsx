@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import DateInputBox from "./UI/DateInputBox";
 import { rentItActions } from "../store/rentIt-slice";
 import { curfmt } from "../utils/formatter";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 function RentItForm({ guestsCap, bookedDates, price }) {
@@ -12,7 +12,21 @@ function RentItForm({ guestsCap, bookedDates, price }) {
   const { token, isAuthenticated } = useSelector((state) => state.authData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+  const {locId} = useParams()
+ 
+  function loadScript(src) {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  }
 
   async function submitRentDetails() {
     let err = {};
@@ -35,14 +49,58 @@ function RentItForm({ guestsCap, bookedDates, price }) {
       amount: totalRent,
       startDate,
       endDate,
-      locId
+      locId,
     };
 
-    const res = await axios.post("http://localhost:3000/payment", body, {
+    const res = await axios.post("http://localhost:3000/profile/payment", body, {
       headers: {
         authorization: `Bearer ${token}`,
       },
     });
+    if (!res.success) {
+      if (res.status === 422) {
+        toast.error("Try again later");
+      }
+      toast.error("Something went wrong");
+      return;
+    }
+    const scriptLoadRes = await loadScript(
+      "https://checkout.razorpay.com/v1/checkout.js"
+    );
+    if (!scriptLoadRes) {
+      toast.error("BAD GATEWAY!");
+      return;
+    }
+    const options = {
+      key: res.razorKey,
+      amount: totalRent,
+      currency: "INR",
+      name: "Rent-IT",
+      description: "Test Transaction",
+      order_id: res.orderId,
+      handler: async function (response) {
+        const payload = {
+          paymentId:res.paymentId,
+          locId
+        }
+
+        const body = {...payload,...response}
+        const verifyRes = await fetch("http://localhost:3000/profile/payment-success", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        const result = await verifyRes.json();
+
+        if (result.success) {
+          toast.success("Payment completed successfully!");
+        } else {
+          toast.error("Payment verification failed!");
+        }
+      },
+    };
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
   }
 
   return (

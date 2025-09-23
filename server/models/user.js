@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -65,27 +65,8 @@ const userSchema = new mongoose.Schema({
     },
     trips: [
         {
-            location: {
-                type: mongoose.Types.ObjectId,
-                ref: "Location",
-            },
-            start: {
-                type: Number,
-                required: true
-            },
-            end: {
-                type: Number,
-                required: true
-            },
-            payment: {
-                type: mongoose.Types.ObjectId,
-                ref: "Payment",
-            },
-            checkIn: {
-                type: Boolean,
-                required: true,
-                default: false
-            },
+            type:mongoose.Types.ObjectId,
+            ref:'Bookings'
         }
     ]
 }, { timestamps: { createdAt: 'createdAt' } })
