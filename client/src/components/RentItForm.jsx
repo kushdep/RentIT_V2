@@ -4,6 +4,7 @@ import { rentItActions } from "../store/rentIt-slice";
 import { curfmt } from "../utils/formatter";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 function RentItForm({ guestsCap, bookedDates, price }) {
   const { totalGuests, startDate, endDate, totalRent, errs } = useSelector(
@@ -12,8 +13,8 @@ function RentItForm({ guestsCap, bookedDates, price }) {
   const { token, isAuthenticated } = useSelector((state) => state.authData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {locId} = useParams()
- 
+  const { locId } = useParams();
+
   function loadScript(src) {
     return new Promise((resolve) => {
       const script = document.createElement("script");
@@ -45,25 +46,35 @@ function RentItForm({ guestsCap, bookedDates, price }) {
       navigate("/login");
       return;
     }
+    const amount = totalRent*100
     const body = {
-      amount: totalRent,
+      amount,
       startDate,
       endDate,
       locId,
     };
-
-    const res = await axios.post("http://localhost:3000/profile/payment", body, {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    });
-    if (!res.success) {
+    console.log(body)
+    const res = await axios.post(
+      "http://localhost:3000/profile/payment",
+      body,
+      {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const toastId = toast.loading("Processing");
+    if (!res.data.success) {
       if (res.status === 422) {
         toast.error("Try again later");
+      }
+      if (res.status === 502) {
+        toast.error("BAD GATEWAY");
       }
       toast.error("Something went wrong");
       return;
     }
+    console.log(res);
     const scriptLoadRes = await loadScript(
       "https://checkout.razorpay.com/v1/checkout.js"
     );
@@ -72,35 +83,48 @@ function RentItForm({ guestsCap, bookedDates, price }) {
       return;
     }
     const options = {
-      key: res.razorKey,
-      amount: totalRent,
+      key: res.data.data.razorKey,
+      amount:amount,
       currency: "INR",
       name: "Rent-IT",
+      logo:'/public/images/logo.png',
       description: "Test Transaction",
-      order_id: res.orderId,
+      order_id: res.data.data.orderId,
       handler: async function (response) {
         const payload = {
-          paymentId:res.paymentId,
-          locId
-        }
+          paymentId: res.data.data.paymentId,
+          bookingId: res.data.data.bookingId,
+          startDate,
+          endDate,
+          locId,
+        };
 
-        const body = {...payload,...response}
-        const verifyRes = await fetch("http://localhost:3000/profile/payment-success", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
+        const body = { ...payload, ...response };
+        const verifyRes = await fetch(
+          "http://localhost:3000/profile/payment-success",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(body),
+          }
+        );
         const result = await verifyRes.json();
 
         if (result.success) {
           toast.success("Payment completed successfully!");
+          dispatch(rentItActions.clearStateData())
         } else {
           toast.error("Payment verification failed!");
         }
       },
     };
+    console.log(options);
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
+    toast.dismiss(toastId);
   }
 
   return (

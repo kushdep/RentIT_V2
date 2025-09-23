@@ -47,7 +47,18 @@ export const rentItSlice = createSlice({
                 console.error("Error in setTotalRent() " + error)
             }
         },
+        clearStateData(state,action){
+            try {
+                state.startDate = ''
+                state.endDate = ''
+                state.stayDuration = null
+                state.totalGuests = null
+                state.totalRent = null
+            } catch (error) {
+                console.error("Error in clearStateData() " + error)
+            }
 
+        }
     }
 })
 

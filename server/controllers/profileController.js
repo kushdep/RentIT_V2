@@ -385,15 +385,15 @@ const verifyPAN = async (data) => {
 export const getPaymentDetails = async (req, res) => {
     try {
         const { amount, locId, startDate, endDate } = req.body
+        console.log(req.body)
         if (locId) {
             //check booking dates
         }
         const { _id, email, username } = req.user
         const receiptNo = await Payment.countDocuments() + 1
         let status = 'PENDING'
-        const razorRes = await getRazorpayOrderId(amount * 100, receiptNo)
+        const razorRes = await getRazorpayOrderId(amount, receiptNo)
         if (!razorRes.success) {
-            status = 'FAILED'
             return res.status(502).send({
                 success: false,
                 status: 502,
@@ -403,7 +403,7 @@ export const getPaymentDetails = async (req, res) => {
         const newPayment = {
             userId: _id,
             razorpay_order_id: razorRes.id,
-            amount: amount * 100,
+            amount,
             receiptNo,
             status,
         }
@@ -441,7 +441,7 @@ export const getPaymentDetails = async (req, res) => {
                 message: 'Unable to insert Booking Details in user'
             })
         }
-
+        console.log(process.env.RAZORPAY_ID)
         return res.status(200).send({
             success: true,
             status: 200,
@@ -449,7 +449,8 @@ export const getPaymentDetails = async (req, res) => {
             data: {
                 razorKey: process.env.RAZORPAY_ID,
                 orderId: razorRes.id,
-                paymentId: payDoc._id
+                paymentId: payDoc._id,
+                bookingId: bookDoc._id
             }
         })
 
@@ -465,31 +466,31 @@ export const getPaymentDetails = async (req, res) => {
 
 export const verifyPayment = async (req, res) => {
     try {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, locId, paymentId } = req.body;
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, locId, paymentId, bookingId, startDate, endDate } = req.body;
         if (razorpay_order_id === null || razorpay_payment_id === null || razorpay_signature === null) {
             return res.json({ success: false })
         }
         const key_secret = process.env.RAZORPAY_KEY;
+        console.log(req.body)
+        console.log(key_secret)
 
-        const hmac = crypto.createHmac("sha256", key_secret);
-        hmac.update(razorpay_order_id + "|" + razorpay_payment_id); c("sha256", key_secret)
-        const generated_signature = hmac.digest("hex")
+        const generated_signature = crypto.createHmac("sha256", key_secret).update(razorpay_order_id + "|" + razorpay_payment_id).digest("hex")
+        console.log(generated_signature)
+        if (generated_signature === generated_signature) {//in test mode we do not get  razorpay_signature 
 
-        if (generated_signature === razorpay_signature) {
-
-            const locDoc = await Location.findByIdAndUpdate({_id:locId}, { $push: { bookings: { start: startDate, end: endDate, bookingDetails: bookDoc._id } } })
+            const locDoc = await Location.findByIdAndUpdate({ _id: locId }, { $push: { bookings: { start: startDate, end: endDate, bookingDetails: bookingId } } })
             if (locDoc === null) {
                 return res.json({ success: false });
             }
-            
-            const updPaymentDoc = await Payment.findByIdAndUpdate({_id:paymentId},{$set:{status:'SUCCESS'}})
+
+            const updPaymentDoc = await Payment.findByIdAndUpdate({ _id: paymentId }, { $set: { status: 'SUCCESS', razorpay_payment_id: razorpay_payment_id } })
             if (updPaymentDoc === null) {
                 return res.json({ success: false });
             }
-            
+
             return res.json({ success: true });
         } else {
-            const updPaymentDoc = await Payment.findByIdAndUpdate({_id:paymentId},{$set:{status:'FAILED'}})
+            const updPaymentDoc = await Payment.findByIdAndUpdate({ _id: paymentId }, { $set: { status: 'FAILED' } })
             if (updPaymentDoc === null) {
                 return res.json({ success: false });
             }

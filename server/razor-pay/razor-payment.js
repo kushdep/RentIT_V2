@@ -9,8 +9,9 @@ export async function getRazorpayOrderId(amount,receiptId) {
         const options = {
             amount,
             currency: "INR",
-            receipt: receiptId
+            receipt: String(receiptId)
         };
+        console.log(options)
         const res = await instance.orders.create(options);
         if(res.status !== 'created'){
             return {
