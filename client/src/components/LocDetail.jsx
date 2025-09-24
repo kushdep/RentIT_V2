@@ -4,7 +4,6 @@ import Reviews from "./Reviews";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import ShowAmmModal from "./Modals/showAmmModal";
-import { curfmt } from "../utils/formatter";
 import GoogleMap from "./GoogleMap";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
@@ -31,10 +30,12 @@ function LocDetails() {
     author: null,
     location: null,
     options: [],
+    bookings:[]
   });
   const { isAuthenticated, token } = useSelector((state) => state.authData);
-  const { savedLocData, profile } = useSelector((state) => state.profileData);
+  const { savedLocData } = useSelector((state) => state.profileData);
   const { locId } = useParams();
+  const {payment} = useSelector(state=>state.rentItData)
   const isSaved = savedLocData.locData.find((e) => e.locId === locId);
   const [like, setLike] = useState(isSaved);
 
@@ -55,6 +56,7 @@ function LocDetails() {
         price: locDtl.price,
         author: locDtl.author,
         location: locDtl.location,
+        bookings:location?.bookings,
         options,
       };
     });
@@ -84,20 +86,23 @@ function LocDetails() {
                 price: locDtl.price,
                 author: locDtl.author,
                 location: locDtl.location,
+                bookings:locationDetail?.bookings,
                 options,
               };
             });
           }
         } catch (error) {
           if (error.response.status === 404) {
+            toast.error('Something went wrong')
           }
           if (error.response.status === 400) {
+            toast.error('Something went wrong')
           }
         }
       }
       getLocDetail();
     }
-  }, []);
+  }, [payment]);
 
   async function handleSave() {
     if (!isAuthenticated) {
@@ -124,7 +129,6 @@ function LocDetails() {
       });
     }
   }
-
   return (
     <>
       {loc.title !== null ? (
@@ -303,7 +307,7 @@ function LocDetails() {
                   className="container position-sticky  rentCol shadow"
                   style={{ top: 10 }}
                 >
-                  <RentItForm guestsCap={loc.guestsCap} price={loc.price} />
+                  <RentItForm guestsCap={loc.guestsCap} price={loc.price} bookedDates={loc.bookings}/>
                 </div>
               </div>
             </div>

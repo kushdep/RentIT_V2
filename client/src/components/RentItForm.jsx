@@ -53,25 +53,34 @@ function RentItForm({ guestsCap, bookedDates, price }) {
       endDate,
       locId,
     };
-    console.log(body);
-    const res = await axios.post(
-      "http://localhost:3000/profile/payment",
-      body,
-      {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    const toastId = toast.loading("Processing");
-    if (!res.data.success) {
-      if (res.status === 422) {
+    let toastId;
+    let res;
+    try {
+      res = await axios.post(
+        "http://localhost:3000/profile/payment",
+        body,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toastId = toast.loading("Processing");
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      if (error.response.status === 422) {
         toast.error("Try again later");
       }
-      if (res.status === 502) {
+      if (error.response.status === 502) {
         toast.error("BAD GATEWAY");
       }
-      toast.error("Something went wrong");
+      if (error.response.status === 500) {
+        toast.error("Something went wrong");
+      }
+      if (error.response.status === 400) {
+        toast.error("Dates Are not available");
+      }
       return;
     }
     console.log(res);
@@ -122,7 +131,7 @@ function RentItForm({ guestsCap, bookedDates, price }) {
             toast.error("Error updating payment status");
           }
         },
-        backdropclose:false
+        backdropclose: false,
       },
       handler: async function (response) {
         const payload = {
@@ -149,7 +158,7 @@ function RentItForm({ guestsCap, bookedDates, price }) {
 
         if (result.success) {
           toast.success("Payment completed successfully!");
-          dispatch(rentItActions.clearStateData());
+          dispatch(rentItActions.clearStateData({isDone:true}));
         } else {
           toast.error("Payment verification failed!");
         }

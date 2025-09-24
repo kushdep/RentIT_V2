@@ -8,7 +8,8 @@ export const rentItSlice = createSlice({
         totalGuests: null,
         stayDuration: null,
         totalRent: null,
-        errs: {}
+        errs: {},
+        payment: false
     },
     reducers: {
         setGstVal(state, action) {
@@ -47,8 +48,11 @@ export const rentItSlice = createSlice({
                 console.error("Error in setTotalRent() " + error)
             }
         },
-        clearStateData(state,action){
+        clearStateData(state, action) {
             try {
+                const { isDone } = action.payload
+                console.log(isDone)
+                state.payment = isDone
                 state.startDate = ''
                 state.endDate = ''
                 state.stayDuration = null
