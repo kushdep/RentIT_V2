@@ -90,6 +90,12 @@ function RentItForm({ guestsCap, bookedDates, price }) {
       logo:'/public/images/logo.png',
       description: "Test Transaction",
       order_id: res.data.data.orderId,
+      method:{
+        emi:false,
+        netbanking:false,
+        wallet:false,
+        paylater:false
+      },
       handler: async function (response) {
         const payload = {
           paymentId: res.data.data.paymentId,
