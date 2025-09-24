@@ -382,7 +382,7 @@ const verifyPAN = async (data) => {
     }
 }
 
-async function isDatesAvail(dates, oldBookedDates) {
+function isDatesAvail(dates, oldBookedDates) {
     try {
         const { startDate, endDate } = dates
         const newStartDate = new Date(startDate).getTime()
@@ -416,20 +416,22 @@ export const getPaymentDetails = async (req, res) => {
     try {
         const { amount = null, locId = null, startDate = null, endDate = null } = req.body
         console.log(req.body)
-        if (startDate === null || endDatestartDate === null || locId === null) {
-            return res.status(400).send({
-                success: true,
-                status: 400,
+        if (startDate === null || endDate === null || locId === null) {
+            return res.status(500).send({
+                success: false,
+                status: 500,
                 message: 'Bad Request'
             })
         }
-        const bookedDates = await Location.findById({ _id: locId }, { "bookings.start": 1, "bookings.end": 1, "bookings.bookingDetails": 0 })
-        if (bookedDates.length > 0) {
-            const isAvailable = isDatesAvail({ startDate, endDate }, bookedDates)
+        const bookedDates = await Location.findById({ _id: locId }, "bookings")
+        console.log(bookedDates)
+        if (bookedDates.bookings.length > 0) {
+            const isAvailable = isDatesAvail({ startDate, endDate }, bookedDates.bookings)
+            console.log(isAvailable)
             if (!isAvailable) {
-                return res.status(404).send({
-                    success: true,
-                    status: 404,
+                return res.status(400).send({
+                    success: false,
+                    status: 400,
                     message: 'Dates Not Available'
                 })
             }
