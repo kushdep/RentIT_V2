@@ -26,4 +26,6 @@ router.post("/payment",getPaymentDetails)
 
 router.post("/payment-success",verifyPayment)
 
+router.post("/payment-failed",verifyPayment)
+
 export default router;

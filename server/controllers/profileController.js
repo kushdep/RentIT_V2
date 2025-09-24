@@ -466,6 +466,15 @@ export const getPaymentDetails = async (req, res) => {
 
 export const verifyPayment = async (req, res) => {
     try {
+        const url = req.originalUrl
+        if (url.includes('payment-failed')) {
+            const { paymentId } = req.body
+            const updPaymentDoc = await Payment.findByIdAndUpdate({ _id: paymentId }, { $set: { status: 'FAILED' } })
+            if (updPaymentDoc === null) {
+                return res.json({ success: false });
+            }
+            return res.json({ success: true });
+        }
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature, locId, paymentId, bookingId, startDate, endDate } = req.body;
         if (razorpay_order_id === null || razorpay_payment_id === null || razorpay_signature === null) {
             return res.json({ success: false })

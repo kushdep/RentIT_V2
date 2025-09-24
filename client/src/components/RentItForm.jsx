@@ -46,14 +46,14 @@ function RentItForm({ guestsCap, bookedDates, price }) {
       navigate("/login");
       return;
     }
-    const amount = totalRent*100
+    const amount = totalRent * 100;
     const body = {
       amount,
       startDate,
       endDate,
       locId,
     };
-    console.log(body)
+    console.log(body);
     const res = await axios.post(
       "http://localhost:3000/profile/payment",
       body,
@@ -84,17 +84,45 @@ function RentItForm({ guestsCap, bookedDates, price }) {
     }
     const options = {
       key: res.data.data.razorKey,
-      amount:amount,
+      amount: amount,
       currency: "INR",
       name: "Rent-IT",
-      logo:'/public/images/logo.png',
+      logo: "/public/images/logo.png",
       description: "Test Transaction",
       order_id: res.data.data.orderId,
-      method:{
-        emi:false,
-        netbanking:false,
-        wallet:false,
-        paylater:false
+      method: {
+        emi: false,
+        netbanking: false,
+        wallet: false,
+        paylater: false,
+      },
+      modal: {
+        ondismiss: async function () {
+          try {
+            const body = { paymentId: res.data.data.paymentId };
+            const failedRes = await fetch(
+              "http://localhost:3000/profile/payment-failed",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(body),
+              }
+            );
+            const result = await failedRes.json();
+            if (!result.success) {
+              toast.error("Something went wrong");
+              return;
+            }
+            toast.error("Payment failed");
+          } catch (err) {
+            console.error(err);
+            toast.error("Error updating payment status");
+          }
+        },
+        backdropclose:false
       },
       handler: async function (response) {
         const payload = {
@@ -121,7 +149,7 @@ function RentItForm({ guestsCap, bookedDates, price }) {
 
         if (result.success) {
           toast.success("Payment completed successfully!");
-          dispatch(rentItActions.clearStateData())
+          dispatch(rentItActions.clearStateData());
         } else {
           toast.error("Payment verification failed!");
         }
