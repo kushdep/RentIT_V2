@@ -152,10 +152,12 @@ const locSchema = new mongoose.Schema({
             },
             totalRevenue: {
                 type: Number,
+                default:0,
                 required: true
             },
             totalBookings: {
                 type: Number,
+                default:0,
                 required: true
             }
         }

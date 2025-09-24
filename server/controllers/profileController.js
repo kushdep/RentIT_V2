@@ -511,6 +511,34 @@ export const getPaymentDetails = async (req, res) => {
     }
 }
 
+function generateStats(dates, totalRent, totalDays) {
+    try {
+        const { startDate, endDate } = dates
+        const startDateMonth = new Date(startDate).getMonth()
+        const endDateMonth = new Date(endDate).getMonth()
+        if (startDateMonth === endDateMonth) {
+            return {
+                months: [`${startDateMonth}`],
+                revenues: totalRent
+            }
+        } else {
+            const sndMnthDays = new Date(startDate).getDate()
+            const rent = totalRent / totalDays
+            const startMonthRevenue = (totalDays - sndMnthDays) * rent
+            const endMonthRevenue = sndMnthDays * rent
+            return {
+                months: [`${startDateMonth}`, `${endDateMonth}`],
+                revenues: [`${startMonthRevenue}`, `${endMonthRevenue}`]
+            }
+        }
+    } catch (error) {
+        console.error("Error in getPaymentDetails() " + error)
+        return {
+            success: false
+        }
+    }
+}
+
 export const verifyPayment = async (req, res) => {
     try {
         const url = req.originalUrl
@@ -522,8 +550,8 @@ export const verifyPayment = async (req, res) => {
             }
             return res.json({ success: true });
         }
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, locId, paymentId, bookingId, startDate, endDate } = req.body;
-        if (razorpay_order_id === null || razorpay_payment_id === null || razorpay_signature === null) {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, locId, paymentId, bookingId, startDate, endDate, totalRent, noOfDays } = req.body;
+        if (razorpay_order_id === null || razorpay_payment_id === null || razorpay_signature === null || startDate === null || endDate === null || bookingId === null || paymentId === null || locId === null) {
             return res.json({ success: false })
         }
         const key_secret = process.env.RAZORPAY_KEY;
@@ -534,12 +562,19 @@ export const verifyPayment = async (req, res) => {
         console.log(generated_signature)
         if (generated_signature === generated_signature) {//in test mode we do not get  razorpay_signature 
 
-            const locDoc = await Location.findByIdAndUpdate({ _id: locId }, { $push: { bookings: { start: startDate, end: endDate, bookingDetails: bookingId } } })
+            const { months, revenues } = generateStats(startDate, endDate, totalRent, noOfDays)
+            if (months.length === 1) {
+                
+            } else if (months.length > 1) {
+
+            }
+
+            const locDoc = await Location.findByIdAndUpdate({ _id: locId }, { $push: { bookings: { start: startDate, end: endDate, bookingDetails: bookingId } }, $push: { stats: stats } })
             if (locDoc === null) {
                 return res.json({ success: false });
             }
 
-            const updPaymentDoc = await Payment.findByIdAndUpdate({ _id: paymentId }, { $set: { status: 'SUCCESS', razorpay_payment_id: razorpay_payment_id } })
+            const updPaymentDoc = await Payment.findByIdAndUpdate({ _id: paymentId }, { $set: { status: 'SUCCESS', razorpay_payment_id: razorpay_payment_id } }, { new: true })
             if (updPaymentDoc === null) {
                 return res.json({ success: false });
             }
