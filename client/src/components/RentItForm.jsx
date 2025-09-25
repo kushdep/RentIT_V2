@@ -6,11 +6,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-function RentItForm({ guestsCap, bookedDates, price }) {
-  const { totalGuests, startDate, endDate, totalRent, errs } = useSelector(
+function RentItForm({ guestsCap, bookedDates, price,authorEmail }) {
+  const { totalGuests, startDate, endDate, totalRent, errs,stayDuration } = useSelector(
     (state) => state.rentItData
   );
   const { token, isAuthenticated } = useSelector((state) => state.authData);
+  const { profile } = useSelector((state) => state.profileData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { locId } = useParams();
@@ -45,6 +46,10 @@ function RentItForm({ guestsCap, bookedDates, price }) {
     if (!isAuthenticated) {
       navigate("/login");
       return;
+    }
+    if(authorEmail === profile.email){
+      toast.error('You are the Owner of Location')
+      return 
     }
     const amount = totalRent * 100;
     const body = {
@@ -140,6 +145,8 @@ function RentItForm({ guestsCap, bookedDates, price }) {
           startDate,
           endDate,
           locId,
+          totalRent,
+          noOfDays:stayDuration
         };
 
         const body = { ...payload, ...response };

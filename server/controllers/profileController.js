@@ -513,22 +513,24 @@ export const getPaymentDetails = async (req, res) => {
 
 function generateStats(dates, totalRent, totalDays) {
     try {
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const { startDate, endDate } = dates
         const startDateMonth = new Date(startDate).getMonth()
         const endDateMonth = new Date(endDate).getMonth()
         if (startDateMonth === endDateMonth) {
             return {
-                months: [`${startDateMonth}`],
-                revenues: totalRent
+                months: [`${monthNames[startDateMonth]}`],
+                revenues: [totalRent]
             }
         } else {
-            const sndMnthDays = new Date(startDate).getDate()
+            const sndMnthDays = new Date(endDate).getDate()
             const rent = totalRent / totalDays
-            const startMonthRevenue = (totalDays - sndMnthDays) * rent
-            const endMonthRevenue = sndMnthDays * rent
+            const startMonthRevenue = Number((totalDays - sndMnthDays) * rent)
+            const endMonthRevenue = Number(sndMnthDays * rent)
             return {
-                months: [`${startDateMonth}`, `${endDateMonth}`],
-                revenues: [`${startMonthRevenue}`, `${endMonthRevenue}`]
+                months: [`${monthNames[startDateMonth]}`, `${monthNames[endDateMonth]}`],
+                revenues: [startMonthRevenue, endMonthRevenue]
             }
         }
     } catch (error) {
@@ -551,29 +553,27 @@ export const verifyPayment = async (req, res) => {
             return res.json({ success: true });
         }
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature, locId, paymentId, bookingId, startDate, endDate, totalRent, noOfDays } = req.body;
-        if (razorpay_order_id === null || razorpay_payment_id === null || razorpay_signature === null || startDate === null || endDate === null || bookingId === null || paymentId === null || locId === null) {
+        if (razorpay_order_id === null || razorpay_payment_id === null || razorpay_signature === null || startDate === null || endDate === null || bookingId === null || paymentId === null || locId === null || totalRent === null || noOfDays === null) {
             return res.json({ success: false })
         }
-        const key_secret = process.env.RAZORPAY_KEY;
-        console.log(req.body)
-        console.log(key_secret)
 
+        const key_secret = process.env.RAZORPAY_KEY;
         const generated_signature = crypto.createHmac("sha256", key_secret).update(razorpay_order_id + "|" + razorpay_payment_id).digest("hex")
-        console.log(generated_signature)
         if (generated_signature === generated_signature) {//in test mode we do not get  razorpay_signature 
 
-            const { months, revenues } = generateStats(startDate, endDate, totalRent, noOfDays)
-            if (months.length === 1) {
-                
-            } else if (months.length > 1) {
+            const { months, revenues } = generateStats({ startDate, endDate }, totalRent, noOfDays)
+            let query = {};
+            months.forEach((m, i) => {
+                query[`stats.${m}.totalRevenue`] = revenues[i];
+                query[`stats.${m}.totalBookings`] = 1;
+            });
 
-            }
 
-            const locDoc = await Location.findByIdAndUpdate({ _id: locId }, { $push: { bookings: { start: startDate, end: endDate, bookingDetails: bookingId } }, $push: { stats: stats } })
+            const locDoc = await Location.findByIdAndUpdate({ _id: locId }, { $push: { bookings: { start: startDate, end: endDate, bookingDetails: bookingId } }, $inc: query }, { new: true })
             if (locDoc === null) {
                 return res.json({ success: false });
             }
-
+            console.log(locDoc)
             const updPaymentDoc = await Payment.findByIdAndUpdate({ _id: paymentId }, { $set: { status: 'SUCCESS', razorpay_payment_id: razorpay_payment_id } }, { new: true })
             if (updPaymentDoc === null) {
                 return res.json({ success: false });

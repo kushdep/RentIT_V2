@@ -138,30 +138,13 @@ const locSchema = new mongoose.Schema({
                 type: String,
                 required: true
             },
-            bookingDetails:{
-                type:mongoose.Schema.Types.ObjectId,
-                ref:'Bookings'
+            bookingDetails: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Bookings'
             }
         }
     ],
-    stats: [
-        {
-            month: {
-                type: String,
-                required: true
-            },
-            totalRevenue: {
-                type: Number,
-                default:0,
-                required: true
-            },
-            totalBookings: {
-                type: Number,
-                default:0,
-                required: true
-            }
-        }
-    ]
+    stats: { type: Map, of: Object }
 }, { timestamps: true })
 
 const Location = mongoose.model('Location', locSchema)

@@ -307,7 +307,7 @@ function LocDetails() {
                   className="container position-sticky  rentCol shadow"
                   style={{ top: 10 }}
                 >
-                  <RentItForm guestsCap={loc.guestsCap} price={loc.price} bookedDates={loc.bookings}/>
+                  <RentItForm guestsCap={loc.guestsCap} price={loc.price} bookedDates={loc.bookings} authorEmail={loc.author.email}/>
                 </div>
               </div>
             </div>
