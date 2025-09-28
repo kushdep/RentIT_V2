@@ -24,6 +24,12 @@ const bookingSchema = new Schema({
         type: Types.ObjectId,
         ref: "Payment",
     },
+    stayDuration:{
+        type:Number
+    },
+    totalGuests:{
+        type:Number
+    },
     checkIn: {
         type: Date,
     }

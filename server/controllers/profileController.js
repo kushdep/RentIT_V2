@@ -414,7 +414,7 @@ function isDatesAvail(dates, oldBookedDates) {
 
 export const getPaymentDetails = async (req, res) => {
     try {
-        const { amount = null, locId = null, startDate = null, endDate = null } = req.body
+        const { amount = null, locId = null, startDate = null, endDate = null, totalGuests = null, stayDuration = null } = req.body
         console.log(req.body)
         if (startDate === null || endDate === null || locId === null) {
             return res.status(500).send({
@@ -470,7 +470,9 @@ export const getPaymentDetails = async (req, res) => {
             user: {
                 email,
                 username
-            }
+            },
+            totalGuests,
+            stayDuration
         }
         const bookDoc = await Bookings.create(newBooking)
         if (bookDoc === null) {

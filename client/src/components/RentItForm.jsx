@@ -57,6 +57,8 @@ function RentItForm({ guestsCap, bookedDates, price,authorEmail }) {
       startDate,
       endDate,
       locId,
+      totalGuests,
+      stayDuration
     };
     let toastId;
     let res;
