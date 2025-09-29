@@ -21,8 +21,7 @@ function ProfileSideBar() {
             title="Whishlist"
             active={currentUrl.includes("/profile/whishlist")}
           />
-          <ProfileButton title="Approvals" />
-          <ProfileButton title="Trips" />
+          <ProfileButton To="/profile/my-trips"  title="Trips" active={currentUrl.includes("/profile/my-trips")}/>
           {!userType.pptr && (
             <Link to='/profile/propertier-verification' className="btn rounded-0 btn-primary text-light fw-semibold" >
               Rent your Location 🏠

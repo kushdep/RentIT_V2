@@ -8,7 +8,6 @@ export default function Whishlist() {
   const { savedLocData } = useSelector((state) => state.profileData);
   const dispatch = useDispatch();
   console.log(savedLocData);
-  const { locId } = useParams();
 
   useEffect(() => {
     const token = localStorage.getItem("token");

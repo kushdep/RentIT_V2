@@ -1,4 +1,4 @@
- import mongoose from "mongoose";
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -65,8 +65,22 @@ const userSchema = new mongoose.Schema({
     },
     trips: [
         {
-            type:mongoose.Types.ObjectId,
-            ref:'Bookings'
+            tripDetails: {
+                booking:{
+                    type: mongoose.Types.ObjectId,
+                    ref: 'Bookings',
+                    required: true
+                },
+                location:{
+                    type: mongoose.Types.ObjectId,
+                    ref: 'Location',
+                    required: true
+                }
+            },
+            review: {
+                type: mongoose.Types.ObjectId,
+                ref: 'Review',
+            }
         }
     ]
 }, { timestamps: { createdAt: 'createdAt' } })

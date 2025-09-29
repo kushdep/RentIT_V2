@@ -20,8 +20,10 @@ const profileSlice = createSlice({
         userType:{
             pptr:false,
         },
-        tripsData: [],
-        approvalsData: []
+        tripsData:{
+            count:0,
+            trips:[]
+        } ,
     },
     reducers: {
         updateSavedLocData(state, action) {
@@ -46,6 +48,15 @@ const profileSlice = createSlice({
                 state.savedLocData.count = totalLocs
             } catch (error) {
                 console.error("Error in addSavedLocData() " + error)
+            }
+        },
+        addTripsData(state, action) {
+            try {
+                const { tripData = [], totalTrips = null } = action.payload
+                state.tripsData.trips = tripData
+                state.tripsData.count = totalTrips
+            } catch (error) {
+                console.error("Error in addTripsData() " + error)
             }
         },
         updateProfileData(state, action) {
@@ -247,6 +258,35 @@ export const setProfileData =  (token, body) => {
     }
 }
 
+export const getMyTrips = (token) => {
+    return async (dispatch) => {
+        const getTrips = async () => {
+            const response = await axios.get(`http://localhost:3000/profile/my-trips`, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            });
+            console.log(response)
+            if (response.status === 200) {
+                const resData = response.data.data
+                console.log(resData)
+                return { trips: resData, totalTrips: response.data.totalLocs };
+            }
+            if (response.status === 204) {
+                return { trips: [], totalTrips: null };
+            }
+        }
+
+        try {
+            const { trips, totalTrips } = await getTrips()
+            console.log(trips)
+            console.log(totalTrips)
+            dispatch(profileActions.addTripsData({ tripData: trips, totalTrips }))
+        } catch (error) {
+            console.error("Error while Getting Data")
+        }
+    }
+}
 
 export const profileActions = profileSlice.actions
 export default profileSlice

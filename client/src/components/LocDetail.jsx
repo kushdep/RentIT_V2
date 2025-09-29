@@ -13,6 +13,7 @@ import { Skeleton } from "antd";
 import ContactUsForm from "./ContactUsForm";
 import ShowAllPhotos from "./Modals/ShowAllPhotos";
 import RentItForm from "./RentItForm";
+import { rentItActions } from "../store/rentIt-slice";
 
 function LocDetails() {
   const showAmmModal = useRef();

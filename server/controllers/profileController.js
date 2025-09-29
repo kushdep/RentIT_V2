@@ -118,6 +118,40 @@ export const getWhishlistLoc = async (req, res) => {
         })
     }
 }
+export const getUserTrips = async (req, res) => {
+    try {
+        const { _id } = req.user
+        let result = []
+        result = await User.findById({ _id }).populate([{
+            path: "trips.tripDetails.booking"
+        }, {
+            path: "trips.tripDetails.location"
+        }, {
+            path: "trips.review",
+            select:"review ratings"
+        }])
+        console.log(result)
+        if (result.length === 0) {
+            return res.status(204).send({
+                success: false,
+                totalTrips: 0,
+                message: "No Trips found"
+            })
+        }
+        return res.status(200).send({
+            success: true,
+            data: result,
+            totalTrips: result.length,
+            message: "User Trips"
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send({
+            success: false,
+            message: error
+        })
+    }
+}
 
 
 export const updateSavedLoc = async (req, res) => {
@@ -387,6 +421,11 @@ function isDatesAvail(dates, oldBookedDates) {
         const { startDate, endDate } = dates
         const newStartDate = new Date(startDate).getTime()
         const newEndDate = new Date(endDate).getTime()
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (newStartDate < today.getTime() || newEndDate <= today.getTime()) {
+            return false
+        }
         for (const oldDate of oldBookedDates) {
             const oldStartDate = new Date(oldDate.start).getTime()
             const oldEndDate = new Date(oldDate.end).getTime()
@@ -482,14 +521,14 @@ export const getPaymentDetails = async (req, res) => {
                 message: 'Unable to insert Booking Data'
             })
         }
-        const userDoc = await User.findByIdAndUpdate(_id, { $push: { trips: bookDoc._id } })
-        if (userDoc === null) {
-            return res.status(500).send({
-                success: false,
-                status: 500,
-                message: 'Unable to insert Booking Details in user'
-            })
-        }
+        // const userDoc = await User.findByIdAndUpdate(_id, { $push: { trips: bookDoc._id } })
+        // if (userDoc === null) {
+        //     return res.status(500).send({
+        //         success: false,
+        //         status: 500,
+        //         message: 'Unable to insert Booking Details in user'
+        //     })
+        // }
         console.log(process.env.RAZORPAY_ID)
         return res.status(200).send({
             success: true,

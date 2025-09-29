@@ -64,7 +64,6 @@ function AddReview() {
           review,
           errors: err,
         };
-        console.error(error?.response?.data?.message);
       }
     }
   }

@@ -18,6 +18,12 @@ function DateInputBox({ disDates, rentPrice, err }) {
       const { startDate, endDate } = dates;
       const newStartDate = new Date(startDate).getTime();
       const newEndDate = new Date(endDate).getTime();
+      const today = new Date()
+      today.setHours(0, 0, 0, 0);
+      if (newStartDate < today.getTime() || newEndDate <= today.getTime()) {
+        console.log('returning false')
+        return false;
+      }
       for (const oldDate of oldBookedDates) {
         const oldStartDate = new Date(oldDate.start).getTime();
         const oldEndDate = new Date(oldDate.end).getTime();
@@ -64,7 +70,7 @@ function DateInputBox({ disDates, rentPrice, err }) {
         console.log(isAvail);
         if (!isAvail) {
           toast.error("Dates are't available");
-          dispatch(rentItActions.clearStateData({isDone:false}));
+          dispatch(rentItActions.clearStateData({ isDone: false }));
           return;
         }
       }
