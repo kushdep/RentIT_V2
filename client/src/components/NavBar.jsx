@@ -141,7 +141,7 @@ function NavBar() {
                           </button>
                           <ul className="dropdown-menu">
                             <li>
-                              <NavLink to="/profile" className="dropdown-item">
+                              <NavLink to="/profile/edit" className="dropdown-item">
                                 Profile
                               </NavLink>
                             </li>
@@ -154,8 +154,13 @@ function NavBar() {
                               </Link>
                             </li>
                             <li>
-                              <Link to="" className="dropdown-item">
-                                Trips
+                              <Link to="/profile/my-trips" className="dropdown-item">
+                                My Trips
+                              </Link>
+                            </li>
+                            <li>
+                              <Link to="/profile/my-bookings" className="dropdown-item">
+                                My Bookings
                               </Link>
                             </li>
                             <li>

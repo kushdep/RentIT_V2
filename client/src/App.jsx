@@ -59,6 +59,7 @@ const router = createBrowserRouter([
           { path: "edit", element: <Profile /> },
           { path: "whishlist", element: <Whishlist /> },
           { path: "my-trips", element: <Trips /> },
+          { path: "my-bookings", element: <Trips /> },
           {
             path: "propertier-verification",
             element: (

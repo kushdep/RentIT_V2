@@ -1,13 +1,22 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AddReview from "../components/AddReview";
+import { useEffect } from "react";
+import { getMyTrips } from "../store/profile-slice";
 
 function Trips() {
   const { tripsData } = useSelector((state) => state.profileData);
+const dispatch = useDispatch()
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    dispatch(getMyTrips(token));
+  }, []);
+
+  console.log(tripsData);
   return (
     <>
       <div className="container">
-        {tripsData.trips.length === 0 ? (
+        {tripsData.trips.length !== 0 ? (
           <div className="row">
             <div className="col-6 p-0">
               <div className="card p-0">

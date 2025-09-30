@@ -65,17 +65,13 @@ const userSchema = new mongoose.Schema({
     },
     trips: [
         {
-            tripDetails: {
-                booking:{
-                    type: mongoose.Types.ObjectId,
-                    ref: 'Bookings',
-                    required: true
-                },
-                location:{
-                    type: mongoose.Types.ObjectId,
-                    ref: 'Location',
-                    required: true
-                }
+            booking: {
+                type: mongoose.Types.ObjectId,
+                ref: 'Bookings',
+            },
+            locationDetails: {
+                type: mongoose.Types.ObjectId,
+                ref: 'Location',
             },
             review: {
                 type: mongoose.Types.ObjectId,

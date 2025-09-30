@@ -123,12 +123,12 @@ export const getUserTrips = async (req, res) => {
         const { _id } = req.user
         let result = []
         result = await User.findById({ _id }).populate([{
-            path: "trips.tripDetails.booking"
+            path: "trips.booking"
         }, {
-            path: "trips.tripDetails.location"
+            path: "trips.locationDetails"
         }, {
             path: "trips.review",
-            select:"review ratings"
+            select: "review ratings"
         }])
         console.log(result)
         if (result.length === 0) {
@@ -152,7 +152,6 @@ export const getUserTrips = async (req, res) => {
         })
     }
 }
-
 
 export const updateSavedLoc = async (req, res) => {
     try {
@@ -585,6 +584,7 @@ function generateStats(dates, totalRent, totalDays) {
 export const verifyPayment = async (req, res) => {
     try {
         const url = req.originalUrl
+                const { _id } = req.user
         if (url.includes('payment-failed')) {
             const { paymentId } = req.body
             const updPaymentDoc = await Payment.findByIdAndUpdate({ _id: paymentId }, { $set: { status: 'FAILED' } })
@@ -618,6 +618,16 @@ export const verifyPayment = async (req, res) => {
             const updPaymentDoc = await Payment.findByIdAndUpdate({ _id: paymentId }, { $set: { status: 'SUCCESS', razorpay_payment_id: razorpay_payment_id } }, { new: true })
             if (updPaymentDoc === null) {
                 return res.json({ success: false });
+            }
+
+            const tripData = {
+                booking: bookingId,
+                locationDetails: locId,
+            }
+
+            const userDoc = await User.findByIdAndUpdate(_id, { $push: { trips: tripData } })
+            if (userDoc === null) {
+                return res.json({success: false})
             }
 
             return res.json({ success: true });

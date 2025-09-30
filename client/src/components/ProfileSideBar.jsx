@@ -21,9 +21,21 @@ function ProfileSideBar() {
             title="Whishlist"
             active={currentUrl.includes("/profile/whishlist")}
           />
-          <ProfileButton To="/profile/my-trips"  title="Trips" active={currentUrl.includes("/profile/my-trips")}/>
+          <ProfileButton
+            To="/profile/my-trips"
+            title="Trips & Reviews"
+            active={currentUrl.includes("/profile/my-trips")}
+          />
+          <ProfileButton
+            To="/profile/my-bookings"
+            title="Bookings"
+            active={currentUrl.includes("/profile/my-bookings")}
+          />
           {!userType.pptr && (
-            <Link to='/profile/propertier-verification' className="btn rounded-0 btn-primary text-light fw-semibold" >
+            <Link
+              to="/profile/propertier-verification"
+              className="btn rounded-0 btn-primary text-light fw-semibold"
+            >
               Rent your Location 🏠
             </Link>
           )}

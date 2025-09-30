@@ -270,7 +270,7 @@ export const getMyTrips = (token) => {
             if (response.status === 200) {
                 const resData = response.data.data
                 console.log(resData)
-                return { trips: resData, totalTrips: response.data.totalLocs };
+                return { trips: resData, totalTrips: response.data.totalTrips };
             }
             if (response.status === 204) {
                 return { trips: [], totalTrips: null };
