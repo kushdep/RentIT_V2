@@ -140,9 +140,59 @@ export const getUserTrips = async (req, res) => {
         }
         return res.status(200).send({
             success: true,
-            data: result,
-            totalTrips: result.length,
+            data: result.trips,
+            totalTrips: result.trips.length,
             message: "User Trips"
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send({
+            success: false,
+            message: error
+        })
+    }
+}
+export const getUserBookings = async (req, res) => {
+    try {
+        const { email } = req.user
+        let result = []
+        result = await User.find({ "user.email":email })
+        console.log(result)
+        if (result.length === 0) {
+            return res.status(204).send({
+                success: false,
+                message: "No Data found"
+            })
+        }
+        return res.status(200).send({
+            success: true,
+            data: result,
+            message: "User Bookings"
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(400).send({
+            success: false,
+            message: error
+        })
+    }
+}
+export const getUserPaymentsInfo = async (req, res) => {
+    try {
+        const { _id } = req.user
+        let result = []
+        result = await Payment.find({ userId:_id })
+        console.log(result)
+        if (result.length === 0) {
+            return res.status(204).send({
+                success: false,
+                message: "No Data found"
+            })
+        }
+        return res.status(200).send({
+            success: true,
+            data: result,
+            message: "User Payments"
         })
     } catch (error) {
         console.log(error)
