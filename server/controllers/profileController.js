@@ -614,7 +614,7 @@ function generateStats(dates, totalRent, totalDays) {
                 revenues: [totalRent]
             }
         } else {
-            const sndMnthDays = new Date(endDate).getDate()
+            const sndMnthDays = new Date(endDate).getDate() - 1
             const rent = totalRent / totalDays
             const startMonthRevenue = (totalDays - sndMnthDays) * rent
             const endMonthRevenue = sndMnthDays * rent

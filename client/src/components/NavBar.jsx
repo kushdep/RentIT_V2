@@ -164,6 +164,11 @@ function NavBar() {
                               </Link>
                             </li>
                             <li>
+                              <Link to="/profile/my-bookings" className="dropdown-item">
+                                Payments
+                              </Link>
+                            </li>
+                            <li>
                               <button
                                 className="btn dropdown-item"
                                 onClick={handleLogout}
