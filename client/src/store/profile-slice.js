@@ -15,15 +15,17 @@ const profileSlice = createSlice({
             address: null,
             contactNo: null,
             othContactNo: null,
-            imgUrl:null,
+            imgUrl: null,
         },
-        userType:{
-            pptr:false,
+        userType: {
+            pptr: false,
         },
-        tripsData:{
-            count:0,
-            trips:[]
-        } ,
+        tripsData: {
+            count: 0,
+            trips: []
+        },
+        bookings: [],
+        payments: [],
     },
     reducers: {
         updateSavedLocData(state, action) {
@@ -59,6 +61,22 @@ const profileSlice = createSlice({
                 console.error("Error in addTripsData() " + error)
             }
         },
+        addBookingsData(state, action) {
+            try {
+                const { bookingsData = [] } = action.payload
+                state.bookings = bookingsData
+            } catch (error) {
+                console.error("Error in addBookingsData() " + error)
+            }
+        },
+        addPaymentsData(state, action) {
+            try {
+                const { paymentsData = [] } = action.payload
+                state.payments = paymentsData
+            } catch (error) {
+                console.error("Error in addPaymentsData() " + error)
+            }
+        },
         updateProfileData(state, action) {
             try {
                 const { userData } = action.payload
@@ -82,15 +100,15 @@ const profileSlice = createSlice({
                     state.profile.othContactNo = user.sndryPhNo
                 }
 
-                if(userData.userType.propertier){
-                    state.userType.pptr=true
+                if (userData.userType.propertier) {
+                    state.userType.pptr = true
                 }
 
             } catch (error) {
                 console.log("Error in updateProfileData " + error)
             }
         },
-        updateProfileImage(state,action){
+        updateProfileImage(state, action) {
             try {
                 const url = action.payload
                 state.profile.imgUrl = url
@@ -207,14 +225,14 @@ export const getProfileData = (token) => {
             const { userData } = await getProfile()
             console.log(userData)
             dispatch(profileActions.updateProfileData({ userData }))
-            dispatch(profileActions.updateProfileImage(userData.userImg.url ))
+            dispatch(profileActions.updateProfileImage(userData.userImg.url))
         } catch (error) {
             console.error("Error in getProfileData " + error)
         }
     }
 }
 
-export const setProfileData =  (token, body) => {
+export const setProfileData = (token, body) => {
     return async (dispatch) => {
         async function setProfile() {
             try {
@@ -250,9 +268,9 @@ export const setProfileData =  (token, body) => {
         } catch (error) {
             console.log("Error in setrProfileData() " + error)
             throw {
-                success:false,
-                message:"Profile Updation failed",
-                error:error
+                success: false,
+                message: "Profile Updation failed",
+                error: error
             }
         }
     }
@@ -282,6 +300,61 @@ export const getMyTrips = (token) => {
             console.log(trips)
             console.log(totalTrips)
             dispatch(profileActions.addTripsData({ tripData: trips, totalTrips }))
+        } catch (error) {
+            console.error("Error while Getting Data")
+        }
+    }
+}
+
+export const getMyBookings = (token) => {
+    return async (dispatch) => {
+        const getBookings = async () => {
+            const response = await axios.get(`http://localhost:3000/profile/my-bookings`, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            });
+            console.log(response)
+            if (response.status === 200) {
+                const resData = response.data.data
+                console.log(resData)
+                return { bookings: resData };
+            }
+            if (response.status === 204) {
+                return { bookings: [] };
+            }
+        }
+
+        try {
+            const { bookings } = await getBookings()
+            dispatch(profileActions.addBookingsData({ bookingsData:bookings}))
+        } catch (error) {
+            console.error("Error while Getting Data")
+        }
+    }
+}
+export const getPaymentsInfo = (token) => {
+    return async (dispatch) => {
+        const getInfo = async () => {
+            const response = await axios.get(`http://localhost:3000/profile/payments-info`, {
+                headers: {
+                    authorization: `Bearer ${token}`
+                }
+            });
+            console.log(response)
+            if (response.status === 200) {
+                const resData = response.data.data
+                console.log(resData)
+                return { payments: resData };
+            }
+            if (response.status === 204) {
+                return { bookings: [] };
+            }
+        }
+
+        try {
+            const { payments } = await getInfo()
+            dispatch(profileActions.addPaymentsData({ paymentsData:payments}))
         } catch (error) {
             console.error("Error while Getting Data")
         }

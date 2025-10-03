@@ -18,6 +18,8 @@ import { getProfileData } from "./store/profile-slice";
 import VerifyProp from "./pages/VerifyProp";
 import { useSelector } from "react-redux";
 import Trips from "./pages/Trips";
+import Bookings from "./pages/Bookings";
+import PaymentsInfo from "./pages/PaymentsInfo";
 
 const PropertierRoute = ({ children }) => {
   const { userType: isPropertier } = useSelector((state) => state.profileData);
@@ -59,7 +61,8 @@ const router = createBrowserRouter([
           { path: "edit", element: <Profile /> },
           { path: "whishlist", element: <Whishlist /> },
           { path: "my-trips", element: <Trips /> },
-          { path: "my-bookings", element: <Trips /> },
+          { path: "my-bookings", element: <Bookings/> },
+          { path: "payments-info", element: <PaymentsInfo/> },
           {
             path: "propertier-verification",
             element: (

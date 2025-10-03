@@ -31,6 +31,11 @@ function ProfileSideBar() {
             title="Bookings"
             active={currentUrl.includes("/profile/my-bookings")}
           />
+          <ProfileButton
+            To="/profile/payments-info"
+            title="Payments"
+            active={currentUrl.includes("/profile/payments-info")}
+          />
           {!userType.pptr && (
             <Link
               to="/profile/propertier-verification"
