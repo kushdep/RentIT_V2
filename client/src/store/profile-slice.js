@@ -80,6 +80,7 @@ const profileSlice = createSlice({
         updateProfileData(state, action) {
             try {
                 const { userData } = action.payload
+                console.log(userData)
                 if (userData.email) {
                     state.profile.email = userData.email
                 }
@@ -103,6 +104,9 @@ const profileSlice = createSlice({
                 if (userData.userType.propertier) {
                     state.userType.pptr = true
                 }
+
+                state.tripsData.count=userData.trips.length
+                state.tripsData.trips=userData.trips
 
             } catch (error) {
                 console.log("Error in updateProfileData " + error)

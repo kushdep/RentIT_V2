@@ -32,7 +32,7 @@ function PaymentsInfo() {
               <p className="card-text">Payment_id - {e.razorpay_payment_id}</p>
             </div>
               <div className="card-footer p-0">
-              <p className="text-center text-muted">{new Date(e.createdAt).toISOString().split('T').join(' ')}</p>
+              <p className="text-center text-muted">{new Date(e.createdAt).toISOString().slice(0,10) + " "+ "("+new Date(e.createdAt).toLocaleTimeString()+")"}</p>
 
               </div>
           </div>
