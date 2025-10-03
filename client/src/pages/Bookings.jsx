@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getMyBookings } from "../store/profile-slice";
+import { curfmt } from "../utils/formatter";
 
 function Bookings() {
   const { bookings } = useSelector((state) => state.profileData);
@@ -16,23 +17,30 @@ function Bookings() {
   console.log(bookings);
   return (
     <>
-      <div className="container">
-        <div className="row-cols-2">
-        {bookings.length !== 0 ? (
+      <div className="container-fluid">
+        <div className="row">
+        {bookings.length !== 0 ? bookings.map((e)=>
           <div
-            className="col card text-bg-transparent w-50 mb-3"
+            className="col card text-bg-transparent mb-3 p-0 me-2"
           >
             <div className="card-header d-flex justify-content-between bg-dark text-light">
-                <p>Header</p>
-                <p>Status</p>
+                <p className="">{e.location.locDtl.title}</p>
+                <p className={e.payment.status==='SUCCESS'?'badge text-bg-success':(e.payment.status==='PENDING'?'badge text-bg-info':'badge text-bg-danger')}>Payment - {e.payment.status}</p>
+            </div>
+            <div className="d-flex">
+            <div className="card-body">
+              <h5 className="card-title">Amount - {curfmt.format(e.payment.amount/100)}</h5>
+              <p className="card-text">Total Guests - {e.totalGuests}</p>
             </div>
             <div className="card-body">
-              <h5 className="card-title">Primary card title</h5>
-              <p className="card-text">
-                Some quick example text to build on the card title and make up
-                the bulk of the card’s content.
-              </p>
+              <h5 className="text-muted fs-6">stay - {new Date(e.start).toLocaleDateString()+' to '+new Date(e.end).toLocaleDateString()}</h5>
+              <p className="card-text">Stay Duration - {e.stayDuration} Nights</p>
             </div>
+            </div>
+              <div className="card-footer p-0">
+              <p className="text-center text-muted">{new Date(e.createdAt).toISOString().slice(0,10) + " "+ "("+new Date(e.createdAt).toLocaleTimeString()+")"}</p>
+
+              </div>
           </div>
         ) : (
           <div className="text-center">

@@ -25,7 +25,7 @@ function PaymentsInfo() {
           >
             <div className="card-header d-flex justify-content-between bg-dark text-light">
                 <p className="">Receipt No #{e.receiptNo}</p>
-                <p className={e.status==='SUCCESS'?'badge text-bg-success':(e.status==='PENDING'?'badge text-bg-info':'badge text-bg-warning')}>{e.status}</p>
+                <p className={e.status==='SUCCESS'?'badge text-bg-success':(e.status==='PENDING'?'badge text-bg-info':'badge text-bg-danger')}>{e.status}</p>
             </div>
             <div className="card-body">
               <h5 className="card-title">Amount - {curfmt.format(e.amount/100)}</h5>

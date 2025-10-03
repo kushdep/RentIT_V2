@@ -1,7 +1,10 @@
 import mongoose, { Schema, Types } from "mongoose";
 
 const bookingSchema = new Schema({
-    location: Types.ObjectId,
+    location: {
+        type: Types.ObjectId,
+        ref: 'Location'
+    },
     user: {
         email: {
             type: String,
@@ -24,11 +27,11 @@ const bookingSchema = new Schema({
         type: Types.ObjectId,
         ref: "Payment",
     },
-    stayDuration:{
-        type:Number
+    stayDuration: {
+        type: Number
     },
-    totalGuests:{
-        type:Number
+    totalGuests: {
+        type: Number
     },
     checkIn: {
         type: Date,

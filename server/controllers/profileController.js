@@ -156,7 +156,7 @@ export const getUserBookings = async (req, res) => {
     try {
         const { email } = req.user
         let result = []
-        result = await User.find({ "user.email":email })
+        result = await Bookings.find({ "user.email":email }).populate([{path:'location',select:'locDtl.title'},{path:'payment',select:'status amount'}])
         console.log(result)
         if (result.length === 0) {
             return res.status(204).send({
@@ -616,8 +616,8 @@ function generateStats(dates, totalRent, totalDays) {
         } else {
             const sndMnthDays = new Date(endDate).getDate()
             const rent = totalRent / totalDays
-            const startMonthRevenue = Number((totalDays - sndMnthDays) * rent)
-            const endMonthRevenue = Number(sndMnthDays * rent)
+            const startMonthRevenue = (totalDays - sndMnthDays) * rent
+            const endMonthRevenue = sndMnthDays * rent
             return {
                 months: [`${monthNames[startDateMonth]}`, `${monthNames[endDateMonth]}`],
                 revenues: [startMonthRevenue, endMonthRevenue]
@@ -652,7 +652,7 @@ export const verifyPayment = async (req, res) => {
         const generated_signature = crypto.createHmac("sha256", key_secret).update(razorpay_order_id + "|" + razorpay_payment_id).digest("hex")
         if (generated_signature === generated_signature) {//in test mode we do not get  razorpay_signature 
 
-            const { months, revenues } = generateStats({ startDate, endDate }, totalRent, noOfDays)
+            const { months, revenues } = generateStats({ startDate, endDate }, Number(totalRent), Number(noOfDays))
             let query = {};
             months.forEach((m, i) => {
                 query[`stats.${m}.totalRevenue`] = revenues[i];
@@ -670,15 +670,15 @@ export const verifyPayment = async (req, res) => {
                 return res.json({ success: false });
             }
 
-            const tripData = {
-                booking: bookingId,
-                locationDetails: locId,
-            }
+            // const tripData = {
+            //     booking: bookingId,
+            //     locationDetails: locId,
+            // }
 
-            const userDoc = await User.findByIdAndUpdate(_id, { $push: { trips: tripData } })
-            if (userDoc === null) {
-                return res.json({success: false})
-            }
+            // const userDoc = await User.findByIdAndUpdate(_id, { $push: { trips: tripData } })
+            // if (userDoc === null) {
+            //     return res.json({success: false})
+            // }
 
             return res.json({ success: true });
         } else {
