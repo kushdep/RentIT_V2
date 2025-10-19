@@ -5,17 +5,16 @@ import { useActionState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-function AddReview() {
+function AddReview({locId,bkngId}) {
   const [formStt, formFn, isPending] = useActionState(submitReview, {
     stars: null,
     review: "",
     errors: [],
   });
   const token = localStorage.getItem("token");
-  const { locId } = useParams();
   const navigate = useNavigate();
   async function submitReview(prevStt, formData) {
-    const stars = formData.get("stars");
+    const stars = Number(formData.get("stars"))
     const review = formData.get("Review");
 
     let err = [];
@@ -39,6 +38,7 @@ function AddReview() {
       locId,
       stars,
       review,
+      bkngId
     };
     console.log(body)
     try {
@@ -68,6 +68,7 @@ function AddReview() {
     }
   }
 
+  console.log()
   return (
     <>
       {formStt?.errors.length > 0 &&

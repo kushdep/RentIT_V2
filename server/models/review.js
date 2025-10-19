@@ -22,6 +22,10 @@ const reviewSchema = new mongoose.Schema({
     review:{
         type:String,
         required:true
+    },
+    bookingId:{
+        type:mongoose.Schema.Types.ObjectId,
+        required:true
     }
 },{ timestamps: { createdAt: 'createdAt' } })
 

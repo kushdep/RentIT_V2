@@ -2,10 +2,11 @@ import { useDispatch, useSelector } from "react-redux";
 import AddReview from "../components/AddReview";
 import { useEffect } from "react";
 import { getMyTrips } from "../store/profile-slice";
+import Review from "../../../server/models/review";
 
 function Trips() {
   const { tripsData } = useSelector((state) => state.profileData);
-const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -16,40 +17,75 @@ const dispatch = useDispatch()
   return (
     <>
       <div className="container">
-        {tripsData.trips.length !== 0 ? (
-          <div className="row">
-            <div className="col-6 p-0">
-              <div className="card p-0">
-                <div className="row g-0">
-                  <div className="col-md-4">
-                    <img
-                      src="/public/images/hall.jpg"
-                      className="img-fluid rounded-start w-100 h-100"
-                      alt="..."
-                    />
-                  </div>
-                  <div className="col-md-8">
-                    <div className="card-body">
-                      <h5 className="card-title">Card title</h5>
-                      <p className="card-text">
-                        This is a wider card with supporting text below as a
-                        natural lead-in to additional content. This content is a
-                        little bit longer.
-                      </p>
-                      <p className="card-text">
-                        <small className="text-body-secondary">
-                          Last updated 3 mins ago
-                        </small>
-                      </p>
+        {tripsData.trips.length > 0 ? (
+          tripsData.trips.map((t) => {
+            return (
+              <div className="row">
+                <div className="col-6 p-0 me-2">
+                  <div className="card p-0">
+                    <div className="row g-0">
+                      <div className="col-md-4">
+                        <img
+                          src={
+                            t?.locationDetails?.locDtl?.imgTtlData[0].images[0]
+                              .url
+                          }
+                          className="img-fluid  p-3"
+                        />
+                      </div>
+                      <div className="col-md-8 ">
+                        <div className="card-body p-0">
+                          <h5 className="card-title p-1">
+                            {t?.locationDetails?.locDtl?.title}
+                          </h5>
+                          <div className="text-muted">
+                            <p>
+                              Stay Duration - {t?.booking.stayDuration}{" "}
+                              {t?.booking.stayDuration > 1 ? "Nights" : "Night"}
+                              <p>Guests - {t?.booking.totalGuests}</p>
+                            </p>
+                            <p className="d-flex flex-column">
+                              Booking Dates :
+                              <small className="text-body-secondary fw-bold">
+                                {t?.booking.start + " to " + t?.booking.end}
+                              </small>
+                            </p>
+                          </div>
+                            <div
+                              className={`w-100 rounded-4 ${
+                                t?.booking.checkIn
+                                  ? "bg-success bg-gradient"
+                                  : "bg-danger bg-gradient"
+                              }`}
+                            >
+                              <p className="fw-bold border-bottom text-light p-2 text-center rounded-4">Check-In</p>
+                              <p className="text-light text-center">
+                                {t.booking?.checkIn
+                                  ? new Date(t.booking.checkIn).toLocaleDateString() +
+                                    " At " +
+                                    new Date(t.booking.checkIn).toLocaleTimeString()
+                                  : "No Check-in"}
+                              </p>
+                            </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
+                <div className="col border rounded-4 p-2 h-50 bg-dark">
+                  {/* {t.booking?.checkIn ? (
+                    t.review?.review ? ( */}
+                      <AddReview locId={t.locationDetails._id} bkngId={t.booking._id}/>
+                    {/* ) : (
+                      <Review />
+                    )
+                  ) : ( */}
+                    {/* <div className="">Cannot Add Review</div> */}
+                  {/* )} */}
+                </div>
               </div>
-            </div>
-            <div className="col border rounded-4  p-2">
-              <AddReview />
-            </div>
-          </div>
+            );
+          })
         ) : (
           <div className="text-center">
             <img src="/public/icons/empty-folder.png" className="" />

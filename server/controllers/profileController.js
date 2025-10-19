@@ -41,28 +41,47 @@ export const addLocation = async (req, res) => {
 export const addReview = async (req, res) => {
     try {
         const { _id } = req.user
-        const { locId, review, stars } = req.body
-        const user = await User.findById({ _id })
+        const { locId, bkngId,review, stars } = req.body
+        let bkngReview = await Review.find({bookingId:bkngId})
+        console.log("bkngReview")
+        console.log(bkngReview)
+        if(bkngReview.length>0){
+            return res.status(400).send({
+                success:false,
+                message:'Review Already exist'
+            })
+        }
+        const user = await User.findById({ _id },{select:'username email trips'})
+        console.log(user)
         const author = {
             username: user.username,
             email: user.email,
         }
-        const newReview = { location: locId, ratings: stars, review, author }
+        const newReview = { location: locId, ratings: stars, review, author ,bookingId:bkngId}
+        console.log(newReview)
         const reviewRes = await Review.create(newReview)
-        const loc = await Location.findById({ _id: locId })
-        loc.locDtl.reviews.push(reviewRes._id)
-        if (loc.locDtl.reviews.length > 0) {
-            const total = loc.locDtl.reviews.reduce((prev, e) => prev + e.ratings, 0)
-            loc.stars = total / loc.locDtl.reviews.length;
+        const tripInd = user.trips.findIndex((t)=>t.booking===bkngId)
+        if(tripInd===-1){
+            return res.status(400).send({
+                succes:false,
+                message:'Something went wrong'
+            })
         }
-        await loc.save()
+        user.trips[tripInd]["review"]=reviewRes._id
+        await user.save() 
+        const updLoc = await Location.findByIdAndUpdate({ _id: locId },{$push:{"locDtl.reviews":reviewRes._id}},{new:true})
+        if (updLoc.locDtl.reviews.length > 0) {
+            const total = updLoc.locDtl.reviews.reduce((prev, e) => prev + e.ratings, 0)
+            updLoc.stars = total / loc.locDtl.reviews.length;
+        }
+        await updLoc.save()
         return res.status(201).send({
             success: true,
             message: 'Review Added Successfully',
         })
     } catch (error) {
         console.log(error)
-        return res.status(400).send({
+        return res.status(500).send({
             success: false,
             message: error
         })
@@ -115,20 +134,21 @@ export const getWhishlistLoc = async (req, res) => {
         return res.status(400).send({
             success: false,
             message: error
-        })
+        }) 
     }
 }
 export const getUserTrips = async (req, res) => {
     try {
         const { _id } = req.user
         let result = []
-        result = await User.findById({ _id }).populate([{
-            path: "trips.booking"
-        }, {
-            path: "trips.locationDetails"
-        }, {
-            path: "trips.review",
-            select: "review ratings"
+        result = await User.findById({ _id }).populate([
+        {
+            path: "trips",
+            populate:[
+                {path:'booking'},
+                {path:'locationDetails'},
+                {path:'review',select:'review ratings'}
+            ]
         }])
         console.log(result)
         if (result.length === 0) {
