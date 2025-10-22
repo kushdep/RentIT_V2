@@ -45,13 +45,14 @@ export const addReview = async (req, res) => {
         let bkngReview = await Review.find({bookingId:bkngId})
         console.log("bkngReview")
         console.log(bkngReview)
+        console.log(bkngReview.length)
         if(bkngReview.length>0){
             return res.status(400).send({
                 success:false,
                 message:'Review Already exist'
             })
         }
-        const user = await User.findById({ _id },{select:'username email trips'})
+        const user = await User.findById(_id)
         console.log(user)
         const author = {
             username: user.username,
@@ -60,7 +61,8 @@ export const addReview = async (req, res) => {
         const newReview = { location: locId, ratings: stars, review, author ,bookingId:bkngId}
         console.log(newReview)
         const reviewRes = await Review.create(newReview)
-        const tripInd = user.trips.findIndex((t)=>t.booking===bkngId)
+        console.log(reviewRes)
+        const tripInd = user.trips.findIndex((t)=>t.booking.toString()===bkngId)
         if(tripInd===-1){
             return res.status(400).send({
                 succes:false,
@@ -68,8 +70,10 @@ export const addReview = async (req, res) => {
             })
         }
         user.trips[tripInd]["review"]=reviewRes._id
+        console.log(user)
         await user.save() 
         const updLoc = await Location.findByIdAndUpdate({ _id: locId },{$push:{"locDtl.reviews":reviewRes._id}},{new:true})
+        console.log(updLoc)
         if (updLoc.locDtl.reviews.length > 0) {
             const total = updLoc.locDtl.reviews.reduce((prev, e) => prev + e.ratings, 0)
             updLoc.stars = total / loc.locDtl.reviews.length;
@@ -147,7 +151,7 @@ export const getUserTrips = async (req, res) => {
             populate:[
                 {path:'booking'},
                 {path:'locationDetails'},
-                {path:'review',select:'review ratings'}
+                {path:'review'}
             ]
         }])
         console.log(result)

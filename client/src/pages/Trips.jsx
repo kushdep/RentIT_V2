@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AddReview from "../components/AddReview";
 import { useEffect } from "react";
 import { getMyTrips } from "../store/profile-slice";
-import Review from "../../../server/models/review";
+import Reviews from "../components/Reviews";
 
 function Trips() {
   const { tripsData } = useSelector((state) => state.profileData);
@@ -20,8 +20,8 @@ function Trips() {
         {tripsData.trips.length > 0 ? (
           tripsData.trips.map((t) => {
             return (
-              <div className="row">
-                <div className="col-6 p-0 me-2">
+              <div className="row mt-2">
+                <div className="col-6 shadow p-0 me-2">
                   <div className="card p-0">
                     <div className="row g-0">
                       <div className="col-md-4">
@@ -33,7 +33,7 @@ function Trips() {
                           className="img-fluid  p-3"
                         />
                       </div>
-                      <div className="col-md-8 ">
+                      <div className="col-md-8 p-3 ">
                         <div className="card-body p-0">
                           <h5 className="card-title p-1">
                             {t?.locationDetails?.locDtl?.title}
@@ -72,16 +72,16 @@ function Trips() {
                     </div>
                   </div>
                 </div>
-                <div className="col border rounded-4 p-2 h-50 bg-dark">
-                  {/* {t.booking?.checkIn ? (
-                    t.review?.review ? ( */}
+                <div className="col border rounded-4 p-2 h-50 shadow">
+                  {t.booking?.checkIn ? (
+                    !t?.review?.review ? (
                       <AddReview locId={t.locationDetails._id} bkngId={t.booking._id}/>
-                    {/* ) : (
-                      <Review />
+                    ) : (
+                      <Reviews review={t?.review}/>
                     )
-                  ) : ( */}
-                    {/* <div className="">Cannot Add Review</div> */}
-                  {/* )} */}
+                  ) : (
+                     <div className="">Cannot Add Review</div>
+                   )} 
                 </div>
               </div>
             );

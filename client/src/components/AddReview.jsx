@@ -18,6 +18,7 @@ function AddReview({locId,bkngId}) {
     const review = formData.get("Review");
 
     let err = [];
+    console.log(stars)
     if (stars < 0.5) {
       err.push("Please Select Star Rating");
     }
