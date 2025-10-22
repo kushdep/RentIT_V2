@@ -34,7 +34,7 @@ function Reviews({ review }) {
               <div className="">
                 <h6 className="fw-medium mb-0">{review?.author.username}</h6>
               </div>
-              <div className="" >
+              <div className="">
                 <div className="col-2 p-0 d-flex flex-row">
                   {Array.from({ length: review?.ratings }).map(() => (
                     <img src="/public/icons/star-fill.svg" alt="" />
@@ -51,9 +51,15 @@ function Reviews({ review }) {
         </div>
         <div className="row row-cols-1">
           <div className="col ">
-            <p>{review?.review}</p>
+            <p>
+              {review?.review
+                ? review.review.length > 50
+                  ? review.review.slice(0, 50) + " ...."
+                  : review.review
+                : ""}
+            </p>
           </div>
-          {review?.review.length > 100 && (
+          {review?.review.length > 50 && (
             <div className="col">
               <button className="btn text-decoration-underline p-0">
                 Show more

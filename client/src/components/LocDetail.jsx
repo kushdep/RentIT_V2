@@ -13,7 +13,6 @@ import { Skeleton } from "antd";
 import ContactUsForm from "./ContactUsForm";
 import ShowAllPhotos from "./Modals/ShowAllPhotos";
 import RentItForm from "./RentItForm";
-import { rentItActions } from "../store/rentIt-slice";
 
 function LocDetails() {
   const showAmmModal = useRef();
@@ -31,12 +30,13 @@ function LocDetails() {
     author: null,
     location: null,
     options: [],
-    bookings:[]
+    bookings: [],
+    reviews: [],
   });
   const { isAuthenticated, token } = useSelector((state) => state.authData);
   const { savedLocData } = useSelector((state) => state.profileData);
   const { locId } = useParams();
-  const {payment} = useSelector(state=>state.rentItData)
+  const { payment } = useSelector((state) => state.rentItData);
   const isSaved = savedLocData.locData.find((e) => e.locId === locId);
   const [like, setLike] = useState(isSaved);
 
@@ -57,8 +57,9 @@ function LocDetails() {
         price: locDtl.price,
         author: locDtl.author,
         location: locDtl.location,
-        bookings:location?.bookings,
+        bookings: location?.bookings,
         options,
+        reviews: locDtl.reviews,
       };
     });
   }
@@ -87,17 +88,18 @@ function LocDetails() {
                 price: locDtl.price,
                 author: locDtl.author,
                 location: locDtl.location,
-                bookings:locationDetail?.bookings,
+                bookings: locationDetail?.bookings,
                 options,
+                reviews: locDtl.reviews,
               };
             });
           }
         } catch (error) {
           if (error.response.status === 404) {
-            toast.error('Something went wrong')
+            toast.error("Something went wrong");
           }
           if (error.response.status === 400) {
-            toast.error('Something went wrong')
+            toast.error("Something went wrong");
           }
         }
       }
@@ -121,7 +123,7 @@ function LocDetails() {
     try {
       console.log(locId);
       console.log(!like);
-      await dispatch(setSavedLoc({ locId: locId, saveStts: !like, token }));
+      dispatch(setSavedLoc({ locId: locId, saveStts: !like, token }));
     } catch (error) {
       console.log(error);
       toast.error("cannot Save to Whishlist");
@@ -130,6 +132,8 @@ function LocDetails() {
       });
     }
   }
+  console.log(locDetails);
+  console.log(loc);
   return (
     <>
       {loc.title !== null ? (
@@ -163,7 +167,7 @@ function LocDetails() {
                     alt=""
                     className="me-1"
                   />
-                  Save
+                  {like ? "Unlike" : "save"}
                 </button>
               </div>
             </div>
@@ -308,7 +312,12 @@ function LocDetails() {
                   className="container position-sticky  rentCol shadow"
                   style={{ top: 10 }}
                 >
-                  <RentItForm guestsCap={loc.guestsCap} price={loc.price} bookedDates={loc.bookings} authorEmail={loc.author.email}/>
+                  <RentItForm
+                    guestsCap={loc.guestsCap}
+                    price={loc.price}
+                    bookedDates={loc.bookings}
+                    authorEmail={loc.author.email}
+                  />
                 </div>
               </div>
             </div>
@@ -326,21 +335,30 @@ function LocDetails() {
                   </div>
                 </div>
                 <div className="row mt-3">
-                  <div className="container" style={{ height: 800 }}>
+                  <div className="container">
                     <div className="row row-cols-2">
-                      <Reviews />
-                      <Reviews />
-                      <Reviews />
-                      <Reviews />
-                      <Reviews />
-                      <Reviews />
+                      {loc.reviews.length > 0 ? (
+                        loc.reviews.map((r, i) => {
+                          if (i > 4) {
+                            return null;
+                          }
+                          return <Reviews review={r} />;
+                        })
+                      ) : 
+                        <div className="text-center w-100 text-muted border rounded-4 p-5">
+
+                          <h2>No reviews</h2>
+                        </div>
+                      }
                     </div>
                     <div className="row">
-                      <div className="col">
-                        <button className="btn btn-outline-primary mt-3  mb-3 w-100">
-                          See More Reviews
-                        </button>
-                      </div>
+                      {loc.reviews.length > 5 && (
+                        <div className="col">
+                          <button className="btn btn-outline-primary mt-3  mb-3 w-100">
+                            See All Reviews
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
