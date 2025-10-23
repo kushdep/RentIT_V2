@@ -9,6 +9,7 @@ import axios from 'axios'
 import crypto from 'crypto'
 import { getRazorpayOrderId } from '../razor-pay/razor-payment.js';
 import Bookings from '../models/booking.js';
+import { getIo } from '../socket.js';
 dotenv.config()
 
 export const addLocation = async (req, res) => {
@@ -658,7 +659,7 @@ function generateStats(dates, totalRent, totalDays) {
 export const verifyPayment = async (req, res) => {
     try {
         const url = req.originalUrl
-                const { _id } = req.user
+        const { _id } = req.user
         if (url.includes('payment-failed')) {
             const { paymentId } = req.body
             const updPaymentDoc = await Payment.findByIdAndUpdate({ _id: paymentId }, { $set: { status: 'FAILED' } })
@@ -693,17 +694,8 @@ export const verifyPayment = async (req, res) => {
             if (updPaymentDoc === null) {
                 return res.json({ success: false });
             }
-
-            // const tripData = {
-            //     booking: bookingId,
-            //     locationDetails: locId,
-            // }
-
-            // const userDoc = await User.findByIdAndUpdate(_id, { $push: { trips: tripData } })
-            // if (userDoc === null) {
-            //     return res.json({success: false})
-            // }
-
+            const io = getIo()
+            io.emit("new_booking",{locName:locDoc.locDtl.title})
             return res.json({ success: true });
         } else {
             const updPaymentDoc = await Payment.findByIdAndUpdate({ _id: paymentId }, { $set: { status: 'FAILED' } })

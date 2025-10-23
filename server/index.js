@@ -1,3 +1,4 @@
+import http from "http"
 import cors from 'cors'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
@@ -7,9 +8,11 @@ import locRoutes from './routes/locRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import profileRoutes from './routes/profileRoutes.js'
 import { authentication } from './middlewares/authentication..js'
-
+import {initSocket} from "./socket.js"
 
 const app = express()
+const scktSrvr = http.createServer(app)
+initSocket(scktSrvr)
 
 dotenv.config()
 ConnectDB()
@@ -29,7 +32,7 @@ app.listen(process.env.PORT, () => {
     console.log(`Connected on Port ${process.env.PORT}`)
 })
 
-
+scktSrvr.listen(5000,()=>console.log("Listening on port 5000"))
 
 
 
