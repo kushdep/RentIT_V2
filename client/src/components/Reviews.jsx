@@ -21,7 +21,7 @@ function Reviews({ review }) {
 
   return (
     <div className="col mt-4">
-      <div className="container">
+      <div className="container border p-2 rounded-4">
         <div className="row">
           <div className="col d-flex">
             <img
@@ -36,9 +36,14 @@ function Reviews({ review }) {
               </div>
               <div className="">
                 <div className="col-2 p-0 d-flex flex-row">
-                  {Array.from({ length: review?.ratings }).map(() => (
-                    <img src="/public/icons/star-fill.svg" alt="" />
-                  ))}
+                  {Array.from({ length: Math.floor(review?.ratings) }).map(
+                    () => (
+                      <img src="/public/icons/star-fill.svg" alt="" />
+                    )
+                  )}
+                  {review?.ratings - Math.floor(review?.ratings) !== 0 && (
+                    <img src="/public/icons/half-star.png" />
+                  )}
                 </div>
                 <div className="col p-0">
                   <span className="align-middle" style={{ fontSize: 12 }}>

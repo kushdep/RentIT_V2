@@ -76,7 +76,7 @@ export const addReview = async (req, res) => {
         console.log(updLoc)
         if (updLoc.locDtl.reviews.length > 0) {
             const total = updLoc.locDtl.reviews.reduce((prev, e) => prev + e.ratings, 0)
-            updLoc.stars = total / loc.locDtl.reviews.length;
+            updLoc.stars = total / updLoc.locDtl.reviews.length;
         }
         await updLoc.save()
         return res.status(201).send({

@@ -69,7 +69,6 @@ function AddReview({locId,bkngId}) {
     }
   }
 
-  console.log()
   return (
     <>
       {formStt?.errors.length > 0 &&
