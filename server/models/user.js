@@ -63,6 +63,27 @@ const userSchema = new mongoose.Schema({
             },
         },
     },
+    notifications:[{
+        ntfType:{
+            type:String,
+            enum:['BKG','RVW'],
+            required:true
+        },
+        message:{
+            type:String,
+            required:true
+        },
+        isVwd:{
+            type:Boolean,
+            default:false,
+            required:false
+        },
+        timeStamp:{
+            type:Date,
+            default:Date.now,
+            required:false
+        }
+    }],
     trips: [
         {
             booking: {

@@ -42,15 +42,15 @@ export const addLocation = async (req, res) => {
 export const addReview = async (req, res) => {
     try {
         const { _id } = req.user
-        const { locId, bkngId,review, stars } = req.body
-        let bkngReview = await Review.find({bookingId:bkngId})
+        const { locId, bkngId, review, stars } = req.body
+        let bkngReview = await Review.find({ bookingId: bkngId })
         console.log("bkngReview")
         console.log(bkngReview)
         console.log(bkngReview.length)
-        if(bkngReview.length>0){
+        if (bkngReview.length > 0) {
             return res.status(400).send({
-                success:false,
-                message:'Review Already exist'
+                success: false,
+                message: 'Review Already exist'
             })
         }
         const user = await User.findById(_id)
@@ -59,21 +59,21 @@ export const addReview = async (req, res) => {
             username: user.username,
             email: user.email,
         }
-        const newReview = { location: locId, ratings: stars, review, author ,bookingId:bkngId}
+        const newReview = { location: locId, ratings: stars, review, author, bookingId: bkngId }
         console.log(newReview)
         const reviewRes = await Review.create(newReview)
         console.log(reviewRes)
-        const tripInd = user.trips.findIndex((t)=>t.booking.toString()===bkngId)
-        if(tripInd===-1){
+        const tripInd = user.trips.findIndex((t) => t.booking.toString() === bkngId)
+        if (tripInd === -1) {
             return res.status(400).send({
-                succes:false,
-                message:'Something went wrong'
+                succes: false,
+                message: 'Something went wrong'
             })
         }
-        user.trips[tripInd]["review"]=reviewRes._id
+        user.trips[tripInd]["review"] = reviewRes._id
         console.log(user)
-        await user.save() 
-        const updLoc = await Location.findByIdAndUpdate({ _id: locId },{$push:{"locDtl.reviews":reviewRes._id}},{new:true})
+        await user.save()
+        const updLoc = await Location.findByIdAndUpdate({ _id: locId }, { $push: { "locDtl.reviews": reviewRes._id } }, { new: true })
         console.log(updLoc)
         if (updLoc.locDtl.reviews.length > 0) {
             const total = updLoc.locDtl.reviews.reduce((prev, e) => prev + e.ratings, 0)
@@ -139,7 +139,7 @@ export const getWhishlistLoc = async (req, res) => {
         return res.status(400).send({
             success: false,
             message: error
-        }) 
+        })
     }
 }
 export const getUserTrips = async (req, res) => {
@@ -147,14 +147,14 @@ export const getUserTrips = async (req, res) => {
         const { _id } = req.user
         let result = []
         result = await User.findById({ _id }).populate([
-        {
-            path: "trips",
-            populate:[
-                {path:'booking'},
-                {path:'locationDetails'},
-                {path:'review'}
-            ]
-        }])
+            {
+                path: "trips",
+                populate: [
+                    { path: 'booking' },
+                    { path: 'locationDetails' },
+                    { path: 'review' }
+                ]
+            }])
         console.log(result)
         if (result.length === 0) {
             return res.status(204).send({
@@ -181,7 +181,7 @@ export const getUserBookings = async (req, res) => {
     try {
         const { email } = req.user
         let result = []
-        result = await Bookings.find({ "user.email":email }).populate([{path:'location',select:'locDtl.title'},{path:'payment',select:'status amount'}])
+        result = await Bookings.find({ "user.email": email }).populate([{ path: 'location', select: 'locDtl.title' }, { path: 'payment', select: 'status amount' }])
         console.log(result)
         if (result.length === 0) {
             return res.status(204).send({
@@ -206,7 +206,7 @@ export const getUserPaymentsInfo = async (req, res) => {
     try {
         const { _id } = req.user
         let result = []
-        result = await Payment.find({ userId:_id })
+        result = await Payment.find({ userId: _id })
         console.log(result)
         if (result.length === 0) {
             return res.status(204).send({
@@ -659,7 +659,7 @@ function generateStats(dates, totalRent, totalDays) {
 export const verifyPayment = async (req, res) => {
     try {
         const url = req.originalUrl
-        const { _id } = req.user
+        const { _id, username } = req.user
         if (url.includes('payment-failed')) {
             const { paymentId } = req.body
             const updPaymentDoc = await Payment.findByIdAndUpdate({ _id: paymentId }, { $set: { status: 'FAILED' } })
@@ -695,7 +695,17 @@ export const verifyPayment = async (req, res) => {
                 return res.json({ success: false });
             }
             const io = getIo()
-            io.emit("new_booking",{locName:locDoc.locDtl.title})
+            console.log("Emitting Event")
+            io.emit("new_booking", { locName: locDoc.locDtl.title ,message:"New Booking"})
+
+            const newNoti = {
+                ntfType: 'BKG',
+                message: `New Booking at ${locDoc.locDtl.title} by ${username}`,
+            }
+            const updUserNoti = await User.findOneAndUpdate({ email: locDoc.locDtl.author.email }, { $push: { notifications: newNoti } },{new:true})
+            if(!updUserNoti){
+                console.log("Unable to Update Booking Notificaitons")
+            }
             return res.json({ success: true });
         } else {
             const updPaymentDoc = await Payment.findByIdAndUpdate({ _id: paymentId }, { $set: { status: 'FAILED' } })
