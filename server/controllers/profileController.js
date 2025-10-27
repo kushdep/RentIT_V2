@@ -80,6 +80,18 @@ export const addReview = async (req, res) => {
             updLoc.stars = total / updLoc.locDtl.reviews.length;
         }
         await updLoc.save()
+        const io = getIo()
+        io.emit("new_booking", { locName: updLoc.locDtl.title, message: "New Review" })
+
+        const newNoti = {
+            ntfType: 'RVW',
+            message: `New Review at ${updLoc.locDtl.title} by ${user.username}`,
+        }
+        const updUserNoti = await User.findOneAndUpdate({ email: updLoc.locDtl.author.email }, { $push: { notifications: newNoti } }, { new: true })
+        if (!updUserNoti) {
+            console.log("Unable to Update Booking Notificaitons")
+        }
+
         return res.status(201).send({
             success: true,
             message: 'Review Added Successfully',
@@ -128,6 +140,10 @@ export const getWhishlistLoc = async (req, res) => {
                 message: "No Filtered Rent Locations Data"
             })
         }
+        const io = getIo()
+        console.log("server Event")
+        io.emit("serverEvent", "Are you LIstening")
+
         return res.status(200).send({
             success: true,
             data: result,
@@ -696,14 +712,14 @@ export const verifyPayment = async (req, res) => {
             }
             const io = getIo()
             console.log("Emitting Event")
-            io.emit("new_booking", { locName: locDoc.locDtl.title ,message:"New Booking"})
+            io.emit("new_booking", { locName: locDoc.locDtl.title, message: "New Booking" })
 
             const newNoti = {
                 ntfType: 'BKG',
                 message: `New Booking at ${locDoc.locDtl.title} by ${username}`,
             }
-            const updUserNoti = await User.findOneAndUpdate({ email: locDoc.locDtl.author.email }, { $push: { notifications: newNoti } },{new:true})
-            if(!updUserNoti){
+            const updUserNoti = await User.findOneAndUpdate({ email: locDoc.locDtl.author.email }, { $push: { notifications: newNoti } }, { new: true })
+            if (!updUserNoti) {
                 console.log("Unable to Update Booking Notificaitons")
             }
             return res.json({ success: true });

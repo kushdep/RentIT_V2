@@ -1,8 +1,10 @@
 import { useEffect } from "react";
+import { io } from "socket.io-client"
 import { useDispatch, useSelector } from "react-redux";
 import { getSavedLoc } from "../store/profile-slice";
 import PropertyCard from "../components/UI/PropertyCard";
 import { curfmt } from "../utils/formatter";
+import toast from "react-hot-toast";
 
 export default function Whishlist() {
   const { savedLocData } = useSelector((state) => state.profileData);
@@ -13,6 +15,22 @@ export default function Whishlist() {
     const token = localStorage.getItem("token");
     console.log(token);
     dispatch(getSavedLoc(token));
+              const socket = io("http://localhost:5000", { autoConnect: true })
+    console.log(socket)
+        const onConnect = () => console.log("Connected:", socket.id)
+        const onDisconnect = () => console.log("Disconnected")
+        const onServerEvent = (data) => {
+          console.log(data)
+          toast.success("LIstening")
+        }
+        const onError = (err) => console.log("Connect error:", err)
+    
+        socket.on("connect", onConnect)
+        socket.on("disconnect", onDisconnect)
+        socket.on("serverEvent", onServerEvent)
+        
+        socket.on("connect_error", onError)
+        
   }, []);
 
   return (
