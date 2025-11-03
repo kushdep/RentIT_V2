@@ -66,6 +66,15 @@ function AddReview({locId,bkngId}) {
           errors: err,
         };
       }
+      if (error?.response?.status === 500) {
+        err.push("Something Went Wrong")
+        return {
+          ...prevStt,
+          stars,
+          review,
+          errors: err,
+        };
+      }
     }
   }
 

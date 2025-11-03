@@ -75,9 +75,18 @@ export const addReview = async (req, res) => {
         await user.save()
         const updLoc = await Location.findByIdAndUpdate({ _id: locId }, { $push: { "locDtl.reviews": reviewRes._id } }, { new: true })
         console.log(updLoc)
-        if (updLoc.locDtl.reviews.length > 0) {
-            const total = updLoc.locDtl.reviews.reduce((prev, e) => prev + e.ratings, 0)
-            updLoc.stars = total / updLoc.locDtl.reviews.length;
+        if(updLoc.locDtl.reviews.length===1){
+            updLoc.stars=stars
+        }
+        else if (updLoc.locDtl.reviews.length > 1) {
+            const reviewIds = updLoc.locDtl.reviews
+            console.log(reviewIds)
+            const revData = await Review.find({_id:{$in:reviewIds}})
+            console.log(revData)
+            const total = revData.reduce((sum, e) => sum + e.ratings, 0)
+            console.log(total )
+            console.log( updLoc.locDtl.reviews.length)
+            updLoc.stars = total / updLoc.locDtl.reviews.length
         }
         await updLoc.save()
         const io = getIo()
@@ -140,9 +149,6 @@ export const getWhishlistLoc = async (req, res) => {
                 message: "No Filtered Rent Locations Data"
             })
         }
-        const io = getIo()
-        console.log("server Event")
-        io.emit("serverEvent", "Are you LIstening")
 
         return res.status(200).send({
             success: true,
