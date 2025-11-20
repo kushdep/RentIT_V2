@@ -2,6 +2,7 @@ import "../css/homepage.css";
 import SearchBar from "../components/UI/SearchBar";
 
 function Homepage() {
+  
   return (
       <div className="container-fluid">
         <div className="row p-0" >

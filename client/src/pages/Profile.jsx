@@ -53,6 +53,8 @@ return (
                     className="position-absolute d-inline-block"
                     style={{ bottom: -5, right: 20 }}
                 >
+                  {
+                    profile.imgUrl===null &&
                     <button className="btn">
                         <img src="/public/icons/plus.png" />
                         <input
@@ -61,6 +63,7 @@ return (
                             className="position-absolute top-0 start-0 w-100 h-100 opacity-0"
                         />
                     </button>
+                  }
                 </div>
             </div>
         </div>

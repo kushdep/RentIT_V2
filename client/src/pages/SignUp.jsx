@@ -125,13 +125,13 @@ export default function SignUp() {
   return (
     <>
       <form action={formFn}>
-        <div className="row row-cols-1 text-center">
+        <div className="row row-cols-1 text-center ">
           <div className="col mb-3">
             <h2 className="fw-bold text-dark">Create Account ✨</h2>
             <p className="text-muted small">Sign up to get started</p>
           </div>
 
-          <div className="col px-4">
+          <div className="col px-4 ">
             <div className="form-floating mb-3">
               <input
                 type="email"
@@ -207,7 +207,6 @@ export default function SignUp() {
             <p className="text-danger px-2">
               {formState?.errors?.get("other")}
             </p>
-
             <div className="col text-center">
               <button
                 type="submit"

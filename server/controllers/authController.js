@@ -71,13 +71,13 @@ export const login = async (req, res) => {
     }
     const validPassword = await bcrypt.compare(password, user.password)
     if (!validPassword) {
-        return  res.status(403).send({
+        return res.status(403).send({
             success: false,
             message: 'Email or password incorrect'
         })
     }
-    const token = jwt.sign({ _id: user._id, email,username:user.username }, process.env.JWT_SECRET, { expiresIn: '7d' })
-    return  res.header('auth-token', token).send(token)
+    const token = jwt.sign({ _id: user._id, email, username: user.username }, process.env.JWT_SECRET, { expiresIn: '7d' })
+    return res.header('auth-token', token).send(token)
 }
 
 export const sendOtp = async (req, res) => {
@@ -97,7 +97,7 @@ export const sendOtp = async (req, res) => {
         });
         const otpPayload = { email, otp }
         await OTP.create(otpPayload)
-        return  res.status(200).send({
+        return res.status(200).send({
             success: true,
             message: "OTP sent successfully"
         });
@@ -116,16 +116,17 @@ export const googleLogin = async (req, res) => {
         try {
             const userRes = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes?.tokens?.access_token}`)
 
-            const { email, name } = userRes.data
-            const user = await User.findOne({ email })
+            const { email, name, picture } = userRes.data
+            let user = await User.findOne({ email })
             if (!user) {
                 user = await User.create({
                     username: name,
-                    email
+                    email,
+                    userImg: { url: picture }
                 })
             }
-            const token = jwt.sign({ _id: user._id, email,username:user.username }, process.env.JWT_SECRET, { expiresIn: '7d' })
-            return  res.header('auth-token', token).send(token)
+            const token = jwt.sign({ _id: user._id, email, username: user.username }, process.env.JWT_SECRET, { expiresIn: '7d' })
+            return res.status(200).send(token)
         }
         catch (error) {
             console.log(error)

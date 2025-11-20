@@ -46,7 +46,7 @@ function NavBar() {
                   className="collapse navbar-collapse navTtl p-2 rounded-pill d-flex justify-content-around shadow"
                   id="navbarText"
                 >
-                  <NavLink
+                  {/* <NavLink
                     to="/"
                     className={({ isActive }) =>
                       isActive
@@ -55,7 +55,7 @@ function NavBar() {
                     }
                   >
                     Home
-                  </NavLink>
+                  </NavLink> */}
                   <NavLink
                     to="/rent-locs"
                     className={({ isActive }) =>
@@ -66,7 +66,7 @@ function NavBar() {
                   >
                     Properties
                   </NavLink>
-                  <NavLink
+                  {/* <NavLink
                     to="/contact-us"
                     className={({ isActive }) =>
                       isActive
@@ -75,7 +75,7 @@ function NavBar() {
                     }
                   >
                     Contact Us
-                  </NavLink>
+                  </NavLink> */}
                 </div>
                 </div>
                 <button
