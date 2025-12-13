@@ -59,7 +59,6 @@ function VerifyProp() {
       }
     } catch (error) {
       console.log(error)
-      if (error.response.status === 400) {
         const { message } = error.response.data;
         toast.error(message);
         return {
@@ -67,7 +66,6 @@ function VerifyProp() {
           id,
           name,
           errs: {},
-        };
       }
     }
   }

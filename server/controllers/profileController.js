@@ -75,17 +75,17 @@ export const addReview = async (req, res) => {
         await user.save()
         const updLoc = await Location.findByIdAndUpdate({ _id: locId }, { $push: { "locDtl.reviews": reviewRes._id } }, { new: true })
         console.log(updLoc)
-        if(updLoc.locDtl.reviews.length===1){
-            updLoc.stars=stars
+        if (updLoc.locDtl.reviews.length === 1) {
+            updLoc.stars = stars
         }
         else if (updLoc.locDtl.reviews.length > 1) {
             const reviewIds = updLoc.locDtl.reviews
             console.log(reviewIds)
-            const revData = await Review.find({_id:{$in:reviewIds}})
+            const revData = await Review.find({ _id: { $in: reviewIds } })
             console.log(revData)
             const total = revData.reduce((sum, e) => sum + e.ratings, 0)
-            console.log(total )
-            console.log( updLoc.locDtl.reviews.length)
+            console.log(total)
+            console.log(updLoc.locDtl.reviews.length)
             updLoc.stars = total / updLoc.locDtl.reviews.length
         }
         await updLoc.save()
@@ -460,11 +460,16 @@ export const setPropertierData = async (req, res) => {
                 throw Error(message)
             } else {
                 console.log('Error in API err_type: ' + err_type + ' err_status ' + err_status + ' err_code ' + err_code)
+                return res.status(500).send({
+                    success: false,
+                    status: 500,
+                    message: "Something went wrong"
+                })
             }
         }
     } catch (error) {
         console.error("Error in setPropertierData() " + error)
-        return res.status(400).send({
+        return res.status(error.status).send({
             success: false,
             status: 400,
             message: error.message

@@ -61,11 +61,20 @@ function AuthModal({ reference, authStt, authSttFn }) {
             errors: err,
           };
         }
+        if (error?.response?.status === 403) {
+          err.push(error?.response?.data?.message);
+          console.log(error?.response?.data?.message)
+          return {
+            ...currentState,
+            errors: err,
+          };
+        }
       }
     } catch (error) {
       console.log(error);
     }
   }
+
   return createPortal(
     <>
       <dialog
@@ -96,6 +105,9 @@ function AuthModal({ reference, authStt, authSttFn }) {
                   <p className="text-muted small">
                     Please log in to continue to your account
                   </p>
+                  <p className="text-danger px-2 text-start">
+                {formState?.errors[0]}
+              </p>
                 </div>
                 <div className="col mb-3">
                   <div className="form-floating">
