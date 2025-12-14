@@ -7,7 +7,7 @@ function VerifyProp() {
   const { profile } = useSelector((state) => state.profileData);
   const [formStt, formFn, isPending] = useActionState(submitId, {
     id: null,
-    name: profile.username || null,
+    name: null,
     errs: {},
   });
   const { token } = useSelector((state) => state.authData);
@@ -104,7 +104,7 @@ function VerifyProp() {
                     id="idNumber"
                     name="id"
                     placeholder="idNumber"
-                    value={formStt?.idProof}
+                    defaultValue={formStt?.idProof}
                   />
                   <label htmlFor="idNumber">PAN Number *</label>
                 </div>

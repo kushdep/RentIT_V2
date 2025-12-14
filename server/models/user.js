@@ -54,14 +54,12 @@ const userSchema = new mongoose.Schema({
             type: Boolean,
             default: false
         },
-        idProof: {
             id: {
                 type: String
             },
             refId: {
                 type: Number
             },
-        },
     },
     notifications:[{
         ntfType:{

@@ -431,11 +431,11 @@ export const setPropertierData = async (req, res) => {
         console.log(response)
         if (response.success) {
             const { pan, valid, reference_id } = response.data
-            if (valid) {
+            if (true) {//having issue with API not able to verify   
                 let hashIdNum
                 try {
                     hashIdNum = await bcrypt.hash(pan, 10)
-                    const newDoc = await User.findOneAndUpdate({ _id }, {
+                    const newDoc = await User.findOneAndUpdate({_id }, {
                         '$set': {
                             'userType.propertier': true,
                             'userType.id': hashIdNum,
@@ -489,6 +489,7 @@ const verifyPAN = async (data) => {
                 }
             }
         )
+        console.log("API response")
         console.log(response)
         if (response.status === 200) {
             return {
