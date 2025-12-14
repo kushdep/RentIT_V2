@@ -412,6 +412,13 @@ export const updateProfileImg = async (req, res) => {
     }
 }
 
+function panHash(pan) {
+    return crypto
+        .createHash('sha256')
+        .update(pan + process.env.PAN_SALT)
+        .digest('hex');
+}
+
 export const setPropertierData = async (req, res) => {
     try {
         const { id = '', name = null } = req.body
@@ -427,15 +434,24 @@ export const setPropertierData = async (req, res) => {
             throw Error('Invalid Credentials')
         }
 
+        const hashIdNum = panHash(id)
+        const panRes = await User.findOne({ 'userType.id': hashIdNum })
+        if (panRes) {
+            return res.status(400).send({
+                success: false,
+                status:400,
+                message: "Already a propertier"
+            })
+        }
+
         const response = await verifyPAN({ 'pan': id, 'name': name })
         console.log(response)
         if (response.success) {
-            const { pan, valid, reference_id } = response.data
+            const { reference_id } = response.data
             if (true) {//having issue with API not able to verify   
-                let hashIdNum
                 try {
-                    hashIdNum = await bcrypt.hash(pan, 10)
-                    const newDoc = await User.findOneAndUpdate({_id }, {
+                    console.log(hashIdNum)
+                    const newDoc = await User.findOneAndUpdate({ _id }, {
                         '$set': {
                             'userType.propertier': true,
                             'userType.id': hashIdNum,
