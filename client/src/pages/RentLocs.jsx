@@ -134,7 +134,7 @@ if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
           {/* <SearchBar updateSearchStt={setSearchLoc} /> */}
         </div>
       </header>
-      <div className="container-fluid border ">
+      <div className="container-fluid ">
         {
           searchLoc.name.val && !searchLoc.name.locId?
           <div className="d-flex justify-content-center">

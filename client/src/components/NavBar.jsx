@@ -32,19 +32,22 @@ function NavBar() {
         authStt={loginStt}
       />
       <div
-        className="container-fluid navRent border"
+        className="container-fluid navRent"
       >
         <div className="row h-100">
-          <div className="col-2 border border-danger">
+          <div className="col-2">
             <div className="h-100 w-100">
 
             {/* <img src="/images/logo.png" alt="Logo" id="logo" className="" /> */}
             </div>
           </div>
           <div className="col-1"></div>
-          <div className="col-6 border">
-            <div className="border border-success h-50"></div>
-            <div className="border border-danger d-flex flex-column justify-content-center h-50 w-100">
+          <div className="col-6">
+            <div className="h-25 d-flex justify-content-center">
+              <img src="/images/travel3d.png" className="" />
+              <span className="trvlSpan p-2">Home</span>
+            </div>
+            <div className="d-flex flex-column justify-content-center h-50 w-100">
               <SearchBar/>
             </div>
           </div>

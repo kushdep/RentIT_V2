@@ -36,9 +36,11 @@
   background-color: #f35525;
 } */
 
-
-#logo {
-  object-fit: ;
+.trvlSpan{
+  font-weight: 600;
+  letter-spacing: -1px;
+  font-size: 1.3rem;
+  border-bottom: 3px solid black;
 }
 
 #login{
