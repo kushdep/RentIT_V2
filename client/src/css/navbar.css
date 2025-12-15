@@ -32,26 +32,32 @@
   text-decoration: underline;
 } */
 
-.navTtl{
+/* .navTtl{
   background-color: #f35525;
-}
+} */
+
 
 #logo {
-  max-width: 8%;
-  height: 8%;
+  object-fit: ;
 }
 
 #login{
-    font-size:20px;
+    font-size: 1.2rem;
     font-weight: 500;
 }
 
 #signup{
-    font-size:20px;
+    font-size:1.2rem;
     font-weight: 500;
 }
 
 .btn-outline-primary.active{
+  color: #1e1e1e;
+  background-color: white;
+  border-color: #1e1e1e;
+}
+
+.btn-outline-primary{
   color: #1e1e1e;
   background-color: white;
   border-color: #1e1e1e;
@@ -73,12 +79,17 @@
 .btn-outline-primary:hover {
   background-color: #1e1e1e;
   color: white;
-  border-color: white;
+  border-color: #1e1e1e;
 }
 
-.page-heading img {
+/* .page-heading img {
   width: 100%;
   background-position: center bottom;
   background-size: cover;
   display: block;
+} */
+
+.navRent{
+  background-color: #f8f8f8;
+  height: 25vh;
 }

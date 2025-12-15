@@ -9,7 +9,7 @@ import "../../css/searchBar.css";
 
 const { RangePicker } = DatePicker;
 
-function SearchBar({ props, updateSearchStt }) {
+function SearchBar({ updateSearchStt }) {
   const { isLoaded, sugg, inpVal, handleInpVal } = useGoogleAutoComp();
   const locType = useRef();
   const navigate = useNavigate();
@@ -137,8 +137,7 @@ function SearchBar({ props, updateSearchStt }) {
 
   return (
     <div
-      className="container d-flex w-50 rounded-pill border h-50"
-      style={props}
+      className="container d-flex rounded-pill w-100 srchBar bg-white"
     >
       <div className="row shadow rounded-pill">
         <div className="col-4 h-100 p-0">
@@ -180,8 +179,8 @@ function SearchBar({ props, updateSearchStt }) {
         <div className="col-4 dateRange h-100">
           <RangePicker bordered={false} />
         </div>
-        <div className="col d-flex justify-content-between p-0 h-100">
           <div className="vr h-75 my-2 px-0"></div>
+        <div className="col d-flex p-0 h-100">
           <div className="form-floating">
             <select
               className="form-select w-100 border-0 h-100"
@@ -198,14 +197,14 @@ function SearchBar({ props, updateSearchStt }) {
               Location Type
             </label>
           </div>
-          <div className="w-25">
+          </div>
+          <div className="col-1 p-0">
             <button
               className="btn btn-primary rounded-circle h-100 w-100 fw-bolder"
               onClick={handleSearchLoc}
             >
               GO
             </button>
-          </div>
         </div>
       </div>
     </div>

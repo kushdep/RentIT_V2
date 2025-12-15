@@ -130,16 +130,11 @@ if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
   return (
     <div>
       <header className="position-relative">
-        <div className="page-heading image-fluid">
-          <img
-            src="/images/rent-locs-homepage.png"
-            className="rounded-5 p-3"
-            alt=""
-          />
-          <SearchBar props={{ height: 100, top: 150, right: 390 }} updateSearchStt={setSearchLoc} />
+        <div className="page-heading image-fluid ">
+          {/* <SearchBar updateSearchStt={setSearchLoc} /> */}
         </div>
       </header>
-      <div className="container-fluid">
+      <div className="container-fluid border ">
         {
           searchLoc.name.val && !searchLoc.name.locId?
           <div className="d-flex justify-content-center">
@@ -148,7 +143,7 @@ if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
           :((searchLoc.coordinates.val && !searchLoc.coordinates.locId && searchLoc.coordinates.locs.length>0)?<SimilarLocs locations={searchLoc.coordinates.locs} locCoord={searchLoc.coordinates} upSrchStt={setSearchLoc}/>:       
         <div className="container-fluid">
         <div className="row">
-<div className="col" style={{backgroundColor:'#f8f8f8'}}>
+<div className="col">
       <div className="container-fluid mt-3">
         <div className="row">
           <div className="col-1 sortBtns">
