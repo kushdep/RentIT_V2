@@ -241,7 +241,7 @@ function LocDetails() {
                           className="p-0 text-muted form "
                           style={{ fontSize: 12 }}
                         >
-                          Aprrover since
+                          Location listed since 
                         </p>
                       </div>
                     </div>

@@ -17,13 +17,16 @@ export default function SignUp() {
     let body = {};
     const email = formData.get("email");
 
-    if (currentState.errors !== null) {
+    console.log("1 here")
+    console.log(currentState)
+    if (currentState && currentState.errors !== null) {
+      console.log("here")
       currentState.errors = null;
     }
     let error = new Map();
 
     console.log(url);
-    if (!currentState.otpSent) {
+    if (currentState && !currentState.otpSent) {
       url += "/send-otp";
       console.log(url);
       body = {
@@ -139,7 +142,6 @@ export default function SignUp() {
                 name="email"
                 id="floatingInput"
                 disabled={formState?.otpSent}
-                value={formState?.email}
                 placeholder="email"
                 style={{
                   background: "#f9fafb",

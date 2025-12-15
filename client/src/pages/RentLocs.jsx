@@ -127,8 +127,6 @@ if (filter.priceRange.ind !== null) fltrSrtBy.push({title:'priceRng',val:filter.
 if (sortBy.distance.inc) fltrSrtBy.push({title:'dst',val:'🏝️ Distance'});
 if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
 
-console.log("pages "+pages)
-console.log("check points"+chckPts)
   return (
     <div>
       <header className="position-relative">
@@ -150,7 +148,7 @@ console.log("check points"+chckPts)
           :((searchLoc.coordinates.val && !searchLoc.coordinates.locId && searchLoc.coordinates.locs.length>0)?<SimilarLocs locations={searchLoc.coordinates.locs} locCoord={searchLoc.coordinates} upSrchStt={setSearchLoc}/>:       
         <div className="container-fluid">
         <div className="row">
-<div className="col ">
+<div className="col" style={{backgroundColor:'#f8f8f8'}}>
       <div className="container-fluid mt-3">
         <div className="row">
           <div className="col-1 sortBtns">

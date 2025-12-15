@@ -4,6 +4,10 @@ import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { useGoogleAutoComp } from "../../hooks/useGoogleAutoComp";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { DatePicker, Space } from "antd";
+import "../../css/searchBar.css";
+
+const { RangePicker } = DatePicker;
 
 function SearchBar({ props, updateSearchStt }) {
   const { isLoaded, sugg, inpVal, handleInpVal } = useGoogleAutoComp();
@@ -17,8 +21,8 @@ function SearchBar({ props, updateSearchStt }) {
       locName = null,
       locType = null,
     } = searchFeilds;
-    console.log(locName)
-    console.log(searchFeilds)
+    console.log(locName);
+    console.log(searchFeilds);
 
     let url = `http://localhost:3000/rent-locs?search=true`;
     if (locName === null && lat !== null && lng !== null) {
@@ -26,49 +30,49 @@ function SearchBar({ props, updateSearchStt }) {
       if (locType !== null) {
         url += `&locType=${locType}`;
       }
-        try {
-          console.log(url)
-          const response = await axios.get(url);
-          if (response.status === 200) {
-            if (response.data.found) {
-              const { locId } = response.data;
-              updateSearchStt((prev) => {
-                const updatedval = {
-                  val: true,
-                  locId,
-                  locs: [],
-                  long:lng,
-                  lat:lat,
-                };
-                return {
-                  ...prev,
-                  coordinates: updatedval,
-                };
-              });
-              console.log(locId)
-              navigate(`/rent-locs/${locId}`);
-            } else {
-              const { similarLocs } = response.data;
-              updateSearchStt((prev) => {
-                const updatedval = {
-                  val: true,
-                  locId: null,
-                  locs: similarLocs,
-                  long:lng,
-                  lat:lat,
-                };
-                return {
-                  ...prev,
-                  coordinates: updatedval,
-                };
-              });
-            }
-          }
-        } catch (error) {
-          if (error.response.status === 400) {
-            console.log(error.response.data);
+      try {
+        console.log(url);
+        const response = await axios.get(url);
+        if (response.status === 200) {
+          if (response.data.found) {
+            const { locId } = response.data;
+            updateSearchStt((prev) => {
+              const updatedval = {
+                val: true,
+                locId,
+                locs: [],
+                long: lng,
+                lat: lat,
+              };
+              return {
+                ...prev,
+                coordinates: updatedval,
+              };
+            });
+            console.log(locId);
+            navigate(`/rent-locs/${locId}`);
+          } else {
+            const { similarLocs } = response.data;
+            updateSearchStt((prev) => {
+              const updatedval = {
+                val: true,
+                locId: null,
+                locs: similarLocs,
+                long: lng,
+                lat: lat,
+              };
+              return {
+                ...prev,
+                coordinates: updatedval,
+              };
+            });
           }
         }
+      } catch (error) {
+        if (error.response.status === 400) {
+          console.log(error.response.data);
+        }
+      }
     }
 
     if (locName !== null) {
@@ -133,75 +137,73 @@ function SearchBar({ props, updateSearchStt }) {
 
   return (
     <div
-      className="container d-flex justify-content-center w-50 position-absolute "
+      className="container d-flex w-50 rounded-pill p-0 h-50 "
       style={props}
     >
-      <div className="row rounded-pill w-100 bg-body-tertiary d-flex align-content-center shadow-lg ">
-        <div className="col">
-          <div className="container">
-            <div className="row d-flex align-items-center">
-              <div className="col-6">
-                <div className="form-floating">
-                  <input
-                    type="text"
-                    disabled={!isLoaded}
-                    value={inpVal.val}
-                    className="form-control rounded-start-pill ps-4 dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    id="floatingInput"
-                    onChange={(e) =>
-                      handleInpVal({ val: e.target.value, index: null })
-                    }
-                    placeholder="Enter Search location"
-                  />
-                  <label htmlFor="floatingInput" className="">
-                    Enter Location
-                  </label>
-                  <ul className="dropdown-menu ms-4">
-                    {sugg?.map((sug, i) => (
-                      <li
-                        className="dropdown-item"
-                        onClick={() =>
-                          handleInpVal({
-                            val: sug?.Dg?.Ph?.[0]?.[2]?.[0],
-                            index: i,
-                          })
-                        }
-                      >
-                        {sug?.Dg?.Ph?.[0]?.[2]?.[0] || "Unknown"}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              <div className="col-5 rounded-bottom">
-                <div className="form-floating">
-                  <select
-                    className="form-select w-100"
-                    id="floatingSelect"
-                    aria-label="Floating label select example"
-                    ref={locType}
-                  >
-                    <option value="none">Select Lopcation Type</option>
-                    <option value="A01">Appartment</option>
-                    <option value="V01">Villa</option>
-                    <option value="P01">Pent-House</option>
-                  </select>
-                  <label for="floatingSelect">Location Type</label>
-                </div>
-              </div>
-              <div
-                className="col-1 p-0 align-middle"
-                style={{ width: 50, height: 54, objectFit: "cover" }}
-              >
-                <button
-                  className="btn btn-primary rounded-end-pill h-100"
-                  onClick={handleSearchLoc}
+      <div className="row shadow rounded-pill">
+        <div className="col-4 border h-100 rounded-pill p-0">
+          <input
+            type="text"
+            disabled={!isLoaded}
+            value={inpVal.val}
+            className="form-control h-100 rounded-pill dropdown-toggle pb-0 px-4"
+            data-bs-toggle="dropdown"
+            id="floatingInput"
+            onChange={(e) => handleInpVal({ val: e.target.value, index: null })}
+            placeholder="Search Destination"
+          />
+
+          <label htmlFor="floatingInput" id="whereTtl">
+            Where
+          </label>
+          <ul className="dropdown-menu ms-4">
+            {sugg?.map((sug, i) => {
+              const value =
+                sug?.Eg?.Qh?.[0]?.[2]?.[0] ?? sug?.Dg?.Ph?.[0]?.[2]?.[0];
+              return (
+                <li
+                  className="dropdown-item"
+                  onClick={() =>
+                    handleInpVal({
+                      val: value,
+                      index: i,
+                    })
+                  }
                 >
-                  <img src="/icons/search.png" />
-                </button>
-              </div>
-            </div>
+                  {value || "Unknown"}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+        <div className="col-4 dateRange h-100 ">
+          <RangePicker bordered={false} />
+        </div>
+        <div className="col d-flex rounded-pill justify-content-between p-0 h-100">
+<div className="vr h-75 my-2"></div>
+          <div className="form-floating">
+            <select
+              className="form-select w-100 border-0"
+              id="floatingSelect"
+              aria-label="Floating label select example"
+              ref={locType}
+            >
+              <option value="none">Select Location type </option>
+              <option value="A01">Appartment</option>
+              <option value="V01">Villa</option>
+              <option value="P01">Pent-House</option>
+            </select>
+            <label htmlFor="floatingSelect" className="fw-bolder text-black">Location Type</label>
+          </div>
+          <div
+            className="w-25"
+          >
+            <button
+              className="btn btn-primary rounded-circle h-100 w-100 fw-bolder"
+              onClick={handleSearchLoc}
+            >
+              GO
+            </button>
           </div>
         </div>
       </div>

@@ -30,8 +30,8 @@ function NavBar() {
         authSttFn={setLoginStt}
         authStt={loginStt}
       />
-      <header className="sub-header p-0 ">
-        <nav className="navbar navbar-expand info">
+      <header className="sub-header p-0">
+        <nav className="navbar navbar-expand border">
           <div className="container-fluid">
             <div className="row align-items-center w-100 m-0 d-flex justify-content-between">
               <div className="col-8 d-flex align-items-center justify-content-between">
@@ -42,11 +42,11 @@ function NavBar() {
                   className="img-fluid"
                 />
                 <div className="w-50">
-                <div
-                  className="collapse navbar-collapse navTtl p-2 rounded-pill d-flex justify-content-around shadow"
-                  id="navbarText"
-                >
-                  {/* <NavLink
+                  <div
+                    className="collapse navbar-collapse navTtl p-2 rounded-pill d-flex justify-content-around shadow"
+                    id="navbarText"
+                  >
+                    {/* <NavLink
                     to="/"
                     className={({ isActive }) =>
                       isActive
@@ -56,17 +56,17 @@ function NavBar() {
                   >
                     Home
                   </NavLink> */}
-                  <NavLink
-                    to="/rent-locs"
-                    className={({ isActive }) =>
-                      isActive
-                        ? "nav-link active navigation p-2 rounded-pill bg-light shadow"
-                        : "nav-link navigation text-light"
-                    }
-                  >
-                    Properties
-                  </NavLink>
-                  {/* <NavLink
+                    <NavLink
+                      to="/rent-locs"
+                      className={({ isActive }) =>
+                        isActive
+                          ? "nav-link active navigation p-2 rounded-pill bg-light shadow"
+                          : "nav-link navigation text-light"
+                      }
+                    >
+                      Properties
+                    </NavLink>
+                    {/* <NavLink
                     to="/contact-us"
                     className={({ isActive }) =>
                       isActive
@@ -76,7 +76,7 @@ function NavBar() {
                   >
                     Contact Us
                   </NavLink> */}
-                </div>
+                  </div>
                 </div>
                 <button
                   className="navbar-toggler ms-2"
@@ -90,7 +90,6 @@ function NavBar() {
                   <span className="navbar-toggler-icon"></span>
                 </button>
               </div>
-
 
               {!isAuthenticated ? (
                 <div className="col-3 d-flex justify-content-center btn-group">
@@ -141,7 +140,10 @@ function NavBar() {
                           </button>
                           <ul className="dropdown-menu">
                             <li>
-                              <NavLink to="/profile/edit" className="dropdown-item">
+                              <NavLink
+                                to="/profile/edit"
+                                className="dropdown-item"
+                              >
                                 Profile
                               </NavLink>
                             </li>
@@ -154,17 +156,26 @@ function NavBar() {
                               </Link>
                             </li>
                             <li>
-                              <Link to="/profile/my-trips" className="dropdown-item">
+                              <Link
+                                to="/profile/my-trips"
+                                className="dropdown-item"
+                              >
                                 My Trips
                               </Link>
                             </li>
                             <li>
-                              <Link to="/profile/my-bookings" className="dropdown-item">
+                              <Link
+                                to="/profile/my-bookings"
+                                className="dropdown-item"
+                              >
                                 My Bookings
                               </Link>
                             </li>
                             <li>
-                              <Link to="/profile/my-bookings" className="dropdown-item">
+                              <Link
+                                to="/profile/my-bookings"
+                                className="dropdown-item"
+                              >
                                 Payments
                               </Link>
                             </li>

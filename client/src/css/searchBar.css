@@ -1,0 +1,19 @@
+.dateRange {
+  border-left: 0px;
+  border-right: 0px;
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+
+#whereTtl{
+    position: relative;
+    bottom: 100%;
+    left: 10%;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+input[type="text"]{
+    font-size: 1rem;
+    box-sizing: border-box;
+}
