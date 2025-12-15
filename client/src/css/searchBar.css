@@ -5,15 +5,29 @@
   padding-bottom: 2%;
 }
 
+.dateRange:hover {
+    background-color: #f8f8f8;
+}
+
+select:hover {
+    background-color: #f8f8f8;
+}
+
 #whereTtl{
     position: relative;
-    bottom: 100%;
+    bottom: 90%;
     left: 10%;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 600;
 }
+
 
 input[type="text"]{
     font-size: 1rem;
     box-sizing: border-box;
+    border-right: 0px;
+}
+
+input[type="text"]:hover{
+    background-color: #f8f8f8;
 }

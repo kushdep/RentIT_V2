@@ -137,16 +137,16 @@ function SearchBar({ props, updateSearchStt }) {
 
   return (
     <div
-      className="container d-flex w-50 rounded-pill p-0 h-50 "
+      className="container d-flex w-50 rounded-pill border h-50"
       style={props}
     >
       <div className="row shadow rounded-pill">
-        <div className="col-4 border h-100 rounded-pill p-0">
+        <div className="col-4 h-100 p-0">
           <input
             type="text"
             disabled={!isLoaded}
             value={inpVal.val}
-            className="form-control h-100 rounded-pill dropdown-toggle pb-0 px-4"
+            className="form-control h-100 dropdown-toggle rounded-pill rounded-end border-0 px-4 py-0 pt-3"
             data-bs-toggle="dropdown"
             id="floatingInput"
             onChange={(e) => handleInpVal({ val: e.target.value, index: null })}
@@ -176,14 +176,15 @@ function SearchBar({ props, updateSearchStt }) {
             })}
           </ul>
         </div>
-        <div className="col-4 dateRange h-100 ">
+        <div className="vr h-75 my-2 px-0"></div>
+        <div className="col-4 dateRange h-100">
           <RangePicker bordered={false} />
         </div>
-        <div className="col d-flex rounded-pill justify-content-between p-0 h-100">
-<div className="vr h-75 my-2"></div>
+        <div className="col d-flex justify-content-between p-0 h-100">
+          <div className="vr h-75 my-2 px-0"></div>
           <div className="form-floating">
             <select
-              className="form-select w-100 border-0"
+              className="form-select w-100 border-0 h-100"
               id="floatingSelect"
               aria-label="Floating label select example"
               ref={locType}
@@ -193,11 +194,11 @@ function SearchBar({ props, updateSearchStt }) {
               <option value="V01">Villa</option>
               <option value="P01">Pent-House</option>
             </select>
-            <label htmlFor="floatingSelect" className="fw-bolder text-black">Location Type</label>
+            <label htmlFor="floatingSelect" className="fw-semibold text-black">
+              Location Type
+            </label>
           </div>
-          <div
-            className="w-25"
-          >
+          <div className="w-25">
             <button
               className="btn btn-primary rounded-circle h-100 w-100 fw-bolder"
               onClick={handleSearchLoc}
