@@ -23,18 +23,7 @@ function SimilarLocs({ locations, locCoord, upSrchStt }) {
       })
     );
     dispatch(getFilteredLoc(1));
-    upSrchStt((prev) => {
-      return {
-        ...prev,
-        coordinates: {
-          val: false,
-          locId: null,
-          locs: [],
-          long: null,
-          lat: null,
-        },
-      };
-    });
+    dispatch(rentLocActions.resetSearchLocs())
   }
 
   console.log(locCoord);

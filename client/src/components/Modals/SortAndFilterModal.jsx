@@ -1,8 +1,6 @@
-import { createPortal, useFormStatus } from "react-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { createPortal } from "react-dom";
 
 function SortAndFilterModal({ reference,title,children}) {
-  const dispatch = useDispatch();
 
   return createPortal(
       <dialog ref={reference} className="border-0 w-25 rounded-4">

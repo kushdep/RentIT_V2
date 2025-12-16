@@ -15,7 +15,7 @@ export const getRentLocs = async (req, res) => {
         }
     } catch (error) {
         console.log(error)
-        return  res.status(400).send({
+        return res.status(400).send({
             success: false,
             message: error
         })
@@ -33,6 +33,8 @@ const getFilterLocs = async (req, res) => {
         let distance = req.query.distance || false
         let lat = req.query.lat ? Number(req.query.lat) : null
         let long = req.query.long ? Number(req.query.long) : null
+
+        const { from = null, to = null } = req.query
 
         if ((dataReq === null || dataReq <= 0) &&
             (guests !== null || range !== null)) {
@@ -60,6 +62,16 @@ const getFilterLocs = async (req, res) => {
                 query["locDtl.price"] = { $gt: from }
             }
         }
+
+        if (from !== null && to !== null) {
+            query.bookings = {
+                $elemMatch: {
+                    start: { $lte: to },
+                    end: { $gte: from }
+                }
+            }
+        }
+
         let skipLoc = (dataReq - 1) * 32
         const locData = await Location.countDocuments(query)
 
@@ -108,18 +120,28 @@ const getSearchLoc = async (req, res) => {
         const { coordinates = null, locName = null } = req.query
         let query = {}
         if (coordinates && locName === null) {
-            const { lat = null, long = null, locType = null } = req.query
+            const { lat = null, long = null, locType = null, from = null, to = null } = req.query
             if (lat !== null && long !== null) {
                 query["locDtl.location.coordinates.longitude"] = Number(long)
                 query["locDtl.location.coordinates.latitude"] = Number(lat)
                 if (locType !== null) {
                     query["locType"] = locType
                 }
+
+                if (from !== null && to !== null) {
+                    query.bookings = {
+                        $elemMatch: {
+                            start: { $lte: to },
+                            end: { $gte: from }
+                        }
+                    }
+                }
+
                 console.log(query)
                 const loc = await Location.findOne(query)
                 console.log(loc)
-                if (loc!==null) {
-                    return  res.status(200).send({
+                if (loc !== null) {
+                    return res.status(200).send({
                         found: true,
                         locId: loc._id,
                         message: "Search location Found"
@@ -127,8 +149,8 @@ const getSearchLoc = async (req, res) => {
                 } else {
                     let rentLocs = await Location.find()
                     rentLocs = sortPlacesByDistance(rentLocs, lat, long)
-                    rentLocs = rentLocs.slice(0,8)
-                    return  res.status(200).send({
+                    rentLocs = rentLocs.slice(0, 8)
+                    return res.status(200).send({
                         found: false,
                         similarLocs: rentLocs,
                         message: "Search location Not Found"
@@ -142,17 +164,25 @@ const getSearchLoc = async (req, res) => {
                 })
             }
         } else if (coordinates === null && locName !== null) {
-            const { name=null, locType = null } = req.query
+            const { name = null, locType = null } = req.query
             console.log(req.query)
-            const title= name.trim()
+            const title = name.trim()
             const regex = new RegExp(`^${title}\\s*$`, "i");
             query["locDtl.title"] = regex
             if (locType !== null) {
                 query["locType"] = locType
             }
+            if (from !== null && to !== null) {
+                query.bookings = {
+                    $elemMatch: {
+                        start: { $lte: to },
+                        end: { $gte: from }
+                    }
+                }
+            }
             console.log(query)
             const loc = await Location.findOne(query)
-             console.log(loc)
+            console.log(loc)
             if (loc) {
                 return res.status(200).send({
                     found: true,

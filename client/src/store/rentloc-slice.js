@@ -14,6 +14,10 @@ const rentLocSlice = createSlice({
             priceRange: {
                 ind: null,
                 range: ''
+            },
+            dates:{
+                start:null,
+                end:null
             }
         },
         searchData: {
@@ -28,7 +32,7 @@ const rentLocSlice = createSlice({
                 long: null,
                 locs: [],
                 lat: null 
-            }
+            },
         },
         sortBy: {
             distance: {
@@ -104,7 +108,7 @@ const rentLocSlice = createSlice({
         },
         updateFilterStt(state, action) {
             try {
-                const { prcRngIn = null, guests = null, locFltr = null } = action.payload
+                const { prcRngIn = null, guests = null, locFltr = null,dateFltr=null } = action.payload
                 if (prcRngIn !== null) {
                     const from = 2 * (Number(prcRngIn) + 1)
                     if (prcRngIn >= 0 && prcRngIn <= 2) {

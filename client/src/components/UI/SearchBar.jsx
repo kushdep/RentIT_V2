@@ -1,21 +1,23 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { useGoogleAutoComp } from "../../hooks/useGoogleAutoComp";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { DatePicker, Space } from "antd";
+import { DatePicker } from "antd";
 import "../../css/searchBar.css";
 import { useDispatch } from "react-redux";
 import { rentLocActions } from "../../store/rentloc-slice";
+import dayjs from "dayjs";
 
-const { RangePicker } = DatePicker;
 
 function SearchBar() {
+  const { RangePicker } = DatePicker;
   const { isLoaded, sugg, inpVal, handleInpVal } = useGoogleAutoComp();
+  const [dates, setDates] = useState({ start: null, end: null });
   const locType = useRef();
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   async function getSearchLoc(searchFeilds) {
     const {
       lat = null,
@@ -32,6 +34,9 @@ function SearchBar() {
       if (locType !== null) {
         url += `&locType=${locType}`;
       }
+      if(dates.start!==null && dates.end!==null){
+        url+=`&from=${dates.start}&to=${dates.end}`
+      }
       try {
         console.log(url);
         const response = await axios.get(url);
@@ -39,13 +44,13 @@ function SearchBar() {
           if (response.data.found) {
             const { locId } = response.data;
             const updatedval = {
-                isCord: true,
-                locId,
-                locs: [],
-                long: lng,
-                lat: lat,
-              };
-            dispatch(rentLocActions.updateSearchLocs(updatedval))
+              isCord: true,
+              locId,
+              locs: [],
+              long: lng,
+              lat: lat,
+            };
+            dispatch(rentLocActions.updateSearchLocs(updatedval));
             console.log(locId);
             navigate(`/rent-locs/${locId}`);
           } else {
@@ -57,7 +62,7 @@ function SearchBar() {
               long: lng,
               lat: lat,
             };
-            dispatch(rentLocActions.updateSearchLocs(updatedval))
+            dispatch(rentLocActions.updateSearchLocs(updatedval));
           }
         }
       } catch (error) {
@@ -79,8 +84,8 @@ function SearchBar() {
           const updatedval = {
             isName: true,
             locId,
-          };                
-          dispatch(rentLocActions.updateSearchLocs(updatedval))
+          };
+          dispatch(rentLocActions.updateSearchLocs(updatedval));
           navigate(`/rent-locs/${locId}`);
         }
       } catch (error) {
@@ -88,8 +93,8 @@ function SearchBar() {
           const updatedval = {
             isName: true,
             locId,
-          };                
-          dispatch(rentLocActions.updateSearchLocs(updatedval))
+          };
+          dispatch(rentLocActions.updateSearchLocs(updatedval));
           console.log(error.response.data);
         }
         if (error.response.status === 400) {
@@ -101,20 +106,18 @@ function SearchBar() {
 
   async function handleSearchLoc() {
     console.log(inpVal.val);
+    console.log(dates);
     const loTypeVal =
       locType.current.value !== "none" ? locType.current.value : null;
-    if (
-      (inpVal.index === null && inpVal.val === "") ||
-      (inpVal.index === null && inpVal.val === "" && loTypeVal !== null)
-    ) {
-      toast.error("Please Enter Valid Search Location");
+    if (inpVal.index === null && inpVal.val === "") {
+      toast.error("Please Enter Valid Search Loaction");
       return;
     }
     if (inpVal.index !== null) {
       const result = await getGeocode({ address: inpVal.val });
       const { lat, lng } = getLatLng(result[0]);
       await getSearchLoc({ lat, lng });
-      handleInpVal({ val: "", index: null, locType: loTypeVal });
+      // handleInpVal({ val: "", index: null, locType: loTypeVal });
     } else {
       await getSearchLoc({ locName: inpVal.val, locType: loTypeVal });
     }
@@ -164,7 +167,43 @@ function SearchBar() {
           <div className="vr h-75 my-2 px-0"></div>
         </div>
         <div className="col-4 d-flex p-0">
-          <RangePicker bordered={false} />
+          <RangePicker
+            bordered={false}
+            value={
+              dates.start !== null && dates.end !== null
+                ? [dayjs(dates.start), dayjs(dates.end)]
+                : null
+            }
+            onChange={(dates, dateString) => {
+              if (dates && dates[0] && dates[1]) {
+                if (dates[0].isSame(dates[1], "day")) {
+                  toast.error("Start and end date cannot be the same");
+                  setDates((val) => {
+                    return {
+                      ...val,
+                      start: null,
+                      end: null,
+                    };
+                  });
+                  return
+                }
+                setDates((val) => {
+                  return {
+                    ...val,
+                    start: dateString[0],
+                    end: dateString[1],
+                  };
+                });
+              }
+            }}
+            disabledDate={(current) => {
+              if (!current) return false;
+
+              const today = dayjs().startOf("day");
+              const maxDate = today.add(1, "month");
+              return current.isBefore(today) || current.isAfter(maxDate);
+            }}
+          />
           <div className="vr h-75 my-2 px-0"></div>
         </div>
         <div className="col-4 d-flex justify-content-between p-0">
@@ -185,11 +224,11 @@ function SearchBar() {
             </label>
           </div>
           <button
-        className="btn btn-primary p-3 rounded-circle fw-bolder"
-        onClick={handleSearchLoc}
-      >
-        GO
-      </button>
+            className="btn btn-primary p-3 rounded-circle fw-bolder"
+            onClick={handleSearchLoc}
+          >
+            GO
+          </button>
         </div>
       </div>
     </div>

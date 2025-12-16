@@ -1,10 +1,11 @@
 import PropertyCard from "../components/UI/PropertyCard";
-import SearchBar from "../components/UI/SearchBar";
 import "../css/rentlocs.css";
 import { curfmt } from "../utils/formatter";
 import { useEffect, useRef, useState } from "react";
 import SortAndFilterModal from "../components/Modals/SortAndFilterModal";
 import toast from "react-hot-toast";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllLoc,
@@ -26,7 +27,9 @@ export default function RentLocs() {
     searchData
   } = useSelector((state) => state.rentLocs);
 
+    const { RangePicker } = DatePicker;
   const dispatch = useDispatch();
+    const [dates, setDates] = useState({ start: null, end: null });
   const [pages, setPagesVal] = useState(null);
   const {savedLocData} =useSelector(state=>state.profileData)
   const sortModalRef = useRef();
@@ -65,7 +68,7 @@ export default function RentLocs() {
     guests > 0 ? guests : (guests = null);
     let priceRng = fd.get("exampleRadios");
 
-    if (!guests && !priceRng) {
+    if (!guests && !priceRng && !(dates.start && dates.end )) {
       console.log("inside");
       toast.error("Apply atleast one filter!");
       return;
@@ -213,6 +216,44 @@ if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
             <SortAndFilterModal title="Filter" reference={filterModalRef}>
               <form onSubmit={handleSubmit}>
                 <div className="row-cols-1 mb-4">
+                <div className="col my-2">
+                  <RangePicker
+                    value={
+                      dates.start !== null && dates.end !== null
+                        ? [dayjs(dates.start), dayjs(dates.end)]
+                        : null
+                    }
+                    onChange={(dates, dateString) => {
+                      if (dates && dates[0] && dates[1]) {
+                        if (dates[0].isSame(dates[1], "day")) {
+                          toast.error("Start and end date cannot be the same");
+                          setDates((val) => {
+                            return {
+                              ...val,
+                              start: null,
+                              end: null,
+                            };
+                          });
+                          return
+                        }
+                        setDates((val) => {
+                          return {
+                            ...val,
+                            start: dateString[0],
+                            end: dateString[1],
+                          };
+                        });
+                      }
+                    }}
+                    disabledDate={(current) => {
+                      if (!current) return false;
+        
+                      const today = dayjs().startOf("day");
+                      const maxDate = today.add(1, "month");
+                      return current.isBefore(today) || current.isAfter(maxDate);
+                    }}
+                  />
+                  </div>
                   <div className="col">
                     <div className="dropdown-center mb-4">
                       <select
@@ -226,6 +267,7 @@ if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
                       </select>
                     </div>
                   </div>
+
                   <div className="col">
                     <div className="fs-5 fw-medium">Price</div>
                     <div className="col">
