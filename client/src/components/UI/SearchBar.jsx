@@ -136,54 +136,56 @@ function SearchBar({ updateSearchStt }) {
   }
 
   return (
-    <div
-      className="container d-flex rounded-pill w-100 srchBar bg-white"
-    >
-      <div className="row shadow rounded-pill">
-        <div className="col-4 h-100 p-0">
-          <input
-            type="text"
-            disabled={!isLoaded}
-            value={inpVal.val}
-            className="form-control h-100 dropdown-toggle rounded-pill rounded-end border-0 px-4 py-0 pt-3"
-            data-bs-toggle="dropdown"
-            id="floatingInput"
-            onChange={(e) => handleInpVal({ val: e.target.value, index: null })}
-            placeholder="Search Destination"
-          />
+    <div className="container rounded-pill shadow bg-white">
+      <div className="row">
+        <div className="col-4 p-0 d-flex">
+          <div className="form-floating">
+            <input
+              type="text"
+              disabled={!isLoaded}
+              value={inpVal.val}
+              className="form-control dropdown-toggle rounded-pill rounded-end border-0"
+              data-bs-toggle="dropdown"
+              id="floatingInput"
+              onChange={(e) =>
+                handleInpVal({ val: e.target.value, index: null })
+              }
+              placeholder="Search Destination"
+            />
 
-          <label htmlFor="floatingInput" id="whereTtl">
-            Where
-          </label>
-          <ul className="dropdown-menu ms-4">
-            {sugg?.map((sug, i) => {
-              const value =
-                sug?.Eg?.Qh?.[0]?.[2]?.[0] ?? sug?.Dg?.Ph?.[0]?.[2]?.[0];
-              return (
-                <li
-                  className="dropdown-item"
-                  onClick={() =>
-                    handleInpVal({
-                      val: value,
-                      index: i,
-                    })
-                  }
-                >
-                  {value || "Unknown"}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-        <div className="vr h-75 my-2 px-0"></div>
-        <div className="col-4 dateRange h-100">
-          <RangePicker bordered={false} />
-        </div>
+            <label htmlFor="floatingInput" id="whereTtl">
+              🗺️ Destination
+            </label>
+            <ul className="dropdown-menu ms-4">
+              {sugg?.map((sug, i) => {
+                const value =
+                  sug?.Eg?.Qh?.[0]?.[2]?.[0] ?? sug?.Dg?.Ph?.[0]?.[2]?.[0];
+                return (
+                  <li
+                    className="dropdown-item"
+                    onClick={() =>
+                      handleInpVal({
+                        val: value,
+                        index: i,
+                      })
+                    }
+                  >
+                    {value || "Unknown"}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
           <div className="vr h-75 my-2 px-0"></div>
-        <div className="col d-flex p-0 h-100">
+        </div>
+        <div className="col-4 d-flex p-0">
+          <RangePicker bordered={false} />
+          <div className="vr h-75 my-2 px-0"></div>
+        </div>
+        <div className="col-4 d-flex justify-content-between p-0">
           <div className="form-floating">
             <select
-              className="form-select w-100 border-0 h-100"
+              className="form-select border-0"
               id="floatingSelect"
               aria-label="Floating label select example"
               ref={locType}
@@ -197,14 +199,12 @@ function SearchBar({ updateSearchStt }) {
               Location Type
             </label>
           </div>
-          </div>
-          <div className="col-1 p-0">
-            <button
-              className="btn btn-primary rounded-circle h-100 w-100 fw-bolder"
-              onClick={handleSearchLoc}
-            >
-              GO
-            </button>
+          <button
+        className="btn btn-primary p-3 rounded-circle fw-bolder"
+        onClick={handleSearchLoc}
+      >
+        GO
+      </button>
         </div>
       </div>
     </div>
@@ -212,3 +212,74 @@ function SearchBar({ updateSearchStt }) {
 }
 
 export default SearchBar;
+
+// <div className="container d-flex rounded-pill srchBar">
+//   <div className="row shadow rounded-pill">
+//     <div className="col-4 h-100 p-0">
+//       <input
+//         type="text"
+//         disabled={!isLoaded}
+//         value={inpVal.val}
+//         className="form-control h-100 dropdown-toggle rounded-pill rounded-end border-0 px-4 py-0 pt-3"
+//         data-bs-toggle="dropdown"
+//         id="floatingInput"
+//         onChange={(e) => handleInpVal({ val: e.target.value, index: null })}
+//         placeholder="Search Destination"
+//       />
+
+//       <label htmlFor="floatingInput" id="whereTtl">
+//         Where
+//       </label>
+//       <ul className="dropdown-menu ms-4">
+//         {sugg?.map((sug, i) => {
+//           const value =
+//             sug?.Eg?.Qh?.[0]?.[2]?.[0] ?? sug?.Dg?.Ph?.[0]?.[2]?.[0];
+//           return (
+//             <li
+//               className="dropdown-item"
+//               onClick={() =>
+//                 handleInpVal({
+//                   val: value,
+//                   index: i,
+//                 })
+//               }
+//             >
+//               {value || "Unknown"}
+//             </li>
+//           );
+//         })}
+//       </ul>
+//     </div>
+//     <div className="vr h-75 my-2 px-0"></div>
+//     <div className="col-4 dateRange h-100">
+//       <RangePicker bordered={false} />
+//     </div>
+//     <div className="vr h-75 my-2 px-0"></div>
+//     <div className="col d-flex p-0 h-100">
+//       <div className="form-floating">
+//         <select
+//           className="form-select w-100 border-0 h-100"
+//           id="floatingSelect"
+//           aria-label="Floating label select example"
+//           ref={locType}
+//         >
+//           <option value="none">Select Location type </option>
+//           <option value="A01">Appartment</option>
+//           <option value="V01">Villa</option>
+//           <option value="P01">Pent-House</option>
+//         </select>
+//         <label htmlFor="floatingSelect" className="fw-semibold text-black">
+//           Location Type
+//         </label>
+//       </div>
+//     </div>
+//     <div className="col-1 p-0">
+//       <button
+//         className="btn btn-primary rounded-circle h-100 w-100 fw-bolder"
+//         onClick={handleSearchLoc}
+//       >
+//         GO
+//       </button>
+//     </div>
+//   </div>
+// </div>

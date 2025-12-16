@@ -9,6 +9,7 @@ import SearchBar from "./UI/SearchBar";
 
 function NavBar() {
   const [loginStt, setLoginStt] = useState(false);
+  const [isSearch, setSrchStt] = useState(true);
   const { isAuthenticated } = useSelector((state) => state.authData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,29 +32,43 @@ function NavBar() {
         authSttFn={setLoginStt}
         authStt={loginStt}
       />
-      <div
-        className="container-fluid navRent"
-      >
-        <div className="row h-100">
-          <div className="col-2">
-            <div className="h-100 w-100">
-
-            {/* <img src="/images/logo.png" alt="Logo" id="logo" className="" /> */}
-            </div>
-          </div>
+      <div className={isSearch ?"container-fluid navSrchRent shadow":"container-fluid navRent"}>
+        <div className="row">
+          <nav className="col-2 navbar">
+            {/* <Link className="navbar-brand">
+            <img src="/images/logo.png" alt="LOGO" className="rentLogo"/>
+            </Link> */}
+                        </nav>
           <div className="col-1"></div>
-          <div className="col-6">
-            <div className="h-25 d-flex justify-content-center">
-              <img src="/images/travel3d.png" className="" />
-              <span className="trvlSpan p-2">Home</span>
+          <div className="col-6  h-75">
+            <div className="d-flex  mt-2 justify-content-center">
+              <div className="w-50 h-50 d-flex justify-content-center">
+                <div className="d-flex justify-content-end align-items-center bg-white p-2 rounded-pill rounded-end border">
+                  <NavLink to='/rent-locs' className="trvlSpan">
+                  <span className="trvlSpan">🏚️ Home</span>
+                  </NavLink>
+                </div>
+                <div className={`d-flex bg-white rounded-pill rounded-start border p-1 ${isSearch?'shadow':''}`}>
+                  <button className="btn border-0" onClick={()=>setSrchStt(!isSearch)}>
+                    {
+                      isSearch?
+                      <img src="/icons/x-circle-fill.svg" style={{ height: "80%" }} />
+                     : <img src="/icons/search.png" style={{ height: "85%" }} />
+                    }
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="d-flex flex-column justify-content-center h-50 w-100">
-              <SearchBar/>
+            {
+              isSearch &&
+            <div className="d-flex justify-content-center mt-3">
+              <SearchBar />
             </div>
+            }
           </div>
           <div className="col-1"></div>
           {!isAuthenticated ? (
-            <div className="col-2 d-flex justify-content-center btn-group h-25 mt-3">
+            <div className="col-2 d-flex justify-content-center btn-group mt-3 h-25">
               <button
                 className="btn btn-primary me-1 shadow"
                 onClick={() => {
@@ -76,7 +91,7 @@ function NavBar() {
               </button>
             </div>
           ) : (
-            <div className="col-2 d-flex justify-content-center btn-group">
+            <div className="col-2 d-flex justify-content-center btn-group mt-2">
               <div className="container" style={{ width: 80, height: 50 }}>
                 <div className="row h-100">
                   <div className="col h-100 p-0">

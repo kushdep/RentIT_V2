@@ -40,8 +40,10 @@
   font-weight: 600;
   letter-spacing: -1px;
   font-size: 1.3rem;
-  border-bottom: 3px solid black;
+  color: black;
+  text-decoration: none;
 }
+
 
 #login{
     font-size: 1.2rem;
@@ -93,5 +95,10 @@
 
 .navRent{
   background-color: #f8f8f8;
-  height: 25vh;
+  height: 10vh;
+}
+
+.navSrchRent{
+  background-color: #f8f8f8;
+  height: 22vh;
 }

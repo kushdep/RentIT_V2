@@ -16,10 +16,8 @@ select:hover {
 
 
 #whereTtl{
-    position: relative;
-    bottom: 90%;
-    left: 10%;
     font-size: 1rem;
+    color: #1e1e1e;
     font-weight: 600;
 }
 
