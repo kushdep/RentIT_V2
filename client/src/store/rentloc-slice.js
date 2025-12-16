@@ -16,11 +16,18 @@ const rentLocSlice = createSlice({
                 range: ''
             }
         },
-        serach: {
-            name: null,
-            locCor: {
+        searchData: {
+            name: {
+                isName: false,
+                locId: null,
+            },
+            coordinates: {
+                isCord: false, 
+                locId: null,
+                locs: [],
                 long: null,
-                lat: null
+                locs: [],
+                lat: null 
             }
         },
         sortBy: {
@@ -168,6 +175,27 @@ const rentLocSlice = createSlice({
                 console.error("Error in resetFltrSrtStt() " + error)
             }
         },
+        updateSearchLocs(state, action) {
+            try {
+                const {isCord,isName} = action.payload
+                if(isCord){
+                    state.searchData.coordinates=action.payload
+                }
+                
+                if(isName){
+                    state.searchData.name=action.payload
+                }
+            } catch (error) {
+                console.error("Error in updateSearchLocs() " + error)
+            }
+        },
+        resetSearchLocs(state, action) {
+            try {
+
+            } catch (error) {
+                console.error("Error in resetSearchLocs() " + error)
+            }
+        }
     }
 })
 

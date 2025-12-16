@@ -2,10 +2,10 @@ import { useDispatch, useSelector } from "react-redux";
 import PropertyCard from "../components/UI/PropertyCard";
 import { getFilteredLoc, rentLocActions } from "../store/rentloc-slice";
 
-function SimilarLocs({ locations , locCoord,upSrchStt}) {
+function SimilarLocs({ locations, locCoord, upSrchStt }) {
   const { isAuthenticated } = useSelector((state) => state.authData);
   const { savedLocData } = useSelector((state) => state.profileData);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   let savedLoc = [];
   if (isAuthenticated) {
@@ -14,18 +14,30 @@ function SimilarLocs({ locations , locCoord,upSrchStt}) {
     });
   }
 
-  function getMoreLocations(){
-    dispatch(rentLocActions.updateSortingStt({srtBy:'Distance',isChk:true,currLocDtl:{long:locCoord.long,lat:locCoord.lat}}))
-    dispatch(getFilteredLoc(1))
-    upSrchStt((prev)=>{
-      return{
+  function getMoreLocations() {
+    dispatch(
+      rentLocActions.updateSortingStt({
+        srtBy: "Distance",
+        isChk: true,
+        currLocDtl: { long: locCoord.long, lat: locCoord.lat },
+      })
+    );
+    dispatch(getFilteredLoc(1));
+    upSrchStt((prev) => {
+      return {
         ...prev,
-        coordinates:{val:false,locId:null,locs:[],long:null,lat:null}
-      }
-    })
+        coordinates: {
+          val: false,
+          locId: null,
+          locs: [],
+          long: null,
+          lat: null,
+        },
+      };
+    });
   }
 
-  console.log(locCoord)
+  console.log(locCoord);
   console.log(locations);
   return (
     <div className="container">
@@ -46,9 +58,13 @@ function SimilarLocs({ locations , locCoord,upSrchStt}) {
             />
           );
         })}
-        <button className="btn btn-primary fw-semibold fs-5 w-100 my-4" onClick={getMoreLocations}>See More Neary Locations</button>
+        <button
+          className="btn btn-primary fw-semibold fs-5 w-100 my-4"
+          onClick={getMoreLocations}
+        >
+          See More Neary Locations
+        </button>
       </div>
-
     </div>
   );
 }

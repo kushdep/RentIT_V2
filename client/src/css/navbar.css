@@ -95,10 +95,15 @@
 
 .navRent{
   background-color: #f8f8f8;
-  height: 10vh;
+  height: 12vh;
 }
 
 .navSrchRent{
   background-color: #f8f8f8;
   height: 22vh;
+}
+
+.rentLogo {
+  height: 90px;
+  width: auto;
 }

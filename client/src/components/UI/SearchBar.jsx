@@ -6,14 +6,16 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { DatePicker, Space } from "antd";
 import "../../css/searchBar.css";
+import { useDispatch } from "react-redux";
+import { rentLocActions } from "../../store/rentloc-slice";
 
 const { RangePicker } = DatePicker;
 
-function SearchBar({ updateSearchStt }) {
+function SearchBar() {
   const { isLoaded, sugg, inpVal, handleInpVal } = useGoogleAutoComp();
   const locType = useRef();
   const navigate = useNavigate();
-
+  const dispatch = useDispatch()
   async function getSearchLoc(searchFeilds) {
     const {
       lat = null,
@@ -36,36 +38,26 @@ function SearchBar({ updateSearchStt }) {
         if (response.status === 200) {
           if (response.data.found) {
             const { locId } = response.data;
-            updateSearchStt((prev) => {
-              const updatedval = {
-                val: true,
+            const updatedval = {
+                isCord: true,
                 locId,
                 locs: [],
                 long: lng,
                 lat: lat,
               };
-              return {
-                ...prev,
-                coordinates: updatedval,
-              };
-            });
+            dispatch(rentLocActions.updateSearchLocs(updatedval))
             console.log(locId);
             navigate(`/rent-locs/${locId}`);
           } else {
             const { similarLocs } = response.data;
-            updateSearchStt((prev) => {
-              const updatedval = {
-                val: true,
-                locId: null,
-                locs: similarLocs,
-                long: lng,
-                lat: lat,
-              };
-              return {
-                ...prev,
-                coordinates: updatedval,
-              };
-            });
+            const updatedval = {
+              isCord: true,
+              locId: null,
+              locs: similarLocs,
+              long: lng,
+              lat: lat,
+            };
+            dispatch(rentLocActions.updateSearchLocs(updatedval))
           }
         }
       } catch (error) {
@@ -84,28 +76,21 @@ function SearchBar({ updateSearchStt }) {
         const response = await axios.get(url);
         if (response.status === 200) {
           const { locId } = response.data;
-          updateSearchStt((prev) => {
-            const updatedval = {
-              val: true,
-              locId,
-            };
-            return {
-              ...prev,
-              coordinates: updatedval,
-            };
-          });
+          const updatedval = {
+            isName: true,
+            locId,
+          };                
+          dispatch(rentLocActions.updateSearchLocs(updatedval))
           navigate(`/rent-locs/${locId}`);
         }
       } catch (error) {
         if (error.response.status === 404) {
+          const updatedval = {
+            isName: true,
+            locId,
+          };                
+          dispatch(rentLocActions.updateSearchLocs(updatedval))
           console.log(error.response.data);
-          updateSearchStt((prev) => {
-            const updatedval = { val: true, locId: null };
-            return {
-              ...prev,
-              name: updatedval,
-            };
-          });
         }
         if (error.response.status === 400) {
           console.log(error.response.data);

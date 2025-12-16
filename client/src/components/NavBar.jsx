@@ -6,10 +6,11 @@ import toast from "react-hot-toast";
 import { useRef, useState } from "react";
 import AuthModal from "./Modals/AuthModal";
 import SearchBar from "./UI/SearchBar";
+import { rentLocActions } from "../store/rentloc-slice";
 
 function NavBar() {
   const [loginStt, setLoginStt] = useState(false);
-  const [isSearch, setSrchStt] = useState(true);
+  const [isSearch, setSrchStt] = useState(false);
   const { isAuthenticated } = useSelector((state) => state.authData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -34,10 +35,10 @@ function NavBar() {
       />
       <div className={isSearch ?"container-fluid navSrchRent shadow":"container-fluid navRent"}>
         <div className="row">
-          <nav className="col-2 navbar">
-            {/* <Link className="navbar-brand">
+          <nav className="col-2">
+            <Link className="navbar-brand">
             <img src="/images/logo.png" alt="LOGO" className="rentLogo"/>
-            </Link> */}
+            </Link>
                         </nav>
           <div className="col-1"></div>
           <div className="col-6  h-75">
@@ -49,7 +50,12 @@ function NavBar() {
                   </NavLink>
                 </div>
                 <div className={`d-flex bg-white rounded-pill rounded-start border p-1 ${isSearch?'shadow':''}`}>
-                  <button className="btn border-0" onClick={()=>setSrchStt(!isSearch)}>
+                  <button className="btn border-0" onClick={()=>{
+                    if(isSearch){
+                      dispatch(rentLocActions.resetSearchLocs())
+                    }
+                    setSrchStt(!isSearch)
+                    }}>
                     {
                       isSearch?
                       <img src="/icons/x-circle-fill.svg" style={{ height: "80%" }} />

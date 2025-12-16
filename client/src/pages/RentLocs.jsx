@@ -22,13 +22,12 @@ export default function RentLocs() {
     currPage,
     chckPts,
     rentLocType:locTypeStt,
-    filter,sortBy
+    filter,sortBy,
+    searchData
   } = useSelector((state) => state.rentLocs);
 
   const dispatch = useDispatch();
   const [pages, setPagesVal] = useState(null);
-  const [searchLoc,setSearchLoc] = useState({name:{val:false,locId:null},coordinates:{val:false,locId:null,locs:[],long:null,lat:null}})
-
   const {savedLocData} =useSelector(state=>state.profileData)
   const sortModalRef = useRef();
   const filterModalRef = useRef();
@@ -129,18 +128,13 @@ if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
 
   return (
     <div>
-      <header className="position-relative">
-        <div className="page-heading image-fluid ">
-          {/* <SearchBar updateSearchStt={setSearchLoc} /> */}
-        </div>
-      </header>
       <div className="container-fluid ">
         {
-          searchLoc.name.val && !searchLoc.name.locId?
+          searchData.name.isName && !searchData.name.locId?
           <div className="d-flex justify-content-center">
             <img className="w-50 h-50" src="/public/images/Loc404.png"/>
           </div>
-          :((searchLoc.coordinates.val && !searchLoc.coordinates.locId && searchLoc.coordinates.locs.length>0)?<SimilarLocs locations={searchLoc.coordinates.locs} locCoord={searchLoc.coordinates} upSrchStt={setSearchLoc}/>:       
+          :((searchData.coordinates.isCord && !searchData.coordinates.locId && searchData.coordinates.locs.length>0)?<SimilarLocs locations={searchData.coordinates.locs} locCoord={searchData.coordinates} upSrchStt={searchData}/>:       
         <div className="container-fluid">
         <div className="row">
 <div className="col">
