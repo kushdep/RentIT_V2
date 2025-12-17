@@ -1,5 +1,6 @@
 import Location from '../models/location.js'
 import { sortPlacesByDistance } from '../utils/distance.js'
+import { isDatesAvail } from './profileController.js'
 
 export const getRentLocs = async (req, res) => {
     try {
@@ -64,20 +65,10 @@ const getFilterLocs = async (req, res) => {
             }
         }
 
-        if (from !== null && to !== null) {
-            query.bookings = {
-                $not: {
-                    $elemMatch: {
-                        start: { $gte: from },
-                        end: { $lte: to }
-                    }
-                }
-            }
-        }
-
+        
         let skipLoc = (dataReq - 1) * 32
         const locData = await Location.countDocuments(query)
-
+        
         if (sortBy) {
             rentLocs = await Location.find(query)
             if (!ratings && distance && lat !== null && long !== null) {
@@ -92,6 +83,9 @@ const getFilterLocs = async (req, res) => {
             rentLocs = rentLocs.slice(skipLoc, skipLoc + 32)
         } else {
             rentLocs = await Location.find(query).skip(skipLoc).limit(32)
+        }
+        if (from !== null && to !== null) {
+            rentLocs.filter((e)=>isDatesAvail({startDate:from,endDate:to},e.bookings))
         }
 
         if (rentLocs.length === 0) {
@@ -131,19 +125,12 @@ const getSearchLoc = async (req, res) => {
                     query["locType"] = locType
                 }
 
-                if (from !== null && to !== null) {
-                    query.bookings = {
-                        $not: {
-                            $elemMatch: {
-                                start: { $gte: from },
-                                end: { $lte: to }
-                            }
-                        }
-                    }
-                }
-
+                
                 console.log(query)
                 const loc = await Location.findOne(query)
+                if(from!==null && to!==null){
+                    loc.filter((e)=>isDatesAvail({startDate:from,endDate:to},e.bookings))
+                }
                 console.log(loc)
                 if (loc !== null) {
                     return res.status(200).send({
@@ -177,16 +164,9 @@ const getSearchLoc = async (req, res) => {
             if (locType !== null) {
                 query["locType"] = locType
             }
-            if (from !== null && to !== null) {
-                query.bookings = {
-                    $not: {
-                        $elemMatch: {
-                            start: { $gte: from },
-                            end: { $lte: to }
-                        }
-                    }
+            if(from!==null && to!==null){
+                    loc.filter((e)=>isDatesAvail({startDate:from,endDate:to},e.bookings))
                 }
-            }
             console.log(query)
             const loc = await Location.findOne(query)
             console.log(loc)

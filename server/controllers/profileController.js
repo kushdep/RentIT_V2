@@ -534,7 +534,7 @@ const verifyPAN = async (data) => {
     }
 }
 
-function isDatesAvail(dates, oldBookedDates) {
+export function isDatesAvail(dates, oldBookedDates) {
     try {
         const { startDate, endDate } = dates
         const newStartDate = new Date(startDate).getTime()
