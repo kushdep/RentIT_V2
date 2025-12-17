@@ -128,7 +128,7 @@ export default function RentLocs() {
 
 if (filter.guestCap !== null) fltrSrtBy.push({title:'guests',val:`${filter.guestCap} guests`});
 if (filter.priceRange.ind !== null) fltrSrtBy.push({title:'priceRng',val:filter.priceRange.range});
-if (filter.dates.start !== null && filter.dates.end !== null) fltrSrtBy.push({title:'date',val:`${filter.dates.start} - ${filter.dates.end}`});
+if (filter.dates.start !== null && filter.dates.end !== null) fltrSrtBy.push({title:'date',val:`${new Date(filter.dates.start).toUTCString().slice(0,16)} - ${new Date(filter.dates.end).toUTCString().slice(0,16)}`});
 if (sortBy.distance.inc) fltrSrtBy.push({title:'dst',val:'🏝️ Distance'});
 if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
 
@@ -328,46 +328,44 @@ if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
           </div>
           <div className="col">
             <div className="container-fluid">
-              <div className="row  mb-3">
+              <div className="row mb-3">
                 <div className="col-10">
                   <div className="container">
-                    <div className="row row-cols-6">
-                      {
-                        fltrSrtBy.length>0 && fltrSrtBy.map((e,i)=>{
-                  return <div
-                    className="col p-0 me-3 alert alert-success rounded-pill"
-                    role="alert"
-                    key={e.title}
-                  >
-                    <div className="d-flex">
-                    <div className="p-2 ms-2">{e.val}</div>
-                    <button
-                      type="button"
-                      className="btn-close p-2 my-1"
-                      aria-label="Close"
-                      onClick={()=>{
-                          if(e.title==='guests' || e.title === 'priceRng' || e.title==='date'){
-                            dispatch(rentLocActions.resetFltrStt(e.title))
-                          }
-                          if(e.title==='dst' || e.title === 'rtng'){
-                            dispatch(rentLocActions.resetSrtStt(e.title))
-                          }                        
-                          dispatch(getFilteredLoc(1))
-                          }
-                      }
-                    ></button>
+              <div className="row row-cols-auto g-2">
+                {fltrSrtBy.length > 0 &&
+                  fltrSrtBy.map((e) => (
+                    <div
+                      className="col"
+                      key={e.title}
+                    >
+                      <div className="filter-pill shadow-sm">
+                        <span className="filter-text">{e.val}</span>
+                        <button
+                          type="button"
+                          className="filter-close"
+                          aria-label="Close"
+                          onClick={() => {
+                            if (e.title === "guests" || e.title === "priceRng" || e.title === "date") {
+                              dispatch(rentLocActions.resetFltrStt(e.title));
+                            }
+                            if (e.title === "dst" || e.title === "rtng") {
+                              dispatch(rentLocActions.resetSrtStt(e.title));
+                            }
+                            dispatch(getFilteredLoc(1));
+                          }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                        })
-                      }
-                    </div>
+                  ))}
+              </div>
+
                   </div>
                 </div>
                 <div className="col-2 p-0">
                   <div class="btn-group w-100">
                   <button
                     type="button"
-                    class="btn btn-primary dropdown-toggle ms-3 fw-semibold rounded-pill shadow"
+                    class="btn bg-dark text-light dropdown-toggle ms-3 fw-semibold rounded-pill shadow"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >

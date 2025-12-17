@@ -36,74 +36,111 @@
   background-color: #f35525;
 } */
 
-.trvlSpan{
+/* ---------------- NAVBAR BASE ---------------- */
+.navRent,
+.navSrchRent {
+  background-color: #f8f8f8;
+  padding: 0.75rem 1.25rem;
+  transition: all 0.25s ease;
+}
+
+.navRent {
+  min-height: 80px;
+}
+
+.navSrchRent {
+  min-height: 130px;
+}
+
+/* ---------------- LOGO ---------------- */
+.rentLogo {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* ---------------- HOME LINK ---------------- */
+.trvlSpan {
   font-weight: 600;
-  letter-spacing: -1px;
-  font-size: 1.3rem;
-  color: black;
+  letter-spacing: -0.5px;
+  font-size: 1.1rem;
+  color: #1e1e1e;
   text-decoration: none;
+  display: flex;
+  align-items: center;
 }
 
-
-#login{
-    font-size: 1.2rem;
-    font-weight: 500;
+/* ---------------- SEARCH PILL ---------------- */
+.search-pill {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 999px;
+  border: 1px solid #dee2e6;
+  padding: 4px;
 }
 
-#signup{
-    font-size:1.2rem;
-    font-weight: 500;
+.search-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 10px;
 }
 
-.btn-outline-primary.active{
+/* ---------------- BUTTONS ---------------- */
+#login,
+#signup {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background-color: #f35525;
+  border-color: #f35525;
+}
+
+.btn-primary:hover {
+  background-color: #e24b1f;
+  border-color: #e24b1f;
+}
+
+.btn-outline-primary {
   color: #1e1e1e;
-  background-color: white;
+  background-color: #fff;
   border-color: #1e1e1e;
-}
-
-.btn-outline-primary{
-  color: #1e1e1e;
-  background-color: white;
-  border-color: #1e1e1e;
-}
-
-.btn-primary.active{
-    background-color: #f35525;
-    border-color: #f35525;
-}
-.btn-primary{
-    background-color: #f35525;
-    border-color: #f35525;
-}
-
-.btn-primary:hover{
-    border-color: white;
 }
 
 .btn-outline-primary:hover {
   background-color: #1e1e1e;
-  color: white;
-  border-color: #1e1e1e;
+  color: #fff;
 }
 
-/* .page-heading img {
-  width: 100%;
-  background-position: center bottom;
-  background-size: cover;
-  display: block;
-} */
-
-.navRent{
-  background-color: #f8f8f8;
-  height: 12vh;
+/* ---------------- USER DROPDOWN ---------------- */
+.dropdown-toggle {
+  background: #fff;
+  border: 1px solid #dee2e6;
 }
 
-.navSrchRent{
-  background-color: #f8f8f8;
-  height: 22vh;
+.dropdown-toggle::after {
+  display: none;
 }
 
-.rentLogo {
-  height: 90px;
-  width: auto;
+.dropdown-menu {
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* ---------------- SEARCH BAR AREA ---------------- */
+.navSrchRent .search-bar-wrapper {
+  animation: slideDown 0.25s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

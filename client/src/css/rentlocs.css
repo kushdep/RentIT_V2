@@ -26,3 +26,53 @@ dialog {
 dialog {
   overflow: visible;
 }
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.8rem 0.45rem 0.9rem;
+  background-color: #212529;
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.filter-text {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filter-close {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background-color: #fff;
+  position: relative;
+  cursor: pointer;
+}
+
+.filter-close::before,
+.filter-close::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 2px;
+  background: #000;
+}
+
+.filter-close::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.filter-close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.filter-close:hover {
+  background-color: #e9ecef;
+}

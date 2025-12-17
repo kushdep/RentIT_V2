@@ -65,12 +65,12 @@ function NavBar() {
                 </div>
               </div>
             </div>
-            {
-              isSearch &&
-            <div className="d-flex justify-content-center mt-3">
-              <SearchBar />
-            </div>
-            }
+          {isSearch && (
+  <div className="search-bar-wrapper d-flex justify-content-center mt-3">
+    <SearchBar />
+  </div>
+)}
+
           </div>
           <div className="col-1"></div>
           {!isAuthenticated ? (
