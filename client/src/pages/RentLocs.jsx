@@ -134,7 +134,7 @@ if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
 
   return (
     <div>
-      <div className="container-fluid ">
+      <div className="container-fluid mt-3">
         {
           searchData.name.isName && !searchData.name.locId?
           <div className="d-flex justify-content-center">
@@ -216,7 +216,7 @@ if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
               </div>
               </form>
             </SortAndFilterModal>
-            <SortAndFilterModal title="Filter" reference={filterModalRef}>
+            <SortAndFilterModal  title="Filter" reference={filterModalRef}>
               <form onSubmit={handleSubmit}>
                 <div className="row-cols-1 mb-4">
                 <div className="col my-2">

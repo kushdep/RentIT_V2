@@ -1,9 +1,10 @@
 import { createPortal } from "react-dom";
+import '../../css/rentlocs.css'
 
 function SortAndFilterModal({ reference,title,children}) {
 
   return createPortal(
-      <dialog ref={reference} className="border-0 w-25 rounded-4">
+      <dialog ref={reference} className="border-0 w-25 rounded-4" id="dateDialog">
         <form method="dialog" className="container">
           <div className="row">
             <div className="col-2 d-flex justify-content-center align-items-center">

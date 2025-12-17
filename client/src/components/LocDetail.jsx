@@ -138,7 +138,7 @@ function LocDetails() {
     <>
       {loc.title !== null ? (
         <>
-          <div className="container">
+          <div className="container mt-4">
             <ShowAmmModal
               reference={showAmmModal}
               facilities={loc.facilities}
@@ -172,21 +172,20 @@ function LocDetails() {
               </div>
             </div>
             <div className="row">
-              <div className="col-8 h-100 p-0 pe-3">
+              <div className="col-8 h-100 p-0 pe-3 position-relative">
                 <img
                   src={`${loc.imgTtlData[0].images[0].url}`}
                   alt="hall"
-                  className="w-100 h-100 mainImg position-relative shadow"
-                  style={{ objectFit: "cover" }}
+                  className="w-100 h-100 mainImg shadow"
                 />
                 <button
-                  className="btn btn-light position-absolute rounded-pill"
-                  style={{ bottom: 50, left: 150 }}
+                  className="btn btn-light rounded-pill shwAllPhtsBtn"
                   onClick={() => showPhotosModal.current.showModal()}
                 >
                   Show all Photos
                 </button>
-              </div>
+            </div>
+
 
               <div className="col-4 p-0 d-flex flex-column imgParent">
                 <div className="imgWrapper">
@@ -195,7 +194,6 @@ function LocDetails() {
                       src={`${loc.imgTtlData[1].images[0].url}`}
                       alt="bedroom"
                       className="imgT shadow"
-                      style={{ objectFit: "cover" }}
                     />
                   </div>
 
@@ -204,7 +202,6 @@ function LocDetails() {
                       src={`${loc.imgTtlData[2].images[0].url}`}
                       alt="bedroom"
                       className="imgB shadow"
-                      style={{ objectFit: "cover" }}
                     />
                   </div>
                 </div>

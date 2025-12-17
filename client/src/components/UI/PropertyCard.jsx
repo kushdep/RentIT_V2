@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setSavedLoc } from "../../store/profile-slice";
 import toast from "react-hot-toast";
+import "../../css/property-card.css"
 
 function PropertyCard({
   name,
@@ -73,7 +74,7 @@ function PropertyCard({
             onClick={handleClick}
             style={{ cursor: "pointer" }}
           >
-            <img src={coverImg} className="card-img-top rounded-5 shadow" />
+            <img src={coverImg} className="card-img-top rounded-5 shadow fixed-img" />
             <div className="d-flex col justify-content-between mt-3">
               <div className="d-flex row w-75">
                 <p className="mx-2 text-dark fw-semibold mb-0">{name}</p>

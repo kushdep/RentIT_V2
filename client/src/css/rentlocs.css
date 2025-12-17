@@ -15,17 +15,15 @@
   text-align: center;
 }
 
-dialog {
+#dateDialog {
   z-index: 1055;
+  overflow: visible;
 }
 
 .ant-picker-dropdown {
   z-index: 1060 !important;
 }
 
-dialog {
-  overflow: visible;
-}
 .filter-pill {
   display: inline-flex;
   align-items: center;
