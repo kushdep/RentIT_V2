@@ -6,6 +6,7 @@ export function useGoogleAutoComp() {
     const [inpVal, setInpVal] = useState({ val: "", index: null });
     const [sugg, setSugg] = useState([]);
     const sessionTokenRef = useRef(null);
+    const timerRef = useRef(null);
 
 
     useEffect(() => {
@@ -18,22 +19,18 @@ export function useGoogleAutoComp() {
 
     useEffect(() => {
         if (window.google) {
-            if (inpVal.val.length < 4) {
-                setSugg([]);
-                return;
-            }
-
-            if (!sessionTokenRef.current) {
-                const token = getSessionToken();
-                if (!token) {
-                    console.error("Cannot get token");
-                    return;
-                }
-                sessionTokenRef.current = token;
-            }
-
+            
             async function sugg() {
                 try {
+                    if (!sessionTokenRef.current) {
+                        const token = getSessionToken();
+                        if (!token) {
+                            console.error("Cannot get token");
+                            return;
+                        }
+                        sessionTokenRef.current = token;
+                    }
+                    console.log("Google Api called")
                     const { suggestions } = await getSuggestions(
                         sessionTokenRef.current,
                         inpVal.val
@@ -43,7 +40,12 @@ export function useGoogleAutoComp() {
                     console.error("Error while getting sugg()" + error);
                 }
             }
-            sugg();
+            const debounceSearch = (func,delay)=>{
+                clearTimeout(timerRef.current)
+                timerRef.current = setTimeout(func,delay)
+            }
+
+            debounceSearch(sugg,3000);
         }
     }, [inpVal.val]);
 
