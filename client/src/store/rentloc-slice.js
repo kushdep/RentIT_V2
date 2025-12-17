@@ -15,9 +15,9 @@ const rentLocSlice = createSlice({
                 ind: null,
                 range: ''
             },
-            dates:{
-                start:null,
-                end:null
+            dates: {
+                start: null,
+                end: null
             }
         },
         searchData: {
@@ -26,12 +26,12 @@ const rentLocSlice = createSlice({
                 locId: null,
             },
             coordinates: {
-                isCord: false, 
+                isCord: false,
                 locId: null,
                 locs: [],
                 long: null,
                 locs: [],
-                lat: null 
+                lat: null
             },
         },
         sortBy: {
@@ -108,7 +108,7 @@ const rentLocSlice = createSlice({
         },
         updateFilterStt(state, action) {
             try {
-                const { prcRngIn = null, guests = null, locFltr = null,dateFltr=null } = action.payload
+                const { prcRngIn = null, guests = null, locFltr = null, dateFltr = null } = action.payload
                 if (prcRngIn !== null) {
                     const from = 2 * (Number(prcRngIn) + 1)
                     if (prcRngIn >= 0 && prcRngIn <= 2) {
@@ -129,6 +129,9 @@ const rentLocSlice = createSlice({
                     } else {
                         throw Error('Please set correct Location type')
                     }
+                }
+                if (dateFltr !== null && (dateFltr.start && dateFltr.start !== null && dateFltr.start && dateFltr.start !== null)) {
+                    state.filter.dates=dateFltr
                 }
             } catch (error) {
                 console.error("Error in updateFilterStt() " + error)
@@ -158,6 +161,9 @@ const rentLocSlice = createSlice({
                 } else if (resetFld === 'priceRng') {
                     state.filter.priceRange.ind = null
                     state.filter.priceRange.range = ''
+                }else if(resetFld==='date'){
+                    state.filter.dates.start=null
+                    state.filter.dates.end=null
                 }
             } catch (error) {
                 console.error("Error in resetFltrSrtStt() " + error)
@@ -181,13 +187,13 @@ const rentLocSlice = createSlice({
         },
         updateSearchLocs(state, action) {
             try {
-                const {isCord,isName} = action.payload
-                if(isCord){
-                    state.searchData.coordinates=action.payload
+                const { isCord, isName } = action.payload
+                if (isCord) {
+                    state.searchData.coordinates = action.payload
                 }
-                
-                if(isName){
-                    state.searchData.name=action.payload
+
+                if (isName) {
+                    state.searchData.name = action.payload
                 }
             } catch (error) {
                 console.error("Error in updateSearchLocs() " + error)
@@ -207,7 +213,7 @@ export const getFilteredLoc = (reqNum) => {
     return async (dispatch, getState) => {
         const getFltrLoc = async () => {
             const { filter, sortBy, rentLocType } = getState().rentLocs
-            const { guestCap, priceRange } = filter
+            const { guestCap, priceRange,dates } = filter
             const { distance, ratings } = sortBy
 
             console.log(distance)
@@ -215,11 +221,12 @@ export const getFilteredLoc = (reqNum) => {
             let url = `http://localhost:3000/rent-locs?dataReq=${reqNum}`
 
             const queryParams = []
-            if (guestCap !== null || priceRange.ind !== null || rentLocType !== '') queryParams.push(`filter=true`)
+            if (guestCap !== null || priceRange.ind !== null || rentLocType !== '' ||(dates.start!=null && dates.end!==null)) queryParams.push(`filter=true`)
             if (distance.inc || ratings) queryParams.push(`sortBy=true`)
 
             if (guestCap !== null) queryParams.push(`guests=${guestCap}`)
             if (priceRange.ind !== null) queryParams.push(`range=${priceRange.ind}`)
+                if(dates.start!==null && dates.end!==null)queryParams.push(`from=${dates.start}&to=${dates.end}`)
 
             if (distance.inc) queryParams.push(`distance=true&lat=${distance.currLoc.lat}&long=${distance.currLoc.long}`)
 

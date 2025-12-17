@@ -14,3 +14,15 @@
   display: inline !important;
   text-align: center;
 }
+
+dialog {
+  z-index: 1055;
+}
+
+.ant-picker-dropdown {
+  z-index: 1060 !important;
+}
+
+dialog {
+  overflow: visible;
+}

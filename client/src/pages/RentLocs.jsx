@@ -73,6 +73,8 @@ export default function RentLocs() {
       toast.error("Apply atleast one filter!");
       return;
     }
+
+    if(dates.start!==null && dates.end!==null)dispatch(rentLocActions.updateFilterStt({dateFltr:dates}))
     if(priceRng!==null)dispatch(rentLocActions.updateFilterStt({prcRngIn:priceRng}))
     if(guests!==null)dispatch(rentLocActions.updateFilterStt({guests:guests}))
     dispatch(getFilteredLoc(1));
@@ -126,6 +128,7 @@ export default function RentLocs() {
 
 if (filter.guestCap !== null) fltrSrtBy.push({title:'guests',val:`${filter.guestCap} guests`});
 if (filter.priceRange.ind !== null) fltrSrtBy.push({title:'priceRng',val:filter.priceRange.range});
+if (filter.dates.start !== null && filter.dates.end !== null) fltrSrtBy.push({title:'date',val:`${filter.dates.start} - ${filter.dates.end}`});
 if (sortBy.distance.inc) fltrSrtBy.push({title:'dst',val:'🏝️ Distance'});
 if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
 
@@ -218,6 +221,9 @@ if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
                 <div className="row-cols-1 mb-4">
                 <div className="col my-2">
                   <RangePicker
+                    getPopupContainer={(triggerNode) =>
+                          triggerNode.closest("dialog")
+                    }                    
                     value={
                       dates.start !== null && dates.end !== null
                         ? [dayjs(dates.start), dayjs(dates.end)]
@@ -340,7 +346,7 @@ if (sortBy.ratings) fltrSrtBy.push({title:'rtng',val:'⭐ Ratings'});
                       className="btn-close p-2 my-1"
                       aria-label="Close"
                       onClick={()=>{
-                          if(e.title==='guests' || e.title === 'priceRng'){
+                          if(e.title==='guests' || e.title === 'priceRng' || e.title==='date'){
                             dispatch(rentLocActions.resetFltrStt(e.title))
                           }
                           if(e.title==='dst' || e.title === 'rtng'){

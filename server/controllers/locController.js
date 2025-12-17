@@ -33,8 +33,9 @@ const getFilterLocs = async (req, res) => {
         let distance = req.query.distance || false
         let lat = req.query.lat ? Number(req.query.lat) : null
         let long = req.query.long ? Number(req.query.long) : null
-
         const { from = null, to = null } = req.query
+
+        console.log(req.query)
 
         if ((dataReq === null || dataReq <= 0) &&
             (guests !== null || range !== null)) {
@@ -65,9 +66,11 @@ const getFilterLocs = async (req, res) => {
 
         if (from !== null && to !== null) {
             query.bookings = {
-                $elemMatch: {
-                    start: { $lte: to },
-                    end: { $gte: from }
+                $not: {
+                    $elemMatch: {
+                        start: { $gte: from },
+                        end: { $lte: to }
+                    }
                 }
             }
         }
