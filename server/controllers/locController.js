@@ -130,9 +130,11 @@ const getSearchLoc = async (req, res) => {
 
                 if (from !== null && to !== null) {
                     query.bookings = {
-                        $elemMatch: {
-                            start: { $lte: to },
-                            end: { $gte: from }
+                        $not: {
+                            $elemMatch: {
+                                start: { $gte: from },
+                                end: { $lte: to }
+                            }
                         }
                     }
                 }
@@ -174,9 +176,11 @@ const getSearchLoc = async (req, res) => {
             }
             if (from !== null && to !== null) {
                 query.bookings = {
-                    $elemMatch: {
-                        start: { $lte: to },
-                        end: { $gte: from }
+                    $not: {
+                        $elemMatch: {
+                            start: { $gte: from },
+                            end: { $lte: to }
+                        }
                     }
                 }
             }
